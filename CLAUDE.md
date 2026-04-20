@@ -76,6 +76,17 @@ service.html + service.js (wizard 3 étapes : service → infos → paiement)
     └─ email livraison via /api/send-email (Resend)
 ```
 
+### Flow client alternatif (CV Builder)
+```
+index.html (CTA CV)
+    ↓
+cv-builder.html + cv-builder.js + cv-builder.css
+    ↓ saisie CV complète + preview A4 temps réel
+    ├─ POST /api/create-checkout  (Stripe) OU paiement PayPal manuel
+    ↓ retour /cv-builder?success=1&order_id=...
+    └─ déverrouillage preview finale + export PDF via window.print()
+```
+
 ### Flow admin
 ```
 admin/index.html
@@ -125,6 +136,9 @@ workspace-* (projets, tâches, chat, IA, QC, agents, notes, dashboard)
 | `service.js` | Wizard client — logique complète, constantes `CV_TEMPLATES`, `MODIFY_SECTIONS`, `CV_POSTES_GROUPS`, `CV_DIPLOMES_GROUPS`, `CV_COMPETENCES_GROUPS`, `LETTRE_ENTREPRISES_GROUPS`, `LETTRE_SECTEUR_TAGS`, `COURRIER_DESTINATAIRES_GROUPS`, `COURRIER_OBJET_TYPES`, `DOSSIER_CAF_PRESTATIONS`, `DOSSIER_CAF_SITUATION_PRO`, `DOSSIER_CAF_FOYER`, `DOSSIER_LOGEMENT_TYPES`, `DOSSIER_LOGEMENT_SITUATIONS`, `DOSSIER_AIDE_TYPES`, `DOSSIER_AIDE_ORGANISMES`, `SEJOUR_NATIONALITES`, `SEJOUR_SITUATION_FAMILIALE`, `SEJOUR_ENFANTS_CHARGE`, `SEJOUR_MOTIFS`, `SEJOUR_DUREES_SOUHAITEES`, `SEJOUR_CHANGEMENT_SITUATION`, `SEJOUR_DUREE_PRESENCE`, `SEJOUR_MOTIFS_REGULARISATION`, `SEJOUR_SUJETS_INFO`, `SSW` state, `swBuildPrompt`, `swGenerate`, panneau modif universel (`swModifyDoc`) — supporte `hybrid-select` et `tags` (avec variante `single: true` = radio-tags) |
 | `service.html` | Wizard client — structure HTML 3 étapes + prévisualisation iframe + panneau modif |
 | `service.css` | Styles wizard + cartes templates + modif panel |
+| `cv-builder.html` | Parcours CV alternatif standalone — builder en une page avec aperçu A4, paiement et export PDF |
+| `cv-builder.js` | Logique du CV Builder — state `CB`, preview live, sections dynamiques, paiement Stripe/PayPal, export impression |
+| `cv-builder.css` | Styles dédiés au CV Builder — layout éditeur + preview + responsive |
 | `a-propos.html` | Page institutionnelle — hero sombre, mission, 7 services + prix, ancrage Guyane (7 langues + organismes réels), engagements RGPD/qualité. Système multilingue intégré (`lang.css` + `lang.js`). Nav/footer alignés sur index.html (liens `#services`, sans `#tarifs` ni `#demande`). CTAs → `/#services`. |
 | `cv-catalogue.html` | Page standalone catalogue des 6 templates CV (lien `?template=XXX` vers wizard) |
 | `mentions-legales.html` | Mentions légales (éditeur, hébergeur Vercel, propriété intellectuelle, contact) |
@@ -234,11 +248,11 @@ Pour les services utilisant `lib/pipeline.js` (via `/api/pipeline` action `gener
   - `lib/documents.js` — 7 tests
   - `lib/review.js` — 5 tests
 - **Non couvert** :
-  - Wizard client (`service.js`) — aucun test unitaire
+  - Wizards clients (`service.js`, `cv-builder.js`) — aucun test unitaire
   - Flows E2E (navigation complète service → paiement → livraison)
   - Pages admin (`admin/*.js`)
   - `api/extract-doc.js`
-  - Templates CV visuels (rendu)
+  - Templates CV visuels (rendu `service.js` + `cv-builder.js`)
 
 ## Conventions de code
 - Pas de framework, vanilla JS/HTML/CSS uniquement
