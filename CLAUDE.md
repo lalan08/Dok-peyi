@@ -28,7 +28,7 @@ Si CLAUDE.md n'est pas à jour → ne pas committer.
 - DB : Firebase Realtime Database EU-west1
 - Email : Resend API
 - Paiement : Stripe Checkout + webhook HMAC-SHA256 + Mobile Money (Momo) + PayPal manuel
-- Tests : `node --test` natif (pas de framework externe), 183 tests / 59 suites
+- Tests : `node --test` natif (pas de framework externe), 185 tests / 60 suites
 - CI : GitHub Actions (`ci.yml`, `tests.yml`, `secret-scan.yml`)
 - Zéro dépendance npm (`package.json` ne contient que `"type": "module"` et le script test)
 
@@ -134,7 +134,7 @@ workspace-* (projets, tâches, chat, IA, QC, agents, notes, dashboard)
 | Fichier | Rôle |
 |---|---|
 | `service.js` | Wizard client — logique complète, constantes `CV_TEMPLATES`, `MODIFY_SECTIONS`, `CV_POSTES_GROUPS`, `CV_DIPLOMES_GROUPS`, `CV_COMPETENCES_GROUPS`, `LETTRE_ENTREPRISES_GROUPS`, `LETTRE_SECTEUR_TAGS`, `COURRIER_DESTINATAIRES_GROUPS`, `COURRIER_OBJET_TYPES`, `DOSSIER_CAF_PRESTATIONS`, `DOSSIER_CAF_SITUATION_PRO`, `DOSSIER_CAF_FOYER`, `DOSSIER_LOGEMENT_TYPES`, `DOSSIER_LOGEMENT_SITUATIONS`, `DOSSIER_AIDE_TYPES`, `DOSSIER_AIDE_ORGANISMES`, `SEJOUR_NATIONALITES`, `SEJOUR_SITUATION_FAMILIALE`, `SEJOUR_ENFANTS_CHARGE`, `SEJOUR_MOTIFS`, `SEJOUR_DUREES_SOUHAITEES`, `SEJOUR_CHANGEMENT_SITUATION`, `SEJOUR_DUREE_PRESENCE`, `SEJOUR_MOTIFS_REGULARISATION`, `SEJOUR_SUJETS_INFO`, `SSW` state, `swBuildPrompt`, `swGenerate`, panneau modif universel (`swModifyDoc`) — supporte `hybrid-select` et `tags` (avec variante `single: true` = radio-tags) |
-| `service.html` | Wizard client — structure HTML 3 étapes + prévisualisation iframe + panneau modif. Navbar premium alignée sur la landing (`.navbar`, `.nav-links`, CTA retour accueil, menu mobile). |
+| `service.html` | Wizard client — structure HTML 3 étapes + prévisualisation iframe + panneau modif. Navbar premium alignée sur la landing (`.navbar`, `.nav-links`, CTA retour accueil, menu mobile). `service.css` est appelé avec suffixe de version (`?v=...`) pour casser les caches navigateurs lors des changements de header. |
 | `service.css` | Styles wizard + cartes templates + modif panel. Reprend aussi la grammaire du header premium de la landing pour les pages service. |
 | `cv-builder.html` | Parcours CV alternatif standalone — builder en une page avec aperçu A4, paiement et export PDF |
 | `cv-builder.js` | Logique du CV Builder — state `CB`, preview live, sections dynamiques, paiement Stripe/PayPal, export impression |
@@ -142,6 +142,7 @@ workspace-* (projets, tâches, chat, IA, QC, agents, notes, dashboard)
 | `a-propos.html` | Page institutionnelle — hero sombre, mission, 7 services + prix, ancrage Guyane (7 langues + organismes réels), engagements RGPD/qualité. Système multilingue intégré (`lang.css` + `lang.js`). Nav/footer alignés sur index.html (liens `#services`, sans `#tarifs` ni `#demande`). CTAs → `/#services`. |
 | `cv-catalogue.html` | Page standalone catalogue des 6 templates CV (lien `?template=XXX` vers wizard) |
 | `tests/service-nav.test.js` | Test de régression statique — vérifie que `service.html` expose les liens de navigation publics (`/#comment`, `/#services`, `/a-propos`, retour accueil) et réutilise la structure premium du header landing (`.navbar`, `.nav-links`, `.nav-cta`). |
+| `tests/static-asset-cache.test.js` | Test de régression cache statique — vérifie que `service.html` versionne `service.css` et que `vercel.json` n'applique plus `immutable` aux CSS non hashés. |
 | `mentions-legales.html` | Mentions légales (éditeur, hébergeur Vercel, propriété intellectuelle, contact) |
 | `cgv.html` | Conditions Générales de Vente (tarifs détaillés, délais, remboursement, disclaimer IA, CIMADE Guyane) |
 | `confidentialite.html` | Politique de confidentialité RGPD (données collectées, sous-traitants, droits, CNIL) |
@@ -219,14 +220,14 @@ Pour les services utilisant `lib/pipeline.js` (via `/api/pipeline` action `gener
 ## Branches Git
 - **Branche principale** : `claude/create-website-AhMOy`
 - **Convention commits** : `<type>(<scope>): <message>` — types `feat`, `fix`, `chore`, `refactor`, `test`, `merge`, scopes courants : `cv`, `lettre`, `courrier`, `dossier`, `sejour`, `impot`, `naturalisation`, `prompt`, `impot`
-- **Tests obligatoires avant push** : `node --test tests/*.test.js` (183 / 183 OK)
+- **Tests obligatoires avant push** : `node --test tests/*.test.js` (185 / 185 OK)
 
 ## Déploiement Vercel
 - **Production Branch** : `claude/create-website-AhMOy` (auto-deploy sur chaque push)
 - **Edge Functions timeout** : 25 s (Hobby) / 60 s (Pro) — streaming maintient la connexion
 - **CORS** : géré uniquement par `lib/edge-response.js` via `NEXT_PUBLIC_BASE_URL`
 - **Headers sécurité** (`vercel.json`) : CSP, HSTS, X-Frame-Options, Referrer-Policy
-- **Cache** : `no-store` sur `/api/*`, `immutable` sur CSS/favicon, `no-cache` sur `sw.js`
+- **Cache** : `no-store` sur `/api/*`, `must-revalidate` sur CSS non hashés, `immutable` sur `favicon.svg`, `no-cache` sur `sw.js`
 - **Points d'attention** :
   - CORS unique — ne pas dupliquer les headers dans les handlers
   - Rate-limit en mémoire : reset à chaque cold start (acceptable en Edge)
@@ -235,7 +236,7 @@ Pour les services utilisant `lib/pipeline.js` (via `/api/pipeline` action `gener
 
 ## Tests
 - **Commande** : `npm test` (équivalent à `node --test tests/*.test.js`)
-- **Résultat actuel** : 183 tests / 59 suites / 183 pass / 0 fail
+- **Résultat actuel** : 185 tests / 60 suites / 185 pass / 0 fail
 - **Couverture** :
   - `api/admin-auth.js` — 11 tests
   - `api/ai-chat.js` — couvert
@@ -249,6 +250,7 @@ Pour les services utilisant `lib/pipeline.js` (via `/api/pipeline` action `gener
   - `lib/documents.js` — 7 tests
   - `lib/review.js` — 5 tests
   - `service.html` — 2 tests de régression sur la navigation publique et la structure premium du header
+  - `vercel.json` + `service.html` — 2 tests de régression sur le cache des assets CSS statiques
 - **Non couvert** :
   - Wizards clients (`service.js`, `cv-builder.js`) — aucun test unitaire sur la logique interactive
   - Flows E2E (navigation complète service → paiement → livraison)
@@ -277,21 +279,3 @@ Pour les services utilisant `lib/pipeline.js` (via `/api/pipeline` action `gener
 ## Équipe
 - **Marvin** : produit, IA, prompts, wizard, SEO, contenu
 - **Allan** : infrastructure, Vercel, Firebase, Stripe, PayPal, sécurité
-
-## Pages légales
-4 pages dédiées créées à la racine + bannière cookies dans `index.html` :
-
-| Fichier | URL | Contenu |
-|---|---|---|
-| `mentions-legales.html` | `/mentions-legales` | Éditeur (constitution juridique en cours), responsable publication Marvin, hébergeur Vercel, propriété intellectuelle, contact |
-| `cgv.html` | `/cgv` | Tarifs des 7 services + suppléments templates CV + traduction, délais, remboursement, rétractation, disclaimer IA (CIMADE Guyane), droit français / Tribunal de Cayenne |
-| `confidentialite.html` | `/confidentialite` | RGPD : données collectées, sous-traitants (Anthropic/Vercel/Stripe/Firebase/Resend), durée conservation 12 mois, droits, CNIL |
-| `cookies.html` | `/cookies` | Cookies strictement nécessaires uniquement, tableau des cookies utilisés, aucun tracking tiers |
-
-Page legacy `legales.html` conservée (page unifiée accessible via `/legales`).
-
-**Bannière cookies** : bandeau fixe bas de page dans `index.html` avec bouton « J'accepte » (stockage localStorage `dok_cookies_ok`) et lien vers `/cookies`. Masquée automatiquement si déjà acceptée.
-
-**Footer d'`index.html`** : liens mis à jour vers les 4 pages dédiées (`/mentions-legales`, `/cgv`, `/confidentialite`, `/cookies`). Liens `#tarifs` et `#demande` supprimés — remplacés par `#services`.
-
-**Section `#services` (`index.html`)** : refonte premium dark — grille CSS `repeat(6,1fr)`, 7 cartes (`.svc-dark-card`) fond `#111827`, hover bleu `#2563eb`. Ligne 1 : 3 cartes `span 2` (CV, Lettre, Courrier). Lignes 2–3 : 2 cartes larges `span 3` (Dossier+Séjour / Impôt+Naturalisation). Sections `#tarifs` et `#demande` supprimées. Bouton héro et liens footer pointent vers `#services`. **Bug corrigé** : `.svc-dark-card` ajouté au sélecteur de l'`IntersectionObserver` (ligne 354) — les cartes portaient la classe `reveal` (opacity:0) mais n'étaient jamais observées → invisible sur fond noir.
