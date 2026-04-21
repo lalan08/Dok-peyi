@@ -599,13 +599,19 @@ async function adminLogin(e) {
         headers: { 'content-type': 'application/json' },
         body:    JSON.stringify({ username: u, password: p })
       });
+      if (res.status === 429) {
+        if (errEl) { errEl.textContent = 'Trop de tentatives. Attends 5 minutes.'; errEl.style.display = 'block'; }
+        if (btn)   { btn.textContent = 'Se connecter →'; btn.disabled = false; }
+        return;
+      }
       const data = await res.json();
       ok = data.ok === true;
       isFirstLogin = ok;
     }
   } catch(err) {
-    // Réseau indisponible — impossible de valider le mot de passe
-    ok = false;
+    if (errEl) { errEl.textContent = 'Erreur réseau — vérifie ta connexion.'; errEl.style.display = 'block'; }
+    if (btn)   { btn.textContent = 'Se connecter →'; btn.disabled = false; }
+    return;
   }
 
   if (ok) {
@@ -624,6 +630,39 @@ function _loginError(errEl, btn, passEl) {
   if (errEl) { errEl.textContent = 'Identifiant ou mot de passe incorrect.'; errEl.style.display = 'block'; }
   if (btn)   { btn.textContent = 'Se connecter →'; btn.disabled = false; }
   if (passEl) { passEl.value = ''; passEl.focus(); }
+}
+
+/* Réinitialiser le hash stocké — force la vérification serveur au prochain login */
+async function resetStoredHash() {
+  const u = (document.getElementById('lg-user')?.value || '').trim().toLowerCase();
+  const errEl = document.getElementById('lg-error');
+
+  if (!u) {
+    if (errEl) { errEl.textContent = 'Saisis d\'abord ton identifiant.'; errEl.style.display = 'block'; }
+    document.getElementById('lg-user')?.focus();
+    return;
+  }
+  const found = USERS.find(x => x.user === u);
+  if (!found) {
+    if (errEl) { errEl.textContent = 'Identifiant inconnu.'; errEl.style.display = 'block'; }
+    return;
+  }
+
+  /* Effacer le hash local */
+  try { localStorage.removeItem('dok_pass_' + u); } catch(_) {}
+
+  /* Effacer le hash Firebase si disponible */
+  if (typeof db !== 'undefined' && db) {
+    try { await db.ref('dok-peyi/users/' + u + '/passHash').remove(); } catch(_) {}
+  }
+
+  if (errEl) {
+    errEl.textContent = '✅ Réinitialisé. Utilise le mot de passe original fourni par Allan et reconnecte-toi.';
+    errEl.style.display = 'block';
+    errEl.style.color = '#10b981';
+    errEl.style.background = '#ecfdf5';
+  }
+  document.getElementById('lg-pass')?.focus();
 }
 
 /* ============================================================
