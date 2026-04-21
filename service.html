@@ -24,10 +24,14 @@
 <body>
 
   <!-- NAVBAR -->
-  <nav class="sw-nav">
+  <nav class="sw-nav" aria-label="Navigation principale">
     <a href="/" class="sw-nav-logo">Dok'<span>péyi</span></a>
-    <a href="/a-propos" class="sw-nav-back">À propos</a>
-    <a href="/" class="sw-nav-back">← Retour à l'accueil</a>
+    <div class="sw-nav-links">
+      <a href="/#comment" class="sw-nav-link">Comment ça marche</a>
+      <a href="/#services" class="sw-nav-link">Services</a>
+      <a href="/a-propos" class="sw-nav-link">À propos</a>
+    </div>
+    <a href="/" class="sw-nav-home">← Retour à l'accueil</a>
   </nav>
 
   <!-- HERO -->
@@ -174,7 +178,7 @@ Exemples :
 
       </div>
 
-      <!-- ── ÉTAPE 4 : Paiement ─────────────────────────── -->
+      <!-- ── ÉTAPE 4 : Paiement ──────────────────────────── -->
       <div class="sw-step" id="sw-s4">
         <h2>Paiement sécurisé</h2>
         <p class="sw-sub">Finalisez votre commande pour recevoir le document sans filigrane</p>

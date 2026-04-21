@@ -26,14 +26,16 @@ body {
 }
 button { font-family: var(--font); }
 
-/* ── NAVBAR ───────────────────────────────────────────── */
+/* ── NAVBAR ──────────────────────────────────────────── */
 .sw-nav {
   background: #fff;
   border-bottom: 1px solid #e2e8f0;
   padding: 0 20px;
-  height: 56px;
+  min-height: 64px;
   display: flex;
   align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -46,16 +48,62 @@ button { font-family: var(--font); }
   letter-spacing: -.02em;
 }
 .sw-nav-logo span { color: var(--sw-color); }
-.sw-nav-back {
+.sw-nav-links {
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sw-nav-link,
+.sw-nav-home {
   font-size: .83rem;
+  font-weight: 500;
   color: #64748b;
   text-decoration: none;
   padding: 6px 10px;
   border-radius: 8px;
-  transition: background .15s;
+  transition: background .15s, color .15s, border-color .15s, transform .15s;
 }
-.sw-nav-back:hover { background: #f1f5f9; color: #1e293b; }
+.sw-nav-link:hover,
+.sw-nav-home:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+.sw-nav-home {
+  border: 1px solid #dbe3ee;
+  background: #fff;
+  font-weight: 600;
+}
+.sw-nav-home:hover {
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 900px) {
+  .sw-nav {
+    padding: 12px 16px;
+    align-items: flex-start;
+  }
+  .sw-nav-links {
+    order: 3;
+    margin-left: 0;
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+  .sw-nav-links::-webkit-scrollbar { display: none; }
+}
+
+@media (max-width: 560px) {
+  .sw-nav {
+    gap: 12px;
+  }
+  .sw-nav-home {
+    width: 100%;
+    text-align: center;
+  }
+}
 
 /* ── HERO ─────────────────────────────────────────────── */
 .sw-hero {
@@ -133,7 +181,7 @@ button { font-family: var(--font); }
   padding: 20px 14px 56px;
 }
 
-/* ── WIZARD CARD ──────────────────────────────────────── */
+/* ── WIZARD CARD ───────────────────────────────────────── */
 .sw-card {
   background: #fff;
   border-radius: var(--radius-lg);
@@ -222,7 +270,7 @@ button { font-family: var(--font); }
 }
 .sw-radio input[type="radio"] { width: auto; margin: 0; accent-color: var(--sw-color); }
 
-/* ── HYBRID SELECT (select + input libre) ─────────────────── */
+/* ── HYBRID SELECT (select + input libre) ── */
 .sw-hybrid { display: flex; flex-direction: column; gap: 8px; }
 .sw-hybrid-select {
   appearance: none;
@@ -232,7 +280,7 @@ button { font-family: var(--font); }
   cursor: pointer;
 }
 
-/* ── TAGS (chips cliquables + texte libre) ────────────────── */
+/* ── TAGS (chips cliquables + texte libre) ── */
 .sw-tags-wrap {
   border: 1.5px solid #e2e8f0;
   border-radius: 10px;
@@ -572,7 +620,7 @@ button { font-family: var(--font); }
 }
 .sw-confirm-email { font-size: .82rem; color: #94a3b8; margin-top: 16px; }
 
-/* ── LEGAL NOTICE ─────────────────────────────────────── */
+/* ── LEGAL NOTICE ────────────────────────────────────── */
 .sw-legal {
   margin-top: 20px;
   padding: 14px 16px;
