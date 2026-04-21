@@ -16,4 +16,13 @@ describe('service.html navigation', () => {
     assert.match(html, /href="\/a-propos"/);
     assert.match(html, /Retour à l'accueil/);
   });
+
+  test('reuses the premium landing navigation structure on service pages', async () => {
+    const html = await fs.readFile(serviceHtmlPath, 'utf8');
+
+    assert.match(html, /<nav class="navbar" id="navbar"/);
+    assert.match(html, /class="container nav-inner"/);
+    assert.match(html, /class="nav-links"/);
+    assert.match(html, /class="nav-cta"/);
+  });
 });
