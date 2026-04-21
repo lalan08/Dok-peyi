@@ -481,6 +481,17 @@ function _renderChat() {
 
   // Écoute Firebase si disponible
   _chatFirebaseListen();
+
+  // Clavier mobile : scroll messages + input dans la zone visible
+  if (window.visualViewport && !window._chatVVInit) {
+    window._chatVVInit = true;
+    window.visualViewport.addEventListener('resize', () => {
+      const msgs = document.getElementById('chat-messages');
+      if (msgs) msgs.scrollTop = msgs.scrollHeight;
+      const inp = document.querySelector('.chat-input:focus, .fchat-input:focus');
+      if (inp) setTimeout(() => inp.scrollIntoView({ block: 'nearest', behavior: 'smooth' }), 60);
+    });
+  }
 }
 
 /* ── Avatars membres dans le header ── */

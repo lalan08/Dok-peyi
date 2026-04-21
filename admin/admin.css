@@ -26,7 +26,7 @@ a{text-decoration:none;color:inherit}
 button{cursor:pointer}
 input,select,textarea,button{font-family:inherit;font-size:inherit}
 /* ===== ADMIN APP ===== */
-#admin-app{display:none;width:100%;height:100vh;max-height:100vh;overflow:hidden;position:relative}
+#admin-app{display:none;width:100%;height:100vh;height:100dvh;max-height:100vh;max-height:100dvh;overflow:hidden;position:relative}
 #admin-app.visible{display:flex!important}
 /* ===== SIDEBAR ===== */
 .sidebar{width:var(--sb-w);background:linear-gradient(180deg,#0d1527 0%,#0f172a 100%);display:flex;flex-direction:column;flex-shrink:0;height:100vh;overflow:hidden;transition:width .32s cubic-bezier(.4,0,.2,1),transform .28s ease;z-index:100;border-right:1px solid rgba(255,255,255,.05)}
@@ -53,7 +53,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 .btn-logout:hover{background:rgba(239,68,68,.28);color:var(--white);border-color:rgba(239,68,68,.4)}
 .sb-overlay{display:none;position:fixed;top:0;right:0;bottom:0;left:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);z-index:99}
 /* ===== MAIN WRAP ===== */
-.main-wrap{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden;height:100vh}
+.main-wrap{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden;height:100vh;height:100dvh}
 /* ===== TOPBAR ===== */
 .topbar{height:var(--topbar-h);background:rgba(255,255,255,.88);backdrop-filter:blur(16px) saturate(160%);-webkit-backdrop-filter:blur(16px) saturate(160%);border-bottom:1px solid rgba(226,232,240,.7);display:flex;align-items:center;gap:16px;padding:0 28px;flex-shrink:0;z-index:10;box-shadow:0 1px 12px rgba(0,0,0,.06)}
 .topbar-hamburger{display:flex;align-items:center;justify-content:center;width:36px;height:36px;background:none;border:none;border-radius:var(--radius);font-size:1.1rem;color:var(--gray-600);cursor:pointer;flex-shrink:0;transition:background .2s,color .2s}
@@ -279,7 +279,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 /* breakout of .content padding */
 #s-workspace.active{margin:-28px -28px -48px;padding:0;animation:none;overflow:hidden}
 /* shell */
-.wsp-shell{display:flex;height:calc(100vh - var(--topbar-h));background:#030812;overflow:hidden}
+.wsp-shell{display:flex;height:calc(100vh - var(--topbar-h));height:calc(100dvh - var(--topbar-h));background:#030812;overflow:hidden}
 /* ── Sidebar ── */
 .wsp-sidebar{width:236px;flex-shrink:0;background:rgba(3,10,28,.92);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border-right:1px solid rgba(99,179,237,.07);display:flex;flex-direction:column;padding:22px 14px 14px;gap:18px}
 .wsp-brand{display:flex;align-items:center;gap:10px;padding:0 4px 4px}
@@ -416,7 +416,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
   .wsp-collapse-btn{display:flex}
 }
 /* ── Chat dark ── */
-.chat-shell{display:flex;flex-direction:column;height:calc(100vh - var(--topbar-h) - 130px);min-height:460px;background:#0d1117;border-radius:20px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.45)}
+.chat-shell{display:flex;flex-direction:column;height:calc(100vh - var(--topbar-h) - 130px);height:calc(100dvh - var(--topbar-h) - 130px);min-height:0;background:#0d1117;border-radius:20px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.45)}
 .chat-header{display:flex;align-items:center;gap:12px;padding:16px 22px;background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.07);backdrop-filter:blur(12px)}
 .chat-header-icon{width:38px;height:38px;background:linear-gradient(135deg,#3b82f6,#6366f1);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;box-shadow:0 4px 12px rgba(99,102,241,.4)}
 .chat-header-title{font-weight:700;font-size:.95rem;color:#f1f5f9;letter-spacing:-.02em}
@@ -998,7 +998,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 @media(max-width:600px){
   #fchat-drawer{
     bottom:0;right:12px;left:12px;width:auto;
-    height:auto;max-height:88vh;
+    height:auto;max-height:88dvh;
     border-radius:24px 24px 0 0;
     transform:translateY(110%) scale(1);
     transition:opacity .16s ease-in,transform .2s cubic-bezier(.55,0,1,1);
@@ -1023,7 +1023,7 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 .badge-pq{background:rgba(236,72,153,.15);color:#f472b6}
 /* Layout principal QC */
 #s-controle.active{margin:-28px -28px -48px;padding:0;animation:none;overflow:hidden}
-.qc-shell{display:flex;height:calc(100vh - var(--topbar-h));background:#030812;overflow:hidden}
+.qc-shell{display:flex;height:calc(100vh - var(--topbar-h));height:calc(100dvh - var(--topbar-h));background:#030812;overflow:hidden}
 /* Panneau liste */
 .qc-list-panel{width:360px;flex-shrink:0;display:flex;flex-direction:column;border-right:1px solid rgba(255,255,255,.06);background:#0a0f1e}
 .qc-list-head{padding:18px 16px 12px;border-bottom:1px solid rgba(255,255,255,.06)}
@@ -1263,6 +1263,18 @@ html, body {
 /* dvh pour les navigateurs modernes */
 @supports (height: 100dvh) {
   html, body { height: 100dvh; }
+}
+
+/* ── Chat input : safe-area pour iPhone notch + ajustement clavier mobile ── */
+.chat-input-area {
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+}
+.fchat-input-area {
+  padding-bottom: max(10px, env(safe-area-inset-bottom));
+}
+/* Chat shell min-height adaptatif selon la hauteur disponible */
+@media (max-height: 600px) {
+  .chat-shell { min-height: 0 !important; }
 }
 
 /* ── LOGIN SCREEN ── */
