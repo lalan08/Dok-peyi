@@ -178,9 +178,8 @@ function showWSTab(tab, el) {
   wspCloseSidebar();
 
   // Rendu à la demande
-  if      (tab === 'home') renderWSHome();
-  else if (tab === 'chat') { _renderChat(); if (typeof _fchatMarkRead !== 'undefined') _fchatMarkRead(); }
-  else                     _renderComingSoon(tab);
+  if (tab === 'home') renderWSHome();
+  else                _renderComingSoon(tab);
 
   return false; // prevent <a> default navigation
 }
@@ -256,11 +255,6 @@ function renderWSHome() {
           onclick="showWSTab('tasks',document.getElementById('wst-tasks'));setTimeout(()=>typeof tskToggleNew==='function'&&tskToggleNew(),120)">
           <span class="wsp-qa-icon">✅</span>
           <span>Nouvelle tâche</span>
-        </button>
-        <button class="wsp-qa-btn wsp-qa-secondary"
-          onclick="showWSTab('chat',document.getElementById('wst-chat'))">
-          <span class="wsp-qa-icon">💬</span>
-          <span>Chat équipe</span>
         </button>
         <button class="wsp-qa-btn wsp-qa-secondary"
           onclick="showWSTab('ai',document.getElementById('wst-ai'))">
@@ -802,7 +796,7 @@ function _chatFirebaseListen() {
         Object.values(data).forEach(m => { if (!ids.has(m.id)) wsMessages.push(m); });
         wsMessages.sort((a, b) => new Date(a.ts) - new Date(b.ts));
         _wsSave('dok_ws_chat', wsMessages);
-        if (wsCurrentTab === 'chat') _renderChatMessages();
+
         if (_fchatOpen) _fchatRenderMessages();
         _fchatUpdateBadge();
       }
@@ -815,7 +809,7 @@ function _chatFirebaseListen() {
           wsMessages.push(m);
           wsMessages.sort((a, b) => new Date(a.ts) - new Date(b.ts));
           _wsSave('dok_ws_chat', wsMessages);
-          if (wsCurrentTab === 'chat') _renderChatMessages();
+  
           if (_fchatOpen) _fchatRenderMessages();
           const myId = (typeof currentUser !== 'undefined' && currentUser) ? currentUser.user : null;
           _fchatOnFirebaseNew(new Set([m.id]), myId);
@@ -1166,7 +1160,7 @@ function fchatSend() {
   document.getElementById('fchat-attach-preview').innerHTML = '';
   _fchatRenderMessages();
   _fchatMarkRead();
-  if (wsCurrentTab === 'chat') _renderChatMessages();
+
 
   // Déclenchement Rédac si @Rédac mentionné
   if (/^@[Rr][eé]dac\b/i.test(text)) _redacRespond(text, wsMessages.slice(-12));
@@ -1228,7 +1222,7 @@ function _fchatOnStorageChange(e) {
     });
     if (!newIds.size && fresh.length <= wsMessages.length) return;
     wsMessages.sort((a, b) => new Date(a.ts) - new Date(b.ts));
-    if (wsCurrentTab === 'chat') _renderChatMessages();
+  
     if (_fchatOpen) _fchatRenderMessages();
     _fchatUpdateBadge();
     if (newIds.size) {
@@ -1320,7 +1314,7 @@ function _fchatStartPolling() {
     _fchatPollLast = fresh.length;
     _fchatUpdateBadge();
     if (_fchatOpen) _fchatRenderMessages();
-    if (wsCurrentTab === 'chat') _renderChatMessages();
+  
     if (newOtherMsgs.length) {
       _fchatPing();
       newOtherMsgs.forEach(m => _fchatShowBrowserNotif(m));
@@ -1513,7 +1507,7 @@ async function _redacRespond(message, history) {
   _wsSave('dok_ws_chat', wsMessages);
   _chatFirebasePush(msg);
 
-  if (wsCurrentTab === 'chat') _renderChatMessages();
+
   if (_fchatOpen) _fchatRenderMessages();
   if (typeof _fchatUpdateBadge !== 'undefined') _fchatUpdateBadge();
   if (typeof _fchatPing !== 'undefined') _fchatPing();
