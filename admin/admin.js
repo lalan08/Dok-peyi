@@ -590,11 +590,11 @@ async function adminLogin(e) {
   try {
     const storedHash = await getStoredHash(u);
     if (storedHash) {
-      // Mot de passe personnalisé — comparer le hash localement
       ok = (await hashPass(p)) === storedHash;
-    } else {
-      // Pas encore de mot de passe personnalisé → vérifier côté serveur
-      const res  = await fetch('/api/admin-auth', {
+    }
+    if (!ok) {
+      // Hash absent ou non correspondant → vérifier côté serveur (mot de passe original)
+      const res = await fetch('/api/admin-auth', {
         method:  'POST',
         headers: { 'content-type': 'application/json' },
         body:    JSON.stringify({ username: u, password: p })
@@ -605,8 +605,15 @@ async function adminLogin(e) {
         return;
       }
       const data = await res.json();
-      ok = data.ok === true;
-      isFirstLogin = ok;
+      if (data.ok === true) {
+        ok = true;
+        isFirstLogin = !storedHash; // première connexion seulement si aucun hash existant
+        // Nettoyer le hash corrompu s'il y en avait un
+        if (storedHash) {
+          try { localStorage.removeItem('dok_pass_' + u); } catch(_) {}
+          if (db) db.ref('dok-peyi/users/' + u + '/passHash').remove().catch(() => {});
+        }
+      }
     }
   } catch(err) {
     if (errEl) { errEl.textContent = 'Erreur réseau — vérifie ta connexion.'; errEl.style.display = 'block'; }
