@@ -2512,6 +2512,19 @@ function initFirebase() {
   }
 }
 
+function restartSync() {
+  const dot = document.getElementById('fb-status-dot');
+  if (dot) { dot.style.background = '#f59e0b'; dot.title = 'Reconnexion…'; }
+  try {
+    if (db) { db.ref('dok-peyi/demandes').off(); db.goOffline(); db.goOnline(); }
+    initFirebase();
+    showToast('🔄 Synchronisation relancée', 'success');
+  } catch(e) {
+    if (dot) { dot.style.background = '#ef4444'; dot.title = 'Erreur — ' + e.message; }
+    showToast('❌ Erreur de synchronisation : ' + e.message, 'error');
+  }
+}
+
 /* Mise à jour ciblée d'un champ (statut, note…) */
 function fbUpdate(id, changes) {
   if (db) db.ref('dok-peyi/demandes/' + id).update(changes).catch(console.error);
