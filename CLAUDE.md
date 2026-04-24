@@ -127,6 +127,9 @@ workspace-* (projets, tâches, chat, IA, QC, agents, notes, dashboard)
 | `service.css` | Styles wizard + cartes templates + modif panel. Reprend aussi la grammaire du header premium de la landing pour les pages service. |
 | `a-propos.html` | Page institutionnelle — hero sombre, mission, 7 services + prix, ancrage Guyane (7 langues + organismes réels), engagements RGPD/qualité. Système multilingue intégré (`lang.css` + `lang.js`). Nav/footer alignés sur index.html (liens `#services`, sans `#tarifs` ni `#demande`). CTAs → `/#services`. |
 | `cv-catalogue.html` | Page standalone catalogue des 6 templates CV (lien `?template=XXX` vers wizard) |
+| `cv-wizard.html` | Tunnel CV Page 1 — galerie de 12 templates avec filtres par catégorie, miniatures inline HTML/CSS scalées, modale plein écran. Point d'entrée depuis `index.html` CTA CV. Redirige vers `cv-wizard.html?step=2&template=XX` après sélection. |
+| `cv-wizard.css` | Styles dédiés au tunnel CV — navbar dark premium, filtre catégorie, grille 3-col responsive, cards templates, badges prix/populaire, modale overlay, animations. |
+| `cv-wizard.js` | Logique tunnel CV — calcul dynamique de scale (transform) des previews, filtre catégorie instantané, modale (open/close/Escape), sessionStorage `cv_template` + redirect step=2. |
 | `tests/service-nav.test.js` | Test de régression statique — vérifie que `service.html` expose les liens de navigation publics (`/#comment`, `/#services`, `/a-propos`, retour accueil) et réutilise la structure premium du header landing (`.navbar`, `.nav-links`, `.nav-cta`). |
 | `tests/static-asset-cache.test.js` | Test de régression cache statique — vérifie que `service.html` versionne `service.css` et que `vercel.json` n'applique plus `immutable` aux CSS non hashés. |
 | `mentions-legales.html` | Mentions légales (éditeur, hébergeur Vercel, propriété intellectuelle, contact) |
@@ -184,6 +187,24 @@ Le style de chaque template est injecté dans le prompt Emma via le placeholder 
 | `impact` | Impact | +2€ | Dynamique, idéal commerce et BTP |
 | `prestige` | Prestige | +4€ | Or et élégance, idéal santé et éducation |
 | `executive` | Executive | +7€ | Ultra-minimaliste premium, direction et cadres |
+
+### Tunnel CV — 12 templates (cv-wizard.html Page 1)
+Nouvelle galerie 12 templates avec prévisualisation inline HTML/CSS scalée dynamiquement. `service.js` et `CV_TEMPLATES` restent inchangés (utilisés par le wizard existant).
+
+| N° | Nom | Prix | Catégorie | Badge |
+|---|---|---|---|---|
+| 01 | Épuré | +0€ | Classique | Populaire |
+| 02 | Sidebar Sombre | +2€ | Moderne | — |
+| 03 | Brun Premium | +2€ | Moderne | — |
+| 04 | Navy Corporate | +2€ | Classique | Populaire |
+| 05 | Full Dark | +4€ | Premium | — |
+| 06 | Dark Green | +4€ | Premium | — |
+| 07 | Impact Rouge | +2€ | Moderne | — |
+| 08 | Minimaliste Timeline | +0€ | Classique | — |
+| 09 | Géométrique Or | +4€ | Premium | — |
+| 10 | Wave Navy | +2€ | Moderne | Populaire |
+| 11 | Yellow Dark | +2€ | Moderne | — |
+| 12 | Cyber Neon | +7€ | Futuriste | — |
 
 ## Pipeline de génération
 **État actuel (production)** : pipeline mono-agent.
@@ -260,7 +281,7 @@ Pour les services utilisant `lib/pipeline.js` (via `/api/pipeline` action `gener
 - **Phase 0 — Sécurité** : en attente Allan (Vercel env vars + Firebase rules + HSTS preload + rotation secrets)
 - **Phase 1 — Prompts production** : ✅ terminé (prompts enrichis par service et sous-type, contexte Guyane, 7 services fonctionnels)
 - **Phase 2 — Pipeline multi-agents** : ✅ implémenté (`api/orchestrate.js`) — Emma → Viktor → Sofia → Léa orchestré serveur. Mémoire partagée entre agents : à venir (Phase 2b)
-- **Phase 3 — Premium et croissance** : à venir (templates CV premium additionnels, abonnement, parrainage, dashboard client)
+- **Phase 3 — Premium et croissance** : en cours — Tunnel CV Page 1 (galerie 12 templates) ✅ livré. Pages 2–4 (infos, paiement, confirmation) : à venir.
 
 ## Équipe
 - **Marvin** : produit, IA, prompts, wizard, SEO, contenu
