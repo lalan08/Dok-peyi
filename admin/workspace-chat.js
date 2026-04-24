@@ -931,9 +931,13 @@ function _fchatDragEnd() {
 
   if (!_fchatDrag?.moved) {
     _fchatDrag = null;
-    fchatToggle();
+    // Laisser l'événement click natif du navigateur déclencher fchatToggle()
+    // via l'onclick du bouton — évite le double-toggle
     return;
   }
+  // Drag réel — bloquer le click synthétique qui suit touchend/mouseup
+  window._fchatDragHandled = true;
+  setTimeout(() => { window._fchatDragHandled = false; }, 120);
 
   // Calculer la vélocité à partir des derniers points enregistrés
   const hist = _fchatDrag.history;
@@ -1142,7 +1146,10 @@ function fchatSend() {
   const input = document.getElementById('fchat-input');
   const text  = (input?.value || '').trim();
   if (!text && _fchatAttachments.length === 0) return;
-  if (typeof currentUser === 'undefined' || !currentUser) return;
+  if (typeof currentUser === 'undefined' || !currentUser) {
+    if (typeof showToast === 'function') showToast('Non connecté — recharge la page', 'error');
+    return;
+  }
 
   const msg = {
     id:       _wsId(),
