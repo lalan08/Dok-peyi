@@ -2454,6 +2454,15 @@ function initFirebase() {
     if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
     db = firebase.database();
 
+    /* Suivi de la connexion en temps réel — Firebase reconnecte automatiquement */
+    db.ref('.info/connected').on('value', snap => {
+      const dot   = document.getElementById('fb-status-dot');
+      const label = document.getElementById('fb-status-label');
+      const online = snap.val() === true;
+      if (dot)   { dot.style.background = online ? '#22c55e' : '#f59e0b'; dot.title = online ? 'Synchronisé' : 'Reconnexion…'; }
+      if (label) { label.textContent = online ? 'Synchronisé' : 'Reconnexion…'; }
+    });
+
     /* Listener temps réel — se déclenche pour TOUS les admins connectés */
     let knownIds  = new Set();
     let firstLoad = true;
@@ -2473,7 +2482,6 @@ function initFirebase() {
             const svc = svcLabels[d.service] || d.service;
             showToast(`🔔 Nouvelle commande — ${svc} (${d.prenom || '—'})`, 'success');
           });
-          /* Allumer le point rouge sur la cloche topbar */
           const dot = document.getElementById('notif-dot');
           if (dot) dot.style.display = 'block';
         }
@@ -2503,25 +2511,8 @@ function initFirebase() {
         }
       }
     });
-
-    // Indicateur silencieux dans la sidebar (pas de toast intrusif)
-    const fbDot = document.getElementById('fb-status-dot');
-    if (fbDot) { fbDot.style.background = '#22c55e'; fbDot.title = 'Firebase connecté'; }
   } catch(e) {
     console.warn('Firebase init failed, fallback localStorage:', e.message);
-  }
-}
-
-function restartSync() {
-  const dot = document.getElementById('fb-status-dot');
-  if (dot) { dot.style.background = '#f59e0b'; dot.title = 'Reconnexion…'; }
-  try {
-    if (db) { db.ref('dok-peyi/demandes').off(); db.goOffline(); db.goOnline(); }
-    initFirebase();
-    showToast('🔄 Synchronisation relancée', 'success');
-  } catch(e) {
-    if (dot) { dot.style.background = '#ef4444'; dot.title = 'Erreur — ' + e.message; }
-    showToast('❌ Erreur de synchronisation : ' + e.message, 'error');
   }
 }
 

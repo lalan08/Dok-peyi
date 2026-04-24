@@ -118,7 +118,7 @@
       </div>
       <div style="display:flex;align-items:center;gap:7px;padding:4px 4px 0">
         <span id="fb-status-dot" style="width:7px;height:7px;border-radius:50%;background:#475569;flex-shrink:0;transition:background .5s" title="Hors ligne"></span>
-        <button onclick="restartSync()" style="font-size:.72rem;color:#475569;background:none;border:none;cursor:pointer;padding:0;font-family:inherit;text-align:left" title="Cliquer pour relancer la synchronisation">Synchronisation</button>
+        <span id="fb-status-label" style="font-size:.72rem;color:#475569">Synchronisation</span>
       </div>
       <a href="../index.html" target="_blank" class="sb-site-link">↗ Voir le site</a>
       <button class="btn-chpass" onclick="showChangePassModal()">🔑 Changer mot de passe</button>
@@ -434,7 +434,7 @@
 <!-- Config Firebase — remplie par l'utilisateur -->
 <script src="/firebase-config.js"></script>
 <script src="/lib/statuses.js"></script>
-<script src="/admin/admin.js?v=12"></script>
+<script src="/admin/admin.js?v=13"></script>
 <script src="/admin/workspace-chat.js?v=3"></script>
 <script src="/admin/workspace-projects.js?v=1"></script>
 <script src="/admin/workspace-tasks.js?v=1"></script>
