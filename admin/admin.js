@@ -8,7 +8,7 @@ const USERS = [
   { user: 'allan',  nom: 'Allan',      role: 'admin',      color: '#2563eb' },
   { user: 'yonel',  nom: 'Yonel',      role: 'admin',      color: '#10b981' },
   { user: 'marvin', nom: 'Marvin',     role: 'manager',    color: '#f59e0b' },
-  { user: 'redac1', nom: 'Rédacteur',  role: 'redacteur',  color: '#8b5cf6' }
+  { user: 'redac',  nom: 'Rédacteur',  role: 'redacteur',  color: '#8b5cf6' }
 ];
 // ── Rôles ────────────────────────────────────────────────────────────────
 const ROLE_SECTIONS = {

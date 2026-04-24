@@ -14,7 +14,7 @@ const USERS = [
   { user: 'allan',  envKey: 'ADMIN_PASS_ALLAN',  nom: 'Allan',      role: 'admin',      color: '#2563eb' },
   { user: 'yonel',  envKey: 'ADMIN_PASS_YONEL',  nom: 'Yonel',      role: 'admin',      color: '#10b981' },
   { user: 'marvin', envKey: 'ADMIN_PASS_MARVIN', nom: 'Marvin',     role: 'manager',    color: '#f59e0b' },
-  { user: 'redac1', envKey: 'ADMIN_PASS_REDAC',  nom: 'Rédacteur',  role: 'redacteur',  color: '#8b5cf6' }
+  { user: 'redac',  envKey: 'ADMIN_PASS_REDAC',  nom: 'Rédacteur',  role: 'redacteur',  color: '#8b5cf6' }
 ];
 
 export default async function handler(req) {
