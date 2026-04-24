@@ -19,7 +19,7 @@ describe('service static asset caching', () => {
     const raw = await fs.readFile(vercelConfigPath, 'utf8');
     const config = JSON.parse(raw);
     const cssHeader = config.headers.find((entry) =>
-      entry.source === '/(tokens|styles|service|cv-builder|lang)\\.css'
+      entry.source === '/(tokens|styles|service|lang)\\.css'
     );
 
     assert.ok(cssHeader, 'expected CSS cache header rule');
