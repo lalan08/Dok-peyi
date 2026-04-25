@@ -141,7 +141,7 @@ workspace-* (projets, tâches, chat, IA, QC, agents, notes, dashboard)
 | `admin/index.html` | Dashboard admin |
 | `admin/admin.js` | Logique dashboard admin |
 | `admin/workspace-*.js` | Modules du workspace admin (chat, IA, projets, tâches, QC, agents…) |
-| `lang.js` + `lang.css` | Système multilingue — 7 langues (fr/pt/ht/nl/ar/en/gcr). Couverture i18n complète de `a-propos.html` : `data-i18n` sur tous les textes (hero h1 via `<span>`/`<em>`, paragraphes mission/guyane/engagement, descriptions services, lang-tags). Support `data-i18n-html` ajouté dans `applyTranslation` pour éléments contenant des balises HTML (`<strong>`, `<em>`). Le bouton langue est injecté automatiquement dans `.nav-links` et `.mobile-menu` via `injectNavBtn()`. |
+| `lang.js` + `lang.css` | Système multilingue — 7 langues (fr/pt/ht/nl/ar/en/gcr). Base i18n centralisée pour le front public : fallback automatique vers `fr`, support DOM `data-i18n` / `data-i18n-html` / `data-i18n-ph` / `data-i18n-title` / `data-i18n-aria-label` / `data-i18n-value`, injection du bouton langue dans `.nav-links` et `.mobile-menu`. `lang.js` expose aussi `window.DokPeyiI18n` (`t`, `setLanguage`, `getDictionary`, `apply`, `onChange`, `offChange`) et émet l'événement `dokpeyi:langchange` pour les modules JS dynamiques (wizard, tunnel CV). |
 
 Note : les templates CV sont définis dans `service.js` (constante `CV_TEMPLATES`, exposée via `window.CV_TEMPLATES`). Il n'existe pas de fichier `lib/cv-templates.js` séparé.
 
@@ -281,7 +281,7 @@ Pour les services utilisant `lib/pipeline.js` (via `/api/pipeline` action `gener
 - **Phase 0 — Sécurité** : en attente Allan (Vercel env vars + Firebase rules + HSTS preload + rotation secrets)
 - **Phase 1 — Prompts production** : ✅ terminé (prompts enrichis par service et sous-type, contexte Guyane, 7 services fonctionnels)
 - **Phase 2 — Pipeline multi-agents** : ✅ implémenté (`api/orchestrate.js`) — Emma → Viktor → Sofia → Léa orchestré serveur. Mémoire partagée entre agents : à venir (Phase 2b)
-- **Phase 3 — Premium et croissance** : en cours — Tunnel CV Page 1 (galerie 12 templates) ✅ livré. Pages 2–4 (infos, paiement, confirmation) : à venir.
+- **Phase 3 — Premium et croissance** : en cours — Tunnel CV Page 1 (galerie 12 templates) ✅ livré. Pages 2–4 (infos, paiement, confirmation) : à venir. Fondation i18n JS+DOM centralisée posée dans `lang.js`, reste à brancher page par page.
 
 ## Équipe
 - **Marvin** : produit, IA, prompts, wizard, SEO, contenu
