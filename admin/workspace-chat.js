@@ -784,45 +784,47 @@ function _chatFirebaseListen() {
   if (typeof db === 'undefined' || !db || _chatFirebaseListened) return;
   _chatFirebaseListened = true;
 
-  try {
-    // Horodatage avant le chargement initial — tout child_added après = nouveau message
-    const listenFrom = new Date().toISOString();
+  const chatRef   = db.ref('workspace/chat');
+  const listenFrom = new Date().toISOString();
 
-    // 1. Chargement initial de l'historique complet
-    db.ref('workspace/chat').orderByChild('ts').once('value', snap => {
-      const data = snap.val();
-      if (data) {
-        const ids = new Set(wsMessages.map(m => m.id));
-        Object.values(data).forEach(m => { if (!ids.has(m.id)) wsMessages.push(m); });
-        wsMessages.sort((a, b) => new Date(a.ts) - new Date(b.ts));
-        _wsSave('dok_ws_chat', wsMessages);
-
-        if (_fchatOpen) _fchatRenderMessages();
-        _fchatUpdateBadge();
-      }
-
-      // 2. Écoute temps réel — uniquement les NOUVEAUX messages
-      db.ref('workspace/chat').orderByChild('ts').startAt(listenFrom)
-        .on('child_added', snap => {
-          const m = snap.val();
-          if (!m || !m.id || wsMessages.some(x => x.id === m.id)) return;
-          wsMessages.push(m);
-          wsMessages.sort((a, b) => new Date(a.ts) - new Date(b.ts));
-          _wsSave('dok_ws_chat', wsMessages);
-  
-          if (_fchatOpen) _fchatRenderMessages();
-          const myId = (typeof currentUser !== 'undefined' && currentUser) ? currentUser.user : null;
-          _fchatOnFirebaseNew(new Set([m.id]), myId);
-        });
+  // 1. Listener temps réel immédiat — indépendant du chargement historique
+  chatRef.orderByChild('ts').startAt(listenFrom)
+    .on('child_added', snap => {
+      const m = snap.val();
+      if (!m || !m.id || wsMessages.some(x => x.id === m.id)) return;
+      wsMessages.push(m);
+      wsMessages.sort((a, b) => new Date(a.ts) - new Date(b.ts));
+      _wsSave('dok_ws_chat', wsMessages);
+      if (_fchatOpen) _fchatRenderMessages();
+      const myId = (typeof currentUser !== 'undefined' && currentUser) ? currentUser.user : null;
+      _fchatOnFirebaseNew(new Set([m.id]), myId);
+    }, err => {
+      console.warn('[Chat] Firebase écoute échouée:', err.message);
+      _chatFirebaseListened = false; // permettre une nouvelle tentative
     });
-  } catch (e) { /* Firebase non configuré */ }
+
+  // 2. Chargement historique séparé (50 derniers messages)
+  chatRef.orderByChild('ts').limitToLast(50).once('value', snap => {
+    const data = snap.val();
+    if (!data) return;
+    const ids = new Set(wsMessages.map(m => m.id));
+    Object.values(data).forEach(m => { if (!ids.has(m.id)) wsMessages.push(m); });
+    wsMessages.sort((a, b) => new Date(a.ts) - new Date(b.ts));
+    _wsSave('dok_ws_chat', wsMessages);
+    if (_fchatOpen) _fchatRenderMessages();
+    _fchatUpdateBadge();
+  }, err => {
+    console.warn('[Chat] Firebase historique échoué:', err.message);
+  });
 }
 
 function _chatFirebasePush(msg) {
   if (typeof db === 'undefined' || !db) return;
-  try {
-    db.ref(`workspace/chat/${msg.id}`).set(msg);
-  } catch (e) { /* silencieux */ }
+  db.ref(`workspace/chat/${msg.id}`).set(msg).catch(err => {
+    console.warn('[Chat] Firebase push échoué:', err.message);
+    if (typeof showToast === 'function')
+      showToast('⚠️ Message non synchronisé entre appareils (Firebase)', 'error');
+  });
 }
 
 
