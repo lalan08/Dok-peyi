@@ -2447,12 +2447,15 @@ function renderByServiceChart() {
    FIREBASE — Temps réel multi-admin
    ============================================================ */
 function initFirebase() {
+  // firebase-config.js peut avoir déjà initialisé Firebase et posé window.db
+  if (window.db && !db) db = window.db;
+
   if (typeof firebase === 'undefined') return;
   if (!FIREBASE_CONFIG || FIREBASE_CONFIG.apiKey.startsWith('REMPLACE')) return;
 
   try {
     if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
-    db = firebase.database();
+    if (!db) db = firebase.database();
 
     /* Suivi de la connexion en temps réel — Firebase reconnecte automatiquement */
     db.ref('.info/connected').on('value', snap => {

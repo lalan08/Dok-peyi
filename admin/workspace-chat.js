@@ -782,6 +782,7 @@ let _chatFirebaseListened = false;
 const _chatPageLoadTime   = Date.now();
 
 function _chatFirebaseListen() {
+  if (!db && window.db) db = window.db;
   if (typeof db === 'undefined' || !db || _chatFirebaseListened) return;
   _chatFirebaseListened = true;
 
@@ -810,6 +811,7 @@ function _chatFirebaseListen() {
 }
 
 function _chatFirebasePush(msg) {
+  if (!db && window.db) db = window.db;
   if (typeof db === 'undefined' || !db) return;
   db.ref('workspace/chat/' + msg.id).set(msg).catch(err => {
     console.warn('[Chat] Firebase push échoué:', err.message);
@@ -853,6 +855,7 @@ function fchatInit() {
 
 /* ── Diagnostic Firebase ─────────────────────────────────────── */
 function _fchatTestFirebase() {
+  if (!db && window.db) db = window.db;
   if (typeof db === 'undefined' || !db) {
     _fchatSetStatus('⚠️ Firebase non initialisé — messages locaux uniquement', '#f59e0b');
     return;
