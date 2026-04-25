@@ -430,11 +430,15 @@
   </div>
 </div>
 
-<!-- Firebase SDK (compat v10) -->
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"
-  onerror="document.getElementById('fb-sdk-err').textContent='❌ firebase-app.js non chargé'"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"
-  onerror="document.getElementById('fb-sdk-err').textContent='❌ firebase-database.js non chargé'"></script>
+<!-- Firebase SDK (compat v10) — gstatic en priorité, jsDelivr en secours -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script>
+if (typeof firebase === 'undefined') {
+  document.write('<scr'+'ipt src="https://cdn.jsdelivr.net/npm/firebase@10.12.0/firebase-app-compat.min.js"><\/scr'+'ipt>');
+  document.write('<scr'+'ipt src="https://cdn.jsdelivr.net/npm/firebase@10.12.0/firebase-database-compat.min.js"><\/scr'+'ipt>');
+}
+</script>
 <!-- Config Firebase — remplie par l'utilisateur -->
 <script src="/firebase-config.js?v=3"></script>
 <script>
