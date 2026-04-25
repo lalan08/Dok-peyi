@@ -5,17 +5,6 @@
 (function () {
   'use strict';
 
-  /* ── Step=2 routing: show confirmation screen ── */
-  var _params = new URLSearchParams(window.location.search);
-  if (_params.get('step') === '2') {
-    if (document.readyState !== 'loading') {
-      showStep2Screen();
-    } else {
-      document.addEventListener('DOMContentLoaded', showStep2Screen);
-    }
-    return;
-  }
-
   /* ── Scale preview wrappers to fill their container ── */
   const INNER_WIDTH = 680; // px — fixed width of template inner div
 
@@ -27,7 +16,7 @@
       var inner = wrap.querySelector('.tpl-preview-inner');
       if (!inner) return;
       inner.style.transform = 'scale(' + scale + ')';
-      // Height: show top ~55% of an A4 page (enough to see header + first sections)
+      // Height: show top ~80% of an A4 page (enough to see header + first sections)
       wrap.style.height = Math.round(w * 0.80) + 'px';
     });
   }
@@ -160,47 +149,56 @@
     });
   }
 
-  /* ── Init & resize ── */
-  window.addEventListener('DOMContentLoaded', function () {
+  /* ── Single merged DOMContentLoaded ── */
+  document.addEventListener('DOMContentLoaded', function () {
+    var params = new URLSearchParams(window.location.search);
+    var step = params.get('step');
+    console.log('[wizard] step detected:', step);
+
     computeScales();
     computeModalScale();
+
+    if (step === '2') {
+      var TPL_NAMES = {
+        '01': 'Épuré',            '02': 'Sidebar Sombre',       '03': 'Brun Premium',
+        '04': 'Navy Corporate',   '05': 'Full Dark',             '06': 'Dark Green',
+        '07': 'Impact Rouge',     '08': 'Minimaliste Timeline',  '09': 'Géométrique Or',
+        '10': 'Wave Navy',        '11': 'Yellow Dark',           '12': 'Cyber Neon'
+      };
+
+      // Hide gallery sections
+      document.querySelectorAll('.gallery-hero, .filter-section, .tpl-section').forEach(function (el) {
+        el.style.display = 'none';
+      });
+
+      var s2 = document.getElementById('step2-screen');
+      console.log('[wizard] step2-screen element:', s2);
+      if (!s2) return;
+
+      s2.style.display = 'flex';
+      s2.removeAttribute('aria-hidden');
+
+      var tplId = params.get('template') || sessionStorage.getItem('cv_template') || '01';
+      console.log('[wizard] tplId:', tplId);
+
+      var nameEl = document.getElementById('step2-template-name');
+      if (nameEl) {
+        nameEl.textContent = (tplId ? tplId.padStart(2, '0') + ' — ' : '') +
+          (TPL_NAMES[tplId] || 'Template sélectionné');
+      }
+
+      var withPhoto = sessionStorage.getItem('cv_with_photo');
+      var badgeEl = document.getElementById('step2-photo-badge');
+      if (badgeEl) {
+        badgeEl.textContent = withPhoto === 'false' ? '🚫 Sans photo' : '📷 Avec photo';
+      }
+    }
   });
+
+  /* ── Resize ── */
   window.addEventListener('resize', function () {
     computeScales();
     if (overlay && overlay.classList.contains('open')) computeModalScale();
   }, { passive: true });
-
-  // Run immediately if DOM already ready
-  if (document.readyState !== 'loading') {
-    computeScales();
-  }
-
-  /* ── Step-2 confirmation screen ── */
-  function showStep2Screen() {
-    var TPL_NAMES = {
-      '01': 'Épuré',            '02': 'Sidebar Sombre',       '03': 'Brun Premium',
-      '04': 'Navy Corporate',   '05': 'Full Dark',             '06': 'Dark Green',
-      '07': 'Impact Rouge',     '08': 'Minimaliste Timeline',  '09': 'Géométrique Or',
-      '10': 'Wave Navy',        '11': 'Yellow Dark',           '12': 'Cyber Neon'
-    };
-    var tpl    = sessionStorage.getItem('cv_template');
-    var photo  = sessionStorage.getItem('cv_with_photo');
-    var withPh = photo !== 'false';
-
-    document.querySelectorAll('.gallery-hero, .filter-section, .tpl-section').forEach(function (el) {
-      el.style.display = 'none';
-    });
-
-    var s2 = document.getElementById('step2-screen');
-    if (!s2) return;
-    s2.style.display = 'flex';
-    s2.removeAttribute('aria-hidden');
-
-    var nameEl = document.getElementById('step2-template-name');
-    if (nameEl) nameEl.textContent = 'N°' + (tpl || '—') + ' · ' + (TPL_NAMES[tpl] || '—');
-
-    var badgeEl = document.getElementById('step2-photo-badge');
-    if (badgeEl) badgeEl.textContent = withPh ? '📷 Avec photo' : '🚫 Sans photo';
-  }
 
 })();
