@@ -503,6 +503,54 @@ const SSW = {
   htmlVersions:    []      // historique des versions HTML avant chaque modification
 };
 
+function swT(key, fallback) {
+  try {
+    return window.DokPeyiI18n?.t
+      ? window.DokPeyiI18n.t(key, window.DokPeyiI18n.getLanguage?.(), fallback)
+      : fallback;
+  } catch (_) {
+    return fallback;
+  }
+}
+
+function swGetCfg(serviceId) {
+  const base = SVC[serviceId];
+  if (!base) return null;
+
+  return {
+    ...base,
+    name: swT(`wiz_service_${serviceId}_name`, base.name),
+    choices: base.choices.map(choice => ({
+      ...choice,
+      label: swT(`wiz_choice_${serviceId}_${choice.id}_label`, choice.label),
+      desc: swT(`wiz_choice_${serviceId}_${choice.id}_desc`, choice.desc)
+    }))
+  };
+}
+
+function swSyncStep2Draft() {
+  document.querySelectorAll('#sw-fields [data-fid]').forEach(el => {
+    SSW.details[el.dataset.fid] = el.value.trim();
+  });
+}
+
+function swHandleLangChange() {
+  if (!SSW.svc) return;
+  _swApplyTheme(SSW.svc);
+
+  if (SSW.step === 1) {
+    swRenderChoices();
+    return;
+  }
+
+  if (SSW.step === 2) {
+    swSyncStep2Draft();
+    swBuildForm();
+  }
+}
+
+document.addEventListener('dokpeyi:langchange', swHandleLangChange);
+
 /* ── INIT ─────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', swInit);
 
@@ -553,7 +601,7 @@ function swInit() {
 
 function _swApplyTheme(s) {
   SSW.svc = s;
-  const cfg  = SVC[s];
+  const cfg  = swGetCfg(s) || SVC[s];
   const root = document.documentElement;
   root.style.setProperty('--sw-color', cfg.color);
   root.style.setProperty('--sw-light', cfg.light);
@@ -632,7 +680,9 @@ function swGoStep(n) {
 function swRenderChoices() {
   const grid = document.getElementById('sw-choices');
   if (!grid) return;
-  grid.innerHTML = SVC[SSW.svc].choices.map(c => `
+  const cfg = swGetCfg(SSW.svc);
+  if (!cfg) return;
+  grid.innerHTML = cfg.choices.map(c => `
     <div class="sw-choice" data-id="${c.id}" onclick="swPick('${c.id}',this)">
       <div class="sw-choice-icon">${c.icon}</div>
       <div class="sw-choice-body">
@@ -733,11 +783,11 @@ function swHandleImport(input) {
 
   if (!canAnalyze) {
     SSW.importFile = { name: file.name, type: file.type };
-    _swImportStatus('neutral', 'Document joint · remplissez les champs ci-dessous');
+    _swImportStatus('neutral', swT('wiz_import_manual', 'Document joint · remplissez les champs ci-dessous'));
     return;
   }
 
-  _swImportStatus('loading', 'Analyse du document en cours…');
+  _swImportStatus('loading', swT('wiz_import_loading', 'Analyse du document en cours…'));
 
   const reader = new FileReader();
   reader.onload = async e => {
@@ -756,14 +806,14 @@ function swHandleImport(input) {
         _swImportStatus(
           filled > 0 ? 'success' : 'neutral',
           filled > 0
-            ? 'Informations détectées — vérifiez et modifiez si nécessaire'
-            : 'Document joint · remplissez les champs ci-dessous'
+            ? swT('wiz_import_detected', 'Informations détectées — vérifiez et modifiez si nécessaire')
+            : swT('wiz_import_manual', 'Document joint · remplissez les champs ci-dessous')
         );
       } else {
-        _swImportStatus('neutral', 'Document joint · remplissez les champs ci-dessous');
+        _swImportStatus('neutral', swT('wiz_import_manual', 'Document joint · remplissez les champs ci-dessous'));
       }
     } catch(_) {
-      _swImportStatus('neutral', 'Document joint · remplissez les champs ci-dessous');
+      _swImportStatus('neutral', swT('wiz_import_manual', 'Document joint · remplissez les champs ci-dessous'));
     }
   };
   reader.readAsDataURL(file);
@@ -789,7 +839,7 @@ function swBuildForm() {
     impot:          'Votre demande',
     naturalisation: 'Votre dossier de naturalisation'
   };
-  document.getElementById('sw-q-title').textContent = titles[SSW.svc] || 'Informations';
+  document.getElementById('sw-q-title').textContent = swT(`wiz_form_title_${SSW.svc}`, titles[SSW.svc] || swT('wiz_info_title', 'Informations'));
 
   /* Bouton import — uniquement si le choix implique un document existant */
   const showImport = (IMPORT_CHOICES[SSW.svc] || []).includes(SSW.choice);
@@ -802,8 +852,8 @@ function swBuildForm() {
               onclick="document.getElementById('sw-import-input').click()">
         <span class="sw-import-icon">⬆️</span>
         <span>
-          <span class="sw-import-title">Gagnez du temps — importer votre document</span>
-          <span class="sw-import-hint">PDF ou image · max 3 Mo · facultatif</span>
+          <span class="sw-import-title">${escSw(swT('wiz_import_title', 'Gagnez du temps — importer votre document'))}</span>
+          <span class="sw-import-hint">${escSw(swT('wiz_import_hint', 'PDF ou image · max 3 Mo · facultatif'))}</span>
         </span>
       </button>
       <div class="sw-import-chosen" id="sw-import-chosen" style="display:none">
@@ -822,7 +872,7 @@ function swBuildForm() {
     } else if (q.type === 'select') {
       const opts = (q.options || []).map(o => `<option value="${escSw(o)}">${escSw(o)}</option>`).join('');
       field = `<select id="sw-f-${q.id}" data-fid="${q.id}" ${req}>
-                 <option value="">— Choisir —</option>${opts}
+                 <option value="">${escSw(swT('wiz_select_default', '— Choisir —'))}</option>${opts}
                </select>`;
     } else if (q.type === 'date') {
       field = `<input type="date" id="sw-f-${q.id}" data-fid="${q.id}" ${req}>`;
@@ -841,9 +891,9 @@ function swBuildForm() {
       ).join('');
       field = `<div class="sw-hybrid">
                  <select class="sw-hybrid-select" onchange="swHybridPick('${q.id}', this.value); this.selectedIndex=0;">
-                   <option value="">— Choisir dans la liste —</option>
+                   <option value="">${escSw(swT('wiz_select_list_default', '— Choisir dans la liste —'))}</option>
                    ${groups}
-                   <option value="__autre__">Autre (préciser ci-dessous)</option>
+                   <option value="__autre__">${escSw(swT('wiz_other_option', 'Autre (préciser ci-dessous)'))}</option>
                  </select>
                  <input type="text" class="sw-hybrid-input" id="sw-f-${q.id}" data-fid="${q.id}" ${req}
                         placeholder="${escSw(q.placeholder || '')}">
@@ -883,7 +933,7 @@ function swBuildForm() {
       field = `<div class="sw-tpl-wrap" id="sw-tpl-wrap">
                  <div class="sw-tpl-grid">${cards}</div>
                  <a href="/cv-catalogue" target="_blank" class="sw-tpl-catalogue-link">
-                   Voir le catalogue complet →
+                   ${escSw(swT('wiz_tpl_catalogue', 'Voir le catalogue complet →'))}
                  </a>
                  <input type="hidden" id="sw-f-${q.id}" data-fid="${q.id}" value="classique">
                </div>`;
@@ -917,8 +967,8 @@ function swBuildForm() {
       const filled = Object.values(SSW.importExtracted).filter(v => v?.trim()).length;
       _swImportStatus(
         filled > 0 ? 'success' : 'neutral',
-        filled > 0 ? 'Informations détectées — vérifiez et modifiez si nécessaire'
-                   : 'Document joint · remplissez les champs ci-dessous'
+        filled > 0 ? swT('wiz_import_detected', 'Informations détectées — vérifiez et modifiez si nécessaire')
+                   : swT('wiz_import_manual', 'Document joint · remplissez les champs ci-dessous')
       );
     }
   }
@@ -1033,7 +1083,7 @@ function _swRenderChips(id) {
   let selected;
   try { selected = JSON.parse(chips.dataset.selected || '[]'); } catch(_) { selected = []; }
   chips.innerHTML = selected.map(t =>
-    `<span class="sw-tag-chip" data-tag="${escSw(t)}">${escSw(t)}<button type="button" aria-label="Retirer">✕</button></span>`
+    `<span class="sw-tag-chip" data-tag="${escSw(t)}">${escSw(t)}<button type="button" aria-label="${escSw(swT('wiz_tag_remove_aria', 'Retirer'))}">✕</button></span>`
   ).join('');
   chips.querySelectorAll('.sw-tag-chip button').forEach(btn => {
     btn.addEventListener('click', () => {

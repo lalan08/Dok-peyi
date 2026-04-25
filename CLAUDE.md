@@ -28,7 +28,7 @@ Si CLAUDE.md n'est pas à jour → ne pas committer.
 - DB : Firebase Realtime Database EU-west1
 - Email : Resend API
 - Paiement : Stripe Checkout + webhook HMAC-SHA256 + Mobile Money (Momo) + PayPal manuel
-- Tests : `node --test` natif (pas de framework externe), 187 tests / 60 suites
+- Tests : `node --test` natif (pas de framework externe), 189 tests / 61 suites
 - CI : GitHub Actions (`ci.yml`, `tests.yml`, `secret-scan.yml`)
 - Zéro dépendance npm (`package.json` ne contient que `"type": "module"` et le script test)
 
@@ -122,8 +122,8 @@ workspace-* (projets, tâches, chat, IA, QC, agents, notes, dashboard)
 ### Autres fichiers clés
 | Fichier | Rôle |
 |---|---|
-| `service.js` | Wizard client — logique complète, constantes `CV_TEMPLATES`, `MODIFY_SECTIONS`, `CV_POSTES_GROUPS`, `CV_DIPLOMES_GROUPS`, `CV_COMPETENCES_GROUPS`, `LETTRE_ENTREPRISES_GROUPS`, `LETTRE_SECTEUR_TAGS`, `COURRIER_DESTINATAIRES_GROUPS`, `COURRIER_OBJET_TYPES`, `DOSSIER_CAF_PRESTATIONS`, `DOSSIER_CAF_SITUATION_PRO`, `DOSSIER_CAF_FOYER`, `DOSSIER_LOGEMENT_TYPES`, `DOSSIER_LOGEMENT_SITUATIONS`, `DOSSIER_AIDE_TYPES`, `DOSSIER_AIDE_ORGANISMES`, `SEJOUR_NATIONALITES`, `SEJOUR_SITUATION_FAMILIALE`, `SEJOUR_ENFANTS_CHARGE`, `SEJOUR_MOTIFS`, `SEJOUR_DUREES_SOUHAITEES`, `SEJOUR_CHANGEMENT_SITUATION`, `SEJOUR_DUREE_PRESENCE`, `SEJOUR_MOTIFS_REGULARISATION`, `SEJOUR_SUJETS_INFO`, `SSW` state, `swBuildPrompt`, `swGenerate`, panneau modif universel (`swModifyDoc`) — supporte `hybrid-select` et `tags` (avec variante `single: true` = radio-tags) |
-| `service.html` | Wizard client — structure HTML 3 étapes + prévisualisation iframe + panneau modif. Navbar premium alignée sur la landing (`.navbar`, `.nav-links`, CTA retour accueil, menu mobile). Le shell statique visible (nav, progression, chargement, paiement, cookies, notification SW) est branché sur `lang.js` via `data-i18n`. `service.css` est appelé avec suffixe de version (`?v=...`) pour casser les caches navigateurs lors des changements de header. `lang.css` et `lang.js` sont chargés pour permettre la traduction du shell sans toucher encore aux libellés dynamiques de `service.js`. |
+| `service.js` | Wizard client — logique complète, constantes `CV_TEMPLATES`, `MODIFY_SECTIONS`, `CV_POSTES_GROUPS`, `CV_DIPLOMES_GROUPS`, `CV_COMPETENCES_GROUPS`, `LETTRE_ENTREPRISES_GROUPS`, `LETTRE_SECTEUR_TAGS`, `COURRIER_DESTINATAIRES_GROUPS`, `COURRIER_OBJET_TYPES`, `DOSSIER_CAF_PRESTATIONS`, `DOSSIER_CAF_SITUATION_PRO`, `DOSSIER_CAF_FOYER`, `DOSSIER_LOGEMENT_TYPES`, `DOSSIER_LOGEMENT_SITUATIONS`, `DOSSIER_AIDE_TYPES`, `DOSSIER_AIDE_ORGANISMES`, `SEJOUR_NATIONALITES`, `SEJOUR_SITUATION_FAMILIALE`, `SEJOUR_ENFANTS_CHARGE`, `SEJOUR_MOTIFS`, `SEJOUR_DUREES_SOUHAITEES`, `SEJOUR_CHANGEMENT_SITUATION`, `SEJOUR_DUREE_PRESENCE`, `SEJOUR_MOTIFS_REGULARISATION`, `SEJOUR_SUJETS_INFO`, `SSW` state, `swBuildPrompt`, `swGenerate`, panneau modif universel (`swModifyDoc`) — supporte `hybrid-select` et `tags` (avec variante `single: true` = radio-tags). Le noyau dynamique du wizard principal est maintenant branché sur `window.DokPeyiI18n` pour les noms de services, cartes de choix, titres dynamiques de l'étape 2, messages d'import, placeholders de sélection et lien catalogue ; `service.js` écoute `dokpeyi:langchange` pour rerendre les étapes 1 et 2 sans rechargement. |
+| `service.html` | Wizard client — structure HTML 3 étapes + prévisualisation iframe + panneau modif. Navbar premium alignée sur la landing (`.navbar`, `.nav-links`, CTA retour accueil, menu mobile). Le shell statique visible (nav, progression, chargement, paiement, cookies, notification SW) est branché sur `lang.js` via `data-i18n`. `service.css` est appelé avec suffixe de version (`?v=...`) pour casser les caches navigateurs lors des changements de header. `lang.css` et `lang.js` sont chargés pour permettre la traduction du shell et des premiers rerenders dynamiques de `service.js`. |
 | `service.css` | Styles wizard + cartes templates + modif panel. Reprend aussi la grammaire du header premium de la landing pour les pages service. |
 | `index.html` | Landing premium — hero, cartes services, témoignages, footer, bannière cookies et toast de mise à jour Service Worker. Tous les textes visibles de la page sont branchés sur `lang.js` via `data-i18n`, sauf le toast SW qui appelle `window.DokPeyiI18n.t()` au moment de l'affichage. `lang.js` est appelé avec suffixe de version (`?v=20260425-i18n-cachefix`) pour casser les caches navigateurs. |
 | `a-propos.html` | Page institutionnelle — hero sombre, mission, 7 services + prix, ancrage Guyane (7 langues + organismes réels), engagements RGPD/qualité. Tous les textes visibles de la page sont branchés sur `lang.js`, hors email de contact et valeurs numériques. Nav/footer alignés sur index.html (liens `#services`, sans `#tarifs` ni `#demande`). CTAs → `/#services`. `lang.js` est appelé avec suffixe de version (`?v=20260425-i18n-cachefix`) pour casser les caches navigateurs. |
@@ -133,6 +133,7 @@ workspace-* (projets, tâches, chat, IA, QC, agents, notes, dashboard)
 | `cv-wizard.js` | Logique tunnel CV — un seul `DOMContentLoaded` fusionné (plus de `showStep2Screen()` hoistée ni de `return` anticipé). Détection step=2 via `URLSearchParams` dans le handler : masque `.gallery-hero, .filter-section, .tpl-section`, affiche `#step2-screen`, remplit `#step2-template-name` (format `NN — Nom`) et `#step2-photo-badge` depuis `sessionStorage`. `tplId` résolu depuis `params.get('template')` ou `sessionStorage.cv_template`. Calcul dynamique scale previews (`computeScales`, `computeModalScale`). Filtre catégorie, modale (open/close/Escape). `openModal()` reset photo toggle. Toggle photo par `onclick` inline sur `.photo-card`. sessionStorage : `cv_template`, `cv_with_photo`, `cv_mode`. |
 | `docs/superpowers/specs/2026-04-25-i18n-site-public-wizard-design.md` | Spec de design — chantier i18n centralisée du site public + wizard, hors admin et hors documents générés |
 | `tests/service-nav.test.js` | Test de régression statique — vérifie que `service.html` expose les liens de navigation publics (`/#comment`, `/#services`, `/a-propos`, retour accueil) et réutilise la structure premium du header landing (`.navbar`, `.nav-links`, `.nav-cta`). |
+| `tests/service-dynamic-i18n.test.js` | Test de régression i18n dynamique — vérifie que `service.js` est branché sur `DokPeyiI18n` et écoute `dokpeyi:langchange`, et que `lang.js` expose les clés de traduction du wizard principal pour services / choix / titres dynamiques. |
 | `tests/static-asset-cache.test.js` | Test de régression cache statique — vérifie que `service.html` versionne `service.css` et que `vercel.json` n'applique plus `immutable` aux CSS non hashés. |
 | `mentions-legales.html` | Mentions légales (éditeur, hébergeur Vercel, propriété intellectuelle, contact) |
 | `cgv.html` | Conditions Générales de Vente (tarifs détaillés, délais, remboursement, disclaimer IA, CIMADE Guyane) |
@@ -229,7 +230,7 @@ Pour les services utilisant `lib/pipeline.js` (via `/api/pipeline` action `gener
 ## Branches Git
 - **Branche principale** : `claude/create-website-AhMOy`
 - **Convention commits** : `<type>(<scope>): <message>` — types `feat`, `fix`, `chore`, `refactor`, `test`, `merge`, scopes courants : `cv`, `lettre`, `courrier`, `dossier`, `sejour`, `impot`, `naturalisation`, `prompt`, `impot`
-- **Tests obligatoires avant push** : `node --test tests/*.test.js` (187 / 187 OK)
+- **Tests obligatoires avant push** : `node --test tests/*.test.js` (189 / 189 OK)
 
 ## Déploiement Vercel
 - **Production Branch** : `claude/create-website-AhMOy` (auto-deploy sur chaque push)
@@ -246,7 +247,7 @@ Pour les services utilisant `lib/pipeline.js` (via `/api/pipeline` action `gener
 
 ## Tests
 - **Commande** : `npm test` (équivalent à `node --test tests/*.test.js`)
-- **Résultat actuel** : 187 tests / 60 suites / 187 pass / 0 fail
+- **Résultat actuel** : 189 tests / 61 suites / 189 pass / 0 fail
 - **Couverture** :
   - `api/admin-auth.js` — 11 tests
   - `api/ai-chat.js` — couvert
