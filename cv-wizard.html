@@ -1402,14 +1402,33 @@
           <div class="modal-tpl-price" id="modal-tpl-price"></div>
           <span class="modal-tpl-cat" id="modal-tpl-cat"></span>
           <p class="modal-tpl-desc" id="modal-tpl-desc"></p>
+          <div class="photo-toggle" id="photo-toggle">
+            <div class="photo-toggle-title">Voulez-vous une photo sur votre CV ?</div>
+            <div class="photo-toggle-btns">
+              <button class="photo-btn photo-btn--active" id="btn-with-photo">📷 Avec photo</button>
+              <button class="photo-btn" id="btn-without-photo">🚫 Sans photo</button>
+            </div>
+          </div>
           <div class="modal-actions">
-            <button class="btn-gold" id="btn-choose">Choisir ce template →</button>
+            <button class="btn-gold" id="btn-choose">Je veux ce CV →</button>
             <button class="btn-ghost-modal" id="btn-close-modal-2">Fermer</button>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+  <section id="step2-screen" style="display:none" aria-hidden="true">
+    <div class="container step2-container">
+      <div class="step2-badge">Étape 2 / 4 · CV Professionnel</div>
+      <h2 class="step2-title">Parfait ! Passons à la suite</h2>
+      <div class="step2-summary" id="step2-summary"></div>
+      <div class="step2-actions">
+        <button class="btn-gold btn-gold--disabled" id="btn-continue" aria-disabled="true" title="Bientôt disponible">Continuer →</button>
+        <a href="cv-wizard.html" class="btn-ghost-back">← Changer de template</a>
+      </div>
+    </div>
+  </section>
 
   <footer class="gallery-footer">
     <div class="container">

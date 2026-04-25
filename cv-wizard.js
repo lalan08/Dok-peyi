@@ -5,12 +5,14 @@
 (function () {
   'use strict';
 
-  /* ── Step=2 routing: redirect to wizard with chosen template ── */
+  /* ── Step=2 routing: show confirmation screen ── */
   var _params = new URLSearchParams(window.location.search);
   if (_params.get('step') === '2') {
-    var _tpl = _params.get('template') || sessionStorage.getItem('cv_template');
-    if (_tpl) sessionStorage.setItem('cv_template', _tpl);
-    window.location.replace('/service?s=cv');
+    if (document.readyState !== 'loading') {
+      showStep2Screen();
+    } else {
+      document.addEventListener('DOMContentLoaded', showStep2Screen);
+    }
     return;
   }
 
@@ -88,7 +90,8 @@
   var btnClose         = document.getElementById('btn-close-modal');
   var btnClose2        = document.getElementById('btn-close-modal-2');
 
-  var currentId = null;
+  var currentId      = null;
+  var withPhotoChoice = true;
 
   function openModal(card) {
     currentId = card.dataset.tplId;
@@ -105,6 +108,11 @@
         modalPreviewInner.innerHTML = srcInner.innerHTML;
       }
     }
+
+    // Reset photo toggle to "avec photo" on each open
+    withPhotoChoice = true;
+    if (btnWithPhoto)    btnWithPhoto.classList.add('photo-btn--active');
+    if (btnWithoutPhoto) btnWithoutPhoto.classList.remove('photo-btn--active');
 
     if (overlay) overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -142,14 +150,39 @@
     if (e.key === 'Escape') closeModal();
   });
 
-  /* ── Choose template → sessionStorage + redirect ── */
+  /* ── Choose template → sessionStorage + redirect to step=2 ── */
   if (btnChoose) {
     btnChoose.addEventListener('click', function () {
       if (!currentId) return;
       sessionStorage.setItem('cv_template', currentId);
-      window.location.href = 'cv-wizard.html?step=2&template=' + currentId;
+      sessionStorage.setItem('cv_with_photo', withPhotoChoice ? 'true' : 'false');
+      window.location.href = 'cv-wizard.html?step=2';
     });
   }
+
+  /* ── Photo toggle ── */
+  var btnWithPhoto    = document.getElementById('btn-with-photo');
+  var btnWithoutPhoto = document.getElementById('btn-without-photo');
+
+  function applyPhotoToggle(withPhoto) {
+    withPhotoChoice = withPhoto;
+    if (btnWithPhoto)    btnWithPhoto.classList.toggle('photo-btn--active', withPhoto);
+    if (btnWithoutPhoto) btnWithoutPhoto.classList.toggle('photo-btn--active', !withPhoto);
+    if (!modalPreviewInner) return;
+    modalPreviewInner.querySelectorAll('[style]').forEach(function (el) {
+      var s = el.getAttribute('style') || '';
+      var bigCircle   = s.includes('border-radius:50%') && /width:\s*[5-9][0-9]px/.test(s);
+      var clipPhoto   = s.includes('clip-path:polygon') && /width:\s*[5-9][0-9]px/.test(s);
+      var rectPhoto   = s.includes('background:#e0e0e0') && s.includes('overflow:hidden');
+      var squarePhoto = s.includes('border-radius:10px') && /width:\s*[5-9][0-9]px/.test(s);
+      if (bigCircle || clipPhoto || rectPhoto || squarePhoto) {
+        el.style.display = withPhoto ? '' : 'none';
+      }
+    });
+  }
+
+  if (btnWithPhoto)    btnWithPhoto.addEventListener('click',    function () { applyPhotoToggle(true);  });
+  if (btnWithoutPhoto) btnWithoutPhoto.addEventListener('click', function () { applyPhotoToggle(false); });
 
   /* ── Init & resize ── */
   window.addEventListener('DOMContentLoaded', function () {
@@ -164,6 +197,32 @@
   // Run immediately if DOM already ready
   if (document.readyState !== 'loading') {
     computeScales();
+  }
+
+  /* ── Step-2 confirmation screen ── */
+  function showStep2Screen() {
+    var tpl    = sessionStorage.getItem('cv_template');
+    var photo  = sessionStorage.getItem('cv_with_photo');
+    var withPh = photo !== 'false';
+
+    // Hide gallery
+    document.querySelectorAll('.gallery-hero, .filter-section, .tpl-section').forEach(function (el) {
+      el.style.display = 'none';
+    });
+
+    // Show step-2 screen
+    var s2 = document.getElementById('step2-screen');
+    if (!s2) return;
+    s2.style.display = '';
+    s2.removeAttribute('aria-hidden');
+
+    // Fill summary
+    var summaryEl = document.getElementById('step2-summary');
+    if (summaryEl) {
+      summaryEl.innerHTML =
+        '<div class="step2-info"><strong>Template</strong> · N°' + (tpl || '—') + '</div>' +
+        '<div class="step2-info"><strong>Photo</strong> · ' + (withPh ? '📷 Avec photo' : '🚫 Sans photo') + '</div>';
+    }
   }
 
 })();
