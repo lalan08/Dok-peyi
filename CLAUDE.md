@@ -28,7 +28,7 @@ Si CLAUDE.md n'est pas à jour → ne pas committer.
 - DB : Firebase Realtime Database EU-west1
 - Email : Resend API
 - Paiement : Stripe Checkout + webhook HMAC-SHA256 + Mobile Money (Momo) + PayPal manuel
-- Tests : `node --test` natif (pas de framework externe), 189 tests / 61 suites
+- Tests : `node --test` natif (pas de framework externe), 192 tests / 62 suites
 - CI : GitHub Actions (`ci.yml`, `tests.yml`, `secret-scan.yml`)
 - Zéro dépendance npm (`package.json` ne contient que `"type": "module"` et le script test)
 
@@ -128,12 +128,13 @@ workspace-* (projets, tâches, chat, IA, QC, agents, notes, dashboard)
 | `index.html` | Landing premium — hero, cartes services, témoignages, footer, bannière cookies et toast de mise à jour Service Worker. Tous les textes visibles de la page sont branchés sur `lang.js` via `data-i18n`, sauf le toast SW qui appelle `window.DokPeyiI18n.t()` au moment de l'affichage. `lang.js` est appelé avec suffixe de version (`?v=20260425-i18n-cachefix`) pour casser les caches navigateurs. |
 | `a-propos.html` | Page institutionnelle — hero sombre, mission, 7 services + prix, ancrage Guyane (7 langues + organismes réels), engagements RGPD/qualité. Tous les textes visibles de la page sont branchés sur `lang.js`, hors email de contact et valeurs numériques. Nav/footer alignés sur index.html (liens `#services`, sans `#tarifs` ni `#demande`). CTAs → `/#services`. `lang.js` est appelé avec suffixe de version (`?v=20260425-i18n-cachefix`) pour casser les caches navigateurs. |
 | `cv-catalogue.html` | Page standalone catalogue des 6 templates CV (lien `?template=XXX` vers wizard) |
-| `cv-wizard.html` | Tunnel CV Page 1 — galerie de 12 templates avec filtres par catégorie, miniatures inline HTML/CSS scalées (CV Yonel GOVINDIN, masculin, Assistant Administratif Polyvalent, 5 ans exp., 3 postes dont CNAF, 5 compétences, 4 langues dont Portugais), modale plein écran + module toggle photo BEM. Titre h1 « Choisissez le CV qui vous ressemble », sous-titre « Cliquez sur un modèle pour l'agrandir ». CTA modale « Je veux ce CV → ». Écran step=2 intégré (id `step2-screen`) avec : confirmation template (icône animée, nom, badge photo), séparateur doré, 3 cards mode (scratch/improve/target via `onclick` inline — `this.dataset.mode` → `sessionStorage.cv_mode`), `#btn-step2-continue` (désactivé par défaut, activé au choix de mode, redirige → `/cv-wizard.html?step=3`), `#btn-step2-back` (→ `/cv-wizard.html`). Chaque zone photo template porte la classe `cv-photo-zone`. Lien CSS versionné (`?v=20260425-photo`). Point d'entrée depuis `index.html` CTA CV. |
+| `cv-wizard.html` | Tunnel CV Page 1 — galerie de 12 templates avec filtres par catégorie, miniatures inline HTML/CSS scalées (CV Yonel GOVINDIN, masculin, Assistant Administratif Polyvalent, 5 ans exp., 3 postes dont CNAF, 5 compétences, 4 langues dont Portugais), modale plein écran + module toggle photo BEM. Le shell visible est maintenant branché sur `lang.js` (`lang.css` + `lang.js?v=20260425-cvw-i18n`) : nav, hero, filtres, modale, étape 2, footer. Le bouton de choix de langue est injecté automatiquement dans la navbar desktop/mobile. Écran step=2 intégré (id `step2-screen`) avec : confirmation template (icône animée, nom, badge photo), séparateur doré, 3 cards mode (scratch/improve/target via `onclick` inline — `this.dataset.mode` → `sessionStorage.cv_mode`), `#btn-step2-continue` (désactivé par défaut, activé au choix de mode, redirige → `/cv-wizard.html?step=3`), `#btn-step2-back` (→ `/cv-wizard.html`). Chaque zone photo template porte la classe `cv-photo-zone`. Lien CSS versionné (`?v=20260425-photo`). Point d'entrée depuis `index.html` CTA CV. |
 | `cv-wizard.css` | Styles dédiés au tunnel CV — navbar dark premium, filtre catégorie, grille 3-col responsive, cards templates, badges prix/populaire, modale overlay, module `.photo-selector` BEM, écran step=2 (`.step2-inner`, `.step2-confirm`, `.step2-check-icon` animation `checkPop`, `.step2-divider` avec `::before/::after`, `.step2-modes` grid 3-col, `.mode-card` + `.mode-card.active`, `#btn-step2-continue` + `.enabled`, `#btn-step2-back`), animations. |
-| `cv-wizard.js` | Logique tunnel CV — un seul `DOMContentLoaded` fusionné (plus de `showStep2Screen()` hoistée ni de `return` anticipé). Détection step=2 via `URLSearchParams` dans le handler : masque `.gallery-hero, .filter-section, .tpl-section`, affiche `#step2-screen`, remplit `#step2-template-name` (format `NN — Nom`) et `#step2-photo-badge` depuis `sessionStorage`. `tplId` résolu depuis `params.get('template')` ou `sessionStorage.cv_template`. Calcul dynamique scale previews (`computeScales`, `computeModalScale`). Filtre catégorie, modale (open/close/Escape). `openModal()` reset photo toggle. Toggle photo par `onclick` inline sur `.photo-card`. sessionStorage : `cv_template`, `cv_with_photo`, `cv_mode`. |
+| `cv-wizard.js` | Logique tunnel CV — un seul `DOMContentLoaded` fusionné (plus de `showStep2Screen()` hoistée ni de `return` anticipé). Détection step=2 via `URLSearchParams` dans le handler : masque `.gallery-hero, .filter-section, .tpl-section`, affiche `#step2-screen`, remplit `#step2-template-name` (format `NN — Nom`) et `#step2-photo-badge` depuis `sessionStorage`. `tplId` résolu depuis `params.get('template')` ou `sessionStorage.cv_template`. Calcul dynamique scale previews (`computeScales`, `computeModalScale`). Filtre catégorie, modale (open/close/Escape). `openModal()` reset photo toggle. Toggle photo par `onclick` inline sur `.photo-card`. sessionStorage : `cv_template`, `cv_with_photo`, `cv_mode`. Le tunnel CV est maintenant branché sur `window.DokPeyiI18n` via une table `CVW_TEMPLATES` (`cvw_tpl_01_*` → `cvw_tpl_12_*`) ; `cv-wizard.js` écoute `dokpeyi:langchange` pour rerendre les noms, catégories et descriptions des 12 templates, la modale ouverte et l'écran `step=2` sans rechargement. |
 | `docs/superpowers/specs/2026-04-25-i18n-site-public-wizard-design.md` | Spec de design — chantier i18n centralisée du site public + wizard, hors admin et hors documents générés |
 | `tests/service-nav.test.js` | Test de régression statique — vérifie que `service.html` expose les liens de navigation publics (`/#comment`, `/#services`, `/a-propos`, retour accueil) et réutilise la structure premium du header landing (`.navbar`, `.nav-links`, `.nav-cta`). |
 | `tests/service-dynamic-i18n.test.js` | Test de régression i18n dynamique — vérifie que `service.js` est branché sur `DokPeyiI18n` et écoute `dokpeyi:langchange`, et que `lang.js` expose les clés de traduction du wizard principal pour services / choix / titres dynamiques. |
+| `tests/cv-wizard-i18n.test.js` | Test de régression i18n tunnel CV — vérifie que `cv-wizard.html` charge `lang.css` + `lang.js`, expose les hooks de traduction de la nav publique, que `cv-wizard.js` est branché sur `DokPeyiI18n` / `dokpeyi:langchange`, et que `lang.js` expose les clés `cvw_*` du tunnel CV. |
 | `tests/static-asset-cache.test.js` | Test de régression cache statique — vérifie que `service.html` versionne `service.css` et que `vercel.json` n'applique plus `immutable` aux CSS non hashés. |
 | `mentions-legales.html` | Mentions légales (éditeur, hébergeur Vercel, propriété intellectuelle, contact) |
 | `cgv.html` | Conditions Générales de Vente (tarifs détaillés, délais, remboursement, disclaimer IA, CIMADE Guyane) |
@@ -230,7 +231,7 @@ Pour les services utilisant `lib/pipeline.js` (via `/api/pipeline` action `gener
 ## Branches Git
 - **Branche principale** : `claude/create-website-AhMOy`
 - **Convention commits** : `<type>(<scope>): <message>` — types `feat`, `fix`, `chore`, `refactor`, `test`, `merge`, scopes courants : `cv`, `lettre`, `courrier`, `dossier`, `sejour`, `impot`, `naturalisation`, `prompt`, `impot`
-- **Tests obligatoires avant push** : `node --test tests/*.test.js` (189 / 189 OK)
+- **Tests obligatoires avant push** : `node --test tests/*.test.js` (192 / 192 OK)
 
 ## Déploiement Vercel
 - **Production Branch** : `claude/create-website-AhMOy` (auto-deploy sur chaque push)
@@ -247,7 +248,7 @@ Pour les services utilisant `lib/pipeline.js` (via `/api/pipeline` action `gener
 
 ## Tests
 - **Commande** : `npm test` (équivalent à `node --test tests/*.test.js`)
-- **Résultat actuel** : 189 tests / 61 suites / 189 pass / 0 fail
+- **Résultat actuel** : 192 tests / 62 suites / 192 pass / 0 fail
 - **Couverture** :
   - `api/admin-auth.js` — 11 tests
   - `api/ai-chat.js` — couvert
@@ -261,13 +262,14 @@ Pour les services utilisant `lib/pipeline.js` (via `/api/pipeline` action `gener
   - `lib/documents.js` — 7 tests
   - `lib/review.js` — 5 tests
   - `service.html` — 2 tests de régression sur la navigation publique et la structure premium du header
+  - `cv-wizard.html` + `cv-wizard.js` + `lang.js` — 3 tests de régression i18n sur le tunnel CV
   - `vercel.json` + `service.html` — 2 tests de régression sur le cache des assets CSS statiques
 - **Non couvert** :
   - Wizard client (`service.js`) — aucun test unitaire sur la logique interactive
   - Flows E2E (navigation complète service → paiement → livraison)
   - Pages admin (`admin/*.js`)
   - `api/extract-doc.js`
-  - Templates CV visuels (rendu `service.js`)
+  - Templates CV visuels (rendu `service.js` / `cv-wizard.html`)
 
 ## Conventions de code
 - Pas de framework, vanilla JS/HTML/CSS uniquement
@@ -286,7 +288,7 @@ Pour les services utilisant `lib/pipeline.js` (via `/api/pipeline` action `gener
 - **Phase 1 — i18n expérience client** : design validé — cible = tout le site public + wizard, uniquement textes visibles à l'écran, hors admin et hors documents générés (spec : `docs/superpowers/specs/2026-04-25-i18n-site-public-wizard-design.md`)
 - **Phase 1 — Prompts production** : ✅ terminé (prompts enrichis par service et sous-type, contexte Guyane, 7 services fonctionnels)
 - **Phase 2 — Pipeline multi-agents** : ✅ implémenté (`api/orchestrate.js`) — Emma → Viktor → Sofia → Léa orchestré serveur. Mémoire partagée entre agents : à venir (Phase 2b)
-- **Phase 3 — Premium et croissance** : en cours — Tunnel CV Page 1 (galerie 12 templates) ✅ livré. Pages 2–4 (infos, paiement, confirmation) : à venir. Fondation i18n JS+DOM centralisée posée dans `lang.js`. `index.html` est désormais intégralement branchée pour les textes visibles ; reste à brancher les autres pages publiques puis le wizard.
+- **Phase 3 — Premium et croissance** : en cours — Tunnel CV Page 1 (galerie 12 templates) ✅ livré. Le shell visible du tunnel CV est maintenant branché sur l'i18n centralisée (`lang.js`) avec sélecteur de langue dans la nav et rerender dynamique des cartes / modale / étape 2. Pages 2–4 (infos, paiement, confirmation) : à venir. Fondation i18n JS+DOM centralisée posée dans `lang.js`. `index.html`, `a-propos.html`, `service.html` (shell) et `cv-wizard.html` (shell + tunnel dynamique) sont maintenant branchés pour les textes visibles ; reste à couvrir le reste de `service.js` et les autres pages publiques.
 
 ## Équipe
 - **Marvin** : produit, IA, prompts, wizard, SEO, contenu

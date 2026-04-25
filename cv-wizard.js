@@ -7,6 +7,31 @@
 
   /* ── Scale preview wrappers to fill their container ── */
   const INNER_WIDTH = 680; // px — fixed width of template inner div
+  const CVW_TEMPLATES = {
+    '01': { nameKey: 'cvw_tpl_01_name', descKey: 'cvw_tpl_01_desc', catKey: 'cvw_filter_classique', popular: true },
+    '02': { nameKey: 'cvw_tpl_02_name', descKey: 'cvw_tpl_02_desc', catKey: 'cvw_filter_moderne' },
+    '03': { nameKey: 'cvw_tpl_03_name', descKey: 'cvw_tpl_03_desc', catKey: 'cvw_filter_moderne' },
+    '04': { nameKey: 'cvw_tpl_04_name', descKey: 'cvw_tpl_04_desc', catKey: 'cvw_filter_classique', popular: true },
+    '05': { nameKey: 'cvw_tpl_05_name', descKey: 'cvw_tpl_05_desc', catKey: 'cvw_filter_premium' },
+    '06': { nameKey: 'cvw_tpl_06_name', descKey: 'cvw_tpl_06_desc', catKey: 'cvw_filter_premium' },
+    '07': { nameKey: 'cvw_tpl_07_name', descKey: 'cvw_tpl_07_desc', catKey: 'cvw_filter_moderne' },
+    '08': { nameKey: 'cvw_tpl_08_name', descKey: 'cvw_tpl_08_desc', catKey: 'cvw_filter_classique' },
+    '09': { nameKey: 'cvw_tpl_09_name', descKey: 'cvw_tpl_09_desc', catKey: 'cvw_filter_premium' },
+    '10': { nameKey: 'cvw_tpl_10_name', descKey: 'cvw_tpl_10_desc', catKey: 'cvw_filter_moderne', popular: true },
+    '11': { nameKey: 'cvw_tpl_11_name', descKey: 'cvw_tpl_11_desc', catKey: 'cvw_filter_moderne' },
+    '12': { nameKey: 'cvw_tpl_12_name', descKey: 'cvw_tpl_12_desc', catKey: 'cvw_filter_futuriste' }
+  };
+
+  function cvwT(key, fallback) {
+    if (window.DokPeyiI18n && typeof window.DokPeyiI18n.t === 'function') {
+      return window.DokPeyiI18n.t(key, undefined, fallback || '');
+    }
+    return fallback || key;
+  }
+
+  function getTemplateMeta(id) {
+    return CVW_TEMPLATES[id] || CVW_TEMPLATES['01'];
+  }
 
   function computeScales() {
     document.querySelectorAll('.tpl-preview-wrap').forEach(function (wrap) {
@@ -81,13 +106,39 @@
 
   var currentId = null;
 
-  function openModal(card) {
-    currentId = card.dataset.tplId;
+  function hydrateCard(card) {
+    if (!card) return;
+
+    var tplId = card.dataset.tplId;
+    var meta = getTemplateMeta(tplId);
+    var translatedName = cvwT(meta.nameKey, card.dataset.tplName || '');
+    var translatedDesc = cvwT(meta.descKey, card.dataset.tplDesc || '');
+    var translatedCat = cvwT(meta.catKey, card.dataset.tplCat || '');
+    var popularBadge = card.querySelector('.tpl-badge-popular');
+    var nameEl = card.querySelector('.tpl-card-name');
+    var catEl = card.querySelector('.tpl-card-cat');
+
+    card.dataset.tplName = translatedName;
+    card.dataset.tplDesc = translatedDesc;
+    card.dataset.tplCat = translatedCat;
+
+    if (nameEl) nameEl.textContent = translatedName;
+    if (catEl) catEl.textContent = translatedCat;
+    if (popularBadge) popularBadge.textContent = cvwT('badge_popular', 'Populaire');
+  }
+
+  function hydrateModalMeta(card) {
+    if (!card) return;
     if (modalNum)   modalNum.textContent   = card.dataset.tplNum   || card.dataset.tplId;
     if (modalName)  modalName.textContent  = card.dataset.tplName  || '';
     if (modalPrice) modalPrice.textContent = card.dataset.tplPrice || '';
     if (modalCat)   modalCat.textContent   = card.dataset.tplCat   || '';
     if (modalDesc)  modalDesc.textContent  = card.dataset.tplDesc  || '';
+  }
+
+  function openModal(card) {
+    currentId = card.dataset.tplId;
+    hydrateModalMeta(card);
 
     // Clone inner preview content into modal
     if (modalPreviewInner) {
@@ -115,6 +166,45 @@
     if (overlay) overlay.classList.remove('open');
     document.body.style.overflow = '';
     currentId = null;
+  }
+
+  function refreshOpenModal() {
+    if (!currentId || !overlay || !overlay.classList.contains('open')) return;
+    var card = document.querySelector('.tpl-card[data-tpl-id="' + currentId + '"]');
+    if (!card) return;
+    hydrateModalMeta(card);
+  }
+
+  function refreshStep2Screen() {
+    var step2 = document.getElementById('step2-screen');
+    if (!step2 || step2.style.display !== 'flex') return;
+
+    var params = new URLSearchParams(window.location.search);
+    var tplId = params.get('template') || sessionStorage.getItem('cv_template') || '01';
+    var meta = getTemplateMeta(tplId);
+    var tplName = cvwT(meta.nameKey, 'Template');
+    var nameEl = document.getElementById('step2-template-name');
+    var badgeEl = document.getElementById('step2-photo-badge');
+    var withPhoto = sessionStorage.getItem('cv_with_photo');
+
+    if (nameEl) {
+      nameEl.textContent = tplId.padStart(2, '0') + ' — ' + tplName;
+    }
+
+    if (badgeEl) {
+      badgeEl.textContent = withPhoto === 'false'
+        ? cvwT('cvw_photo_without_badge', '🚫 Sans photo')
+        : cvwT('cvw_photo_with_badge', '📷 Avec photo');
+    }
+  }
+
+  function applyCvWizardTranslations() {
+    tplCards.forEach(function (card) {
+      hydrateCard(card);
+    });
+
+    refreshOpenModal();
+    refreshStep2Screen();
   }
 
   // Open on card click
@@ -153,46 +243,28 @@
   document.addEventListener('DOMContentLoaded', function () {
     var params = new URLSearchParams(window.location.search);
     var step = params.get('step');
-    console.log('[wizard] step detected:', step);
 
     computeScales();
     computeModalScale();
+    applyCvWizardTranslations();
 
     if (step === '2') {
-      var TPL_NAMES = {
-        '01': 'Épuré',            '02': 'Sidebar Sombre',       '03': 'Brun Premium',
-        '04': 'Navy Corporate',   '05': 'Full Dark',             '06': 'Dark Green',
-        '07': 'Impact Rouge',     '08': 'Minimaliste Timeline',  '09': 'Géométrique Or',
-        '10': 'Wave Navy',        '11': 'Yellow Dark',           '12': 'Cyber Neon'
-      };
-
       // Hide gallery sections
       document.querySelectorAll('.gallery-hero, .filter-section, .tpl-section').forEach(function (el) {
         el.style.display = 'none';
       });
 
       var s2 = document.getElementById('step2-screen');
-      console.log('[wizard] step2-screen element:', s2);
       if (!s2) return;
 
       s2.style.display = 'flex';
       s2.removeAttribute('aria-hidden');
-
-      var tplId = params.get('template') || sessionStorage.getItem('cv_template') || '01';
-      console.log('[wizard] tplId:', tplId);
-
-      var nameEl = document.getElementById('step2-template-name');
-      if (nameEl) {
-        nameEl.textContent = (tplId ? tplId.padStart(2, '0') + ' — ' : '') +
-          (TPL_NAMES[tplId] || 'Template sélectionné');
-      }
-
-      var withPhoto = sessionStorage.getItem('cv_with_photo');
-      var badgeEl = document.getElementById('step2-photo-badge');
-      if (badgeEl) {
-        badgeEl.textContent = withPhoto === 'false' ? '🚫 Sans photo' : '📷 Avec photo';
-      }
+      refreshStep2Screen();
     }
+  });
+
+  document.addEventListener('dokpeyi:langchange', function () {
+    applyCvWizardTranslations();
   });
 
   /* ── Resize ── */

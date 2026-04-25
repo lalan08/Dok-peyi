@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/lang.css">
   <link rel="stylesheet" href="/cv-wizard.css?v=20260425-photo">
 </head>
 <body>
@@ -17,44 +18,44 @@
     <div class="container nav-inner">
       <a href="/" class="nav-logo">Dok'<span>péyi</span></a>
       <ul class="nav-links">
-        <li><a href="/#comment">Comment ça marche</a></li>
-        <li><a href="/#services">Services</a></li>
-        <li><a href="/a-propos">À propos</a></li>
-        <li><a href="/#services" class="nav-cta">Faire ma demande</a></li>
+        <li><a href="/#comment" data-i18n="nav_comment">Comment ça marche</a></li>
+        <li><a href="/#services" data-i18n="nav_services">Services</a></li>
+        <li><a href="/a-propos" data-i18n="nav_about">À propos</a></li>
+        <li><a href="/#services" class="nav-cta" data-i18n="nav_cta">Faire ma demande</a></li>
       </ul>
-      <button class="hamburger" id="hamburger" aria-label="Menu">
+      <button class="hamburger" id="hamburger" aria-label="Menu" data-i18n-aria-label="cvw_nav_menu_aria">
         <span></span><span></span><span></span>
       </button>
     </div>
     <div class="mobile-menu" id="mobileMenu">
-      <a href="/#comment" class="mobile-link">Comment ça marche</a>
-      <a href="/#services" class="mobile-link">Services</a>
-      <a href="/a-propos" class="mobile-link">À propos</a>
-      <a href="/" class="mobile-link">Retour à l'accueil</a>
-      <a href="/#services" class="mobile-link mobile-cta">Faire ma demande</a>
+      <a href="/#comment" class="mobile-link" data-i18n="nav_comment">Comment ça marche</a>
+      <a href="/#services" class="mobile-link" data-i18n="nav_services">Services</a>
+      <a href="/a-propos" class="mobile-link" data-i18n="nav_about">À propos</a>
+      <a href="/" class="mobile-link" data-i18n="wiz_nav_home">Retour à l'accueil</a>
+      <a href="/#services" class="mobile-link mobile-cta" data-i18n="nav_cta">Faire ma demande</a>
     </div>
   </nav>
 
   <section class="gallery-hero">
     <div class="container">
       <div class="gallery-hero-badge">
-        <span class="gallery-hero-step">Étape 1 / 4</span>
-        CV Professionnel
+        <span class="gallery-hero-step" data-i18n="cvw_hero_step">Étape 1 / 4</span>
+        <span data-i18n="cvw_hero_service">CV Professionnel</span>
       </div>
-      <h1>Choisissez le CV qui <span class="grad">vous ressemble</span></h1>
-      <p>Cliquez sur un modèle pour l'agrandir</p>
-      <p class="gallery-hero-note">Cliquez sur un template pour l'agrandir · Tous inclus dans votre commande</p>
+      <h1 data-i18n-html="cvw_hero_title_html">Choisissez le CV qui <span class="grad">vous ressemble</span></h1>
+      <p data-i18n="cvw_hero_sub">Cliquez sur un modèle pour l'agrandir</p>
+      <p class="gallery-hero-note" data-i18n="cvw_hero_note">Cliquez sur un template pour l'agrandir · Tous inclus dans votre commande</p>
     </div>
   </section>
 
   <section class="filter-section">
     <div class="container">
       <div class="filter-bar">
-        <button class="filter-btn active" data-filter="all">Tous</button>
-        <button class="filter-btn" data-filter="classique">Classique</button>
-        <button class="filter-btn" data-filter="moderne">Moderne</button>
-        <button class="filter-btn" data-filter="premium">Premium</button>
-        <button class="filter-btn" data-filter="futuriste">Futuriste</button>
+        <button class="filter-btn active" data-filter="all" data-i18n="cvw_filter_all">Tous</button>
+        <button class="filter-btn" data-filter="classique" data-i18n="cvw_filter_classique">Classique</button>
+        <button class="filter-btn" data-filter="moderne" data-i18n="cvw_filter_moderne">Moderne</button>
+        <button class="filter-btn" data-filter="premium" data-i18n="cvw_filter_premium">Premium</button>
+        <button class="filter-btn" data-filter="futuriste" data-i18n="cvw_filter_futuriste">Futuriste</button>
       </div>
     </div>
   </section>
@@ -1389,9 +1390,9 @@
     </div>
   </section>
 
-  <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-label="Aperçu du template">
+  <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-label="Aperçu du template" data-i18n-aria-label="cvw_modal_aria">
     <div class="modal-box">
-      <button class="modal-close" id="btn-close-modal" aria-label="Fermer">✕</button>
+      <button class="modal-close" id="btn-close-modal" aria-label="Fermer" data-i18n-aria-label="cvw_close">✕</button>
       <div class="modal-layout">
         <div class="modal-preview-pane" id="modal-preview-pane">
           <div class="modal-preview-inner" id="modal-preview-inner"></div>
@@ -1403,25 +1404,25 @@
           <span class="modal-tpl-cat" id="modal-tpl-cat"></span>
           <p class="modal-tpl-desc" id="modal-tpl-desc"></p>
           <div class="photo-selector">
-            <span class="photo-selector__label">Photo sur votre CV ?</span>
+            <span class="photo-selector__label" data-i18n="cvw_photo_label">Photo sur votre CV ?</span>
             <div class="photo-selector__cards">
               <div class="photo-card active" data-value="true"
                    onclick="document.querySelectorAll('.photo-card').forEach(function(c){c.classList.remove('active')});this.classList.add('active');sessionStorage.setItem('cv_with_photo','true');var z=document.querySelector('.cv-photo-zone');if(z){z.style.transition='opacity 0.3s ease, max-height 0.4s ease';z.style.opacity='1';z.style.maxHeight='300px';}">
                 <div class="photo-card__check">✓</div>
                 <div class="photo-card__icon">👤</div>
-                <div class="photo-card__title">Avec photo</div>
+                <div class="photo-card__title" data-i18n="cvw_photo_with">Avec photo</div>
               </div>
               <div class="photo-card" data-value="false"
                    onclick="document.querySelectorAll('.photo-card').forEach(function(c){c.classList.remove('active')});this.classList.add('active');sessionStorage.setItem('cv_with_photo','false');var z=document.querySelector('.cv-photo-zone');if(z){z.style.transition='opacity 0.3s ease, max-height 0.4s ease';z.style.opacity='0';z.style.maxHeight='0';z.style.overflow='hidden';z.style.margin='0';}">
                 <div class="photo-card__check">✓</div>
                 <div class="photo-card__icon">✦</div>
-                <div class="photo-card__title">Sans photo</div>
+                <div class="photo-card__title" data-i18n="cvw_photo_without">Sans photo</div>
               </div>
             </div>
           </div>
           <div class="modal-actions">
-            <button class="btn-gold" id="btn-choose">Je veux ce CV →</button>
-            <button class="btn-ghost-modal" id="btn-close-modal-2">Fermer</button>
+            <button class="btn-gold" id="btn-choose" data-i18n="cvw_choose_cta">Je veux ce CV →</button>
+            <button class="btn-ghost-modal" id="btn-close-modal-2" data-i18n="cvw_close">Fermer</button>
           </div>
         </div>
       </div>
@@ -1432,45 +1433,46 @@
     <div class="step2-inner">
       <div class="step2-confirm">
         <div class="step2-check-icon">✓</div>
-        <div class="step2-confirm-title">Template sélectionné</div>
+        <div class="step2-confirm-title" data-i18n="cvw_step2_selected">Template sélectionné</div>
         <div class="step2-template-name" id="step2-template-name">—</div>
         <div class="step2-photo-badge" id="step2-photo-badge"></div>
       </div>
-      <div class="step2-divider">Comment souhaitez-vous procéder ?</div>
+      <div class="step2-divider" data-i18n="cvw_step2_divider">Comment souhaitez-vous procéder ?</div>
       <div class="step2-modes">
         <div class="mode-card" data-mode="scratch"
              onclick="document.querySelectorAll('.mode-card').forEach(function(c){c.classList.remove('active')});this.classList.add('active');sessionStorage.setItem('cv_mode',this.dataset.mode);var b=document.getElementById('btn-step2-continue');b.classList.add('enabled');b.removeAttribute('aria-disabled');">
           <span class="mode-card__icon">✦</span>
-          <span class="mode-card__title">Créer de A à Z</span>
-          <span class="mode-card__desc">Je n'ai pas encore de CV</span>
+          <span class="mode-card__title" data-i18n="cvw_step2_scratch_title">Créer de A à Z</span>
+          <span class="mode-card__desc" data-i18n="cvw_step2_scratch_desc">Je n'ai pas encore de CV</span>
         </div>
         <div class="mode-card" data-mode="improve"
              onclick="document.querySelectorAll('.mode-card').forEach(function(c){c.classList.remove('active')});this.classList.add('active');sessionStorage.setItem('cv_mode',this.dataset.mode);var b=document.getElementById('btn-step2-continue');b.classList.add('enabled');b.removeAttribute('aria-disabled');">
           <span class="mode-card__icon">↑</span>
-          <span class="mode-card__title">Améliorer l'existant</span>
-          <span class="mode-card__desc">J'ai déjà un CV à moderniser</span>
-          <span class="mode-card__badge">PDF accepté</span>
+          <span class="mode-card__title" data-i18n="cvw_step2_improve_title">Améliorer l'existant</span>
+          <span class="mode-card__desc" data-i18n="cvw_step2_improve_desc">J'ai déjà un CV à moderniser</span>
+          <span class="mode-card__badge" data-i18n="cvw_step2_improve_badge">PDF accepté</span>
         </div>
         <div class="mode-card" data-mode="target"
              onclick="document.querySelectorAll('.mode-card').forEach(function(c){c.classList.remove('active')});this.classList.add('active');sessionStorage.setItem('cv_mode',this.dataset.mode);var b=document.getElementById('btn-step2-continue');b.classList.add('enabled');b.removeAttribute('aria-disabled');">
           <span class="mode-card__icon">◎</span>
-          <span class="mode-card__title">Adapter à une offre</span>
-          <span class="mode-card__desc">Je cible un poste précis</span>
+          <span class="mode-card__title" data-i18n="cvw_step2_target_title">Adapter à une offre</span>
+          <span class="mode-card__desc" data-i18n="cvw_step2_target_desc">Je cible un poste précis</span>
         </div>
       </div>
       <button id="btn-step2-continue" aria-disabled="true"
-              onclick="var mode=sessionStorage.getItem('cv_mode');if(!mode)return;window.location.href='/cv-wizard.html?step=3';">Continuer →</button>
+              onclick="var mode=sessionStorage.getItem('cv_mode');if(!mode)return;window.location.href='/cv-wizard.html?step=3';" data-i18n="cvw_step2_continue">Continuer →</button>
       <button id="btn-step2-back"
-              onclick="window.location.href='/cv-wizard.html'">← Changer de template</button>
+              onclick="window.location.href='/cv-wizard.html'" data-i18n="cvw_step2_back">← Changer de template</button>
     </div>
   </section>
 
   <footer class="gallery-footer">
     <div class="container">
-      <p>© 2026 <a href="/">Dok'péyi</a> · <a href="/mentions-legales">Mentions légales</a> · <a href="/cgv">CGV</a></p>
+      <p data-i18n-html="cvw_footer_html">© 2026 <a href="/">Dok'péyi</a> · <a href="/mentions-legales">Mentions légales</a> · <a href="/cgv">CGV</a></p>
     </div>
   </footer>
 
-  <script src="/cv-wizard.js?v=1"></script>
+  <script defer src="/lang.js?v=20260425-cvw-i18n"></script>
+  <script defer src="/cv-wizard.js?v=20260425-cvw-i18n"></script>
 </body>
 </html>
