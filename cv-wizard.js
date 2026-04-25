@@ -90,8 +90,9 @@
   var btnClose         = document.getElementById('btn-close-modal');
   var btnClose2        = document.getElementById('btn-close-modal-2');
 
-  var currentId      = null;
+  var currentId       = null;
   var withPhotoChoice = true;
+  var photoElements   = [];
 
   function openModal(card) {
     currentId = card.dataset.tplId;
@@ -109,10 +110,11 @@
       }
     }
 
-    // Reset photo toggle to "avec photo" on each open
+    // Detect photo zones then reset toggle to "avec photo"
+    detectPhotos();
     withPhotoChoice = true;
-    if (btnWithPhoto)    btnWithPhoto.classList.add('photo-btn--active');
-    if (btnWithoutPhoto) btnWithoutPhoto.classList.remove('photo-btn--active');
+    if (btnWithPhoto)    { btnWithPhoto.classList.add('photo-card--active');    btnWithPhoto.setAttribute('aria-pressed', 'true');  }
+    if (btnWithoutPhoto) { btnWithoutPhoto.classList.remove('photo-card--active'); btnWithoutPhoto.setAttribute('aria-pressed', 'false'); }
 
     if (overlay) overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -160,23 +162,50 @@
     });
   }
 
-  /* ── Photo toggle ── */
+  /* ── Photo selector ── */
   var btnWithPhoto    = document.getElementById('btn-with-photo');
   var btnWithoutPhoto = document.getElementById('btn-without-photo');
 
-  function applyPhotoToggle(withPhoto) {
-    withPhotoChoice = withPhoto;
-    if (btnWithPhoto)    btnWithPhoto.classList.toggle('photo-btn--active', withPhoto);
-    if (btnWithoutPhoto) btnWithoutPhoto.classList.toggle('photo-btn--active', !withPhoto);
+  function detectPhotos() {
+    photoElements = [];
     if (!modalPreviewInner) return;
     modalPreviewInner.querySelectorAll('[style]').forEach(function (el) {
       var s = el.getAttribute('style') || '';
-      var bigCircle   = s.includes('border-radius:50%') && /width:\s*[5-9][0-9]px/.test(s);
-      var clipPhoto   = s.includes('clip-path:polygon') && /width:\s*[5-9][0-9]px/.test(s);
-      var rectPhoto   = s.includes('background:#e0e0e0') && s.includes('overflow:hidden');
-      var squarePhoto = s.includes('border-radius:10px') && /width:\s*[5-9][0-9]px/.test(s);
-      if (bigCircle || clipPhoto || rectPhoto || squarePhoto) {
-        el.style.display = withPhoto ? '' : 'none';
+      var isPhoto = (s.includes('border-radius:50%') && /width:\s*[5-9][0-9]px/.test(s)) ||
+                    (s.includes('clip-path:polygon') && /width:\s*[5-9][0-9]px/.test(s)) ||
+                    (s.includes('background:#e0e0e0') && s.includes('overflow:hidden')) ||
+                    (s.includes('border-radius:10px') && /width:\s*[5-9][0-9]px/.test(s));
+      if (!isPhoto) return;
+      el._origStyle = s;
+      // Parse height from style string (works before modal is visible)
+      var hm = /height:\s*(\d+)px/.exec(s);
+      var wm = /width:\s*(\d+)px/.exec(s);
+      var fm = /flex:\s*0\s+0\s+(\d+)px/.exec(s);
+      el._origH = hm ? +hm[1] : wm ? +wm[1] : fm ? +fm[1] : 72;
+      photoElements.push(el);
+    });
+  }
+
+  function applyPhotoToggle(withPhoto) {
+    withPhotoChoice = withPhoto;
+    if (btnWithPhoto)    { btnWithPhoto.classList.toggle('photo-card--active', withPhoto);  btnWithPhoto.setAttribute('aria-pressed', String(withPhoto));  }
+    if (btnWithoutPhoto) { btnWithoutPhoto.classList.toggle('photo-card--active', !withPhoto); btnWithoutPhoto.setAttribute('aria-pressed', String(!withPhoto)); }
+    photoElements.forEach(function (el) {
+      if (withPhoto) {
+        el.style.transition = 'opacity 0.3s ease, max-height 0.3s ease';
+        el.style.maxHeight  = el._origH + 'px';
+        el.style.opacity    = '1';
+        setTimeout(function () { if (el._origStyle) el.setAttribute('style', el._origStyle); }, 350);
+      } else {
+        el.style.overflow  = 'hidden';
+        el.style.maxHeight = el._origH + 'px';
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            el.style.transition = 'opacity 0.3s ease, max-height 0.3s ease';
+            el.style.maxHeight  = '0';
+            el.style.opacity    = '0';
+          });
+        });
       }
     });
   }

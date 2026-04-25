@@ -578,43 +578,72 @@ a { text-decoration: none; color: inherit; }
   .filter-btn { font-size: .8rem; padding: 8px 16px; }
 }
 
-/* ── Photo toggle module ── */
-.photo-toggle {
-  background: rgba(255,255,255,.04);
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 12px;
-  padding: 14px 16px;
+/* ── Photo selector (premium cards) ── */
+.photo-selector { display: flex; flex-direction: column; gap: 12px; }
+.photo-selector-sep {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #d4a853, transparent);
+  opacity: .45;
+  margin: 0 -4px;
 }
-.photo-toggle-title {
-  font-size: .78rem;
-  color: var(--text-muted);
-  margin-bottom: 10px;
-  font-weight: 600;
-  line-height: 1.4;
+.photo-selector-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--text);
+  text-align: center;
 }
-.photo-toggle-btns { display: flex; gap: 8px; }
-.photo-btn {
+.photo-selector-cards { display: flex; gap: 10px; }
+.photo-card {
+  position: relative;
   flex: 1;
-  background: rgba(255,255,255,.05);
-  border: 1px solid rgba(255,255,255,.1);
-  color: var(--text-muted);
-  border-radius: 8px;
-  padding: 8px 10px;
-  font-size: .8rem;
-  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 16px 10px 14px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(214,189,122,.15);
+  border-radius: 12px;
   cursor: pointer;
   font-family: inherit;
-  transition: background .2s, color .2s, border-color .2s;
+  transition: all .2s ease;
+  overflow: hidden;
+  text-align: center;
 }
-.photo-btn--active {
-  background: rgba(212,168,83,.15);
-  border-color: var(--gold);
-  color: var(--gold);
+.photo-card:hover:not(.photo-card--active) {
+  background: rgba(255,255,255,.07);
+  border-color: rgba(214,189,122,.3);
 }
-.photo-btn:hover:not(.photo-btn--active) {
-  background: rgba(255,255,255,.08);
+.photo-card--active {
+  border-color: #d4a853;
+  background: rgba(214,189,122,.08);
+  box-shadow: 0 0 0 1px rgba(214,189,122,.3);
+}
+.photo-card-check {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  opacity: 0;
+  transition: opacity .2s ease;
+  line-height: 0;
+}
+.photo-card--active .photo-card-check { opacity: 1; }
+.photo-card-icon {
+  font-size: 22px;
+  color: #d4a853;
+  line-height: 1;
+  display: block;
+  margin-bottom: 2px;
+}
+.photo-card-label {
+  font-size: 13px;
+  font-weight: 700;
   color: var(--text);
+  line-height: 1;
 }
+.photo-card-sub { font-size: 11px; color: #9f9685; }
 
 /* ── Step-2 screen ── */
 #step2-screen {
