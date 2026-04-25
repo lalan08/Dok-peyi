@@ -40,6 +40,22 @@ self.addEventListener('fetch', e => {
   // Never intercept API calls or Firebase
   if (url.pathname.startsWith('/api/') || url.hostname.includes('firebase')) return;
 
+  // Network-first for the language system to avoid stale translations after deploys
+  if (url.pathname === '/lang.js' || url.pathname === '/lang.css') {
+    e.respondWith(
+      fetch(request)
+        .then(res => {
+          if (res && res.status === 200 && res.type !== 'opaque') {
+            const clone = res.clone();
+            caches.open(CACHE).then(c => c.put(request, clone));
+          }
+          return res;
+        })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
+
   // Network-first for navigation (always fresh HTML)
   if (request.mode === 'navigate') {
     e.respondWith(
