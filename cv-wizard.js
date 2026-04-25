@@ -156,7 +156,7 @@
       sessionStorage.setItem('cv_template', currentId);
       var cvWithPhoto = sessionStorage.getItem('cv_with_photo');
       if (cvWithPhoto === null) sessionStorage.setItem('cv_with_photo', 'true');
-      window.location.href = 'cv-wizard.html?step=2';
+      window.location.href = '/cv-wizard.html?step=2';
     });
   }
 
