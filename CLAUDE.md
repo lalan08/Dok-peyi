@@ -237,6 +237,7 @@ Pour les services utilisant `lib/pipeline.js` (via `/api/pipeline` action `gener
 - **CORS** : géré uniquement par `lib/edge-response.js` via `NEXT_PUBLIC_BASE_URL`
 - **Headers sécurité** (`vercel.json`) : CSP, HSTS, X-Frame-Options, Referrer-Policy
 - **Cache** : `no-store` sur `/api/*`, `must-revalidate` sur CSS non hashés, `immutable` sur `favicon.svg`, `no-cache` sur `sw.js`
+- **Routing** : `cleanUrls: true` (pas de `trailingSlash` — évite la chaîne `/cv-wizard` → `/cv-wizard/` → 404)
 - **Points d'attention** :
   - CORS unique — ne pas dupliquer les headers dans les handlers
   - Rate-limit en mémoire : reset à chaque cold start (acceptable en Edge)
