@@ -70,7 +70,7 @@
       <ul class="nav-links">
         <li><a href="#comment" data-i18n="nav_comment">Comment ça marche</a></li>
         <li><a href="#services" data-i18n="nav_services">Services</a></li>
-        <li><a href="/a-propos">À propos</a></li>
+        <li><a href="/a-propos" data-i18n="nav_about">À propos</a></li>
         <li><a href="#services" class="nav-cta" data-i18n="nav_cta">Faire ma demande</a></li>
       </ul>
       <button class="hamburger" id="hamburger" aria-label="Menu">
@@ -80,7 +80,7 @@
     <div class="mobile-menu" id="mobileMenu">
       <a href="#comment" class="mobile-link" data-i18n="nav_comment">Comment ça marche</a>
       <a href="#services" class="mobile-link" data-i18n="nav_services">Services</a>
-      <a href="/a-propos" class="mobile-link">À propos</a>
+      <a href="/a-propos" class="mobile-link" data-i18n="nav_about">À propos</a>
       <a href="#services" class="mobile-link mobile-cta" data-i18n="nav_cta">Faire ma demande</a>
     </div>
   </nav>
@@ -113,22 +113,22 @@
         <div class="doc-float doc-a">
           <span class="doc-float-icon">📄</span>
           <div>
-            <p class="doc-float-name">CV Professionnel</p>
-            <span class="badge-ready">✓ Prêt</span>
+            <p class="doc-float-name" data-i18n="hero_doc_cv">CV Professionnel</p>
+            <span class="badge-ready" data-i18n="badge_ready">✓ Prêt</span>
           </div>
         </div>
         <div class="doc-float doc-b">
           <span class="doc-float-icon">✉️</span>
           <div>
-            <p class="doc-float-name">Lettre de motivation</p>
-            <span class="badge-ready">✓ Prêt</span>
+            <p class="doc-float-name" data-i18n="hero_doc_lettre">Lettre de motivation</p>
+            <span class="badge-ready" data-i18n="badge_ready">✓ Prêt</span>
           </div>
         </div>
         <div class="doc-float doc-c">
           <span class="doc-float-icon">📁</span>
           <div>
-            <p class="doc-float-name">Dossier CAF</p>
-            <span class="badge-processing">⏳ En cours</span>
+            <p class="doc-float-name" data-i18n="hero_doc_dossier">Dossier CAF</p>
+            <span class="badge-processing" data-i18n="badge_processing">⏳ En cours</span>
           </div>
         </div>
       </div>
@@ -192,62 +192,62 @@
     </style>
     <div class="container">
       <div class="section-head reveal">
-        <h2 style="color:#f1f5f9">Nos services</h2>
-        <p style="color:#94a3b8">Tout ce dont tu as besoin pour tes démarches administratives en Guyane</p>
+        <h2 style="color:#f1f5f9" data-i18n="svc_title">Nos services</h2>
+        <p style="color:#94a3b8" data-i18n="svc_sub_index">Tout ce dont tu as besoin pour tes démarches administratives en Guyane</p>
       </div>
       <div class="svc-grid">
         <!-- Ligne 1 : 3 cartes (span 2) -->
         <div class="svc-dark-card reveal">
-          <span class="svc-popular-badge">Populaire</span>
-          <span class="svc-price-badge">à partir de 8€</span>
+          <span class="svc-popular-badge" data-i18n="badge_popular">Populaire</span>
+          <span class="svc-price-badge" data-i18n="home_price_cv">à partir de 8€</span>
           <div class="svc-icon">📄</div>
-          <h3>CV Professionnel</h3>
-          <p>Un CV percutant, moderne et adapté à ton secteur — créé, amélioré ou professionnalisé selon ton profil.</p>
-          <a href="/cv-wizard" class="svc-btn">Commencer</a>
+          <h3 data-i18n="home_cv_title">CV Professionnel</h3>
+          <p data-i18n="home_cv_desc">Un CV percutant, moderne et adapté à ton secteur — créé, amélioré ou professionnalisé selon ton profil.</p>
+          <a href="/cv-wizard" class="svc-btn" data-i18n="btn_start">Commencer</a>
         </div>
         <div class="svc-dark-card reveal">
-          <span class="svc-price-badge">à partir de 5€</span>
+          <span class="svc-price-badge" data-i18n="home_price_lettre">à partir de 5€</span>
           <div class="svc-icon">✉️</div>
-          <h3>Lettre de motivation</h3>
-          <p>Une lettre personnalisée et convaincante — créée, améliorée ou adaptée à ton offre d'emploi.</p>
-          <a href="/service?s=lettre" class="svc-btn">Commencer</a>
+          <h3 data-i18n="home_lettre_title">Lettre de motivation</h3>
+          <p data-i18n="home_lettre_desc">Une lettre personnalisée et convaincante — créée, améliorée ou adaptée à ton offre d'emploi.</p>
+          <a href="/service?s=lettre" class="svc-btn" data-i18n="btn_start">Commencer</a>
         </div>
         <div class="svc-dark-card reveal">
-          <span class="svc-price-badge">à partir de 7€</span>
+          <span class="svc-price-badge" data-i18n="home_price_courrier">à partir de 7€</span>
           <div class="svc-icon">📮</div>
-          <h3>Courrier officiel</h3>
-          <p>Rédaction pour mairies, préfectures et administrations — demande, réclamation ou contestation.</p>
-          <a href="/service?s=courrier" class="svc-btn">Commencer</a>
+          <h3 data-i18n="home_courrier_title">Courrier officiel</h3>
+          <p data-i18n="home_courrier_desc">Rédaction pour mairies, préfectures et administrations — demande, réclamation ou contestation.</p>
+          <a href="/service?s=courrier" class="svc-btn" data-i18n="btn_start">Commencer</a>
         </div>
         <!-- Ligne 2 : 2 cartes larges (span 3) -->
         <div class="svc-dark-card svc-wide reveal">
-          <span class="svc-price-badge">à partir de 12€</span>
+          <span class="svc-price-badge" data-i18n="home_price_dossier">à partir de 12€</span>
           <div class="svc-icon">📁</div>
-          <h3>Dossier administratif</h3>
-          <p>Accompagnement complet pour monter ton dossier CAF, logement social ou aide sociale — checklist, étapes et pièces justificatives prêtes.</p>
-          <a href="/service?s=dossier" class="svc-btn">Commencer</a>
+          <h3 data-i18n="home_dossier_title">Dossier administratif</h3>
+          <p data-i18n="home_dossier_desc">Accompagnement complet pour monter ton dossier CAF, logement social ou aide sociale — checklist, étapes et pièces justificatives prêtes.</p>
+          <a href="/service?s=dossier" class="svc-btn" data-i18n="btn_start">Commencer</a>
         </div>
         <div class="svc-dark-card svc-wide reveal">
-          <span class="svc-price-badge">à partir de 15€</span>
+          <span class="svc-price-badge" data-i18n="home_price_sejour">à partir de 15€</span>
           <div class="svc-icon">🛂</div>
-          <h3>Titre de séjour</h3>
-          <p>Première demande, renouvellement ou régularisation — dossier guidé, relu manuellement par notre équipe avant envoi.</p>
-          <a href="/service?s=sejour" class="svc-btn">Commencer</a>
+          <h3 data-i18n="home_sejour_title">Titre de séjour</h3>
+          <p data-i18n="home_sejour_desc">Première demande, renouvellement ou régularisation — dossier guidé, relu manuellement par notre équipe avant envoi.</p>
+          <a href="/service?s=sejour" class="svc-btn" data-i18n="btn_start">Commencer</a>
         </div>
         <!-- Ligne 3 : 2 cartes larges (span 3) -->
         <div class="svc-dark-card svc-wide reveal">
-          <span class="svc-price-badge">à partir de 10€</span>
+          <span class="svc-price-badge" data-i18n="home_price_impot">à partir de 10€</span>
           <div class="svc-icon">🧾</div>
-          <h3>Avis d'impôt</h3>
-          <p>Comprends ton avis, trouve des aides et rédige un courrier aux services fiscaux — accompagnement clair et sans jargon.</p>
-          <a href="/service?s=impot" class="svc-btn">Commencer</a>
+          <h3 data-i18n="home_impot_title">Avis d'impôt</h3>
+          <p data-i18n="home_impot_desc">Comprends ton avis, trouve des aides et rédige un courrier aux services fiscaux — accompagnement clair et sans jargon.</p>
+          <a href="/service?s=impot" class="svc-btn" data-i18n="btn_start">Commencer</a>
         </div>
         <div class="svc-dark-card svc-wide reveal">
-          <span class="svc-price-badge">à partir de 20€</span>
+          <span class="svc-price-badge" data-i18n="home_price_naturalisation">à partir de 20€</span>
           <div class="svc-icon">🇫🇷</div>
-          <h3>Naturalisation</h3>
-          <p>Vérification d'éligibilité, préparation du dossier complet et lettre d'intégration — suivi personnalisé par l'équipe.</p>
-          <a href="/service?s=naturalisation" class="svc-btn">Commencer</a>
+          <h3 data-i18n="home_naturalisation_title">Naturalisation</h3>
+          <p data-i18n="home_naturalisation_desc">Vérification d'éligibilité, préparation du dossier complet et lettre d'intégration — suivi personnalisé par l'équipe.</p>
+          <a href="/service?s=naturalisation" class="svc-btn" data-i18n="btn_start">Commencer</a>
         </div>
       </div>
     </div>
@@ -291,18 +291,18 @@
       <div class="grid-3">
         <div class="card testimonial reveal">
           <div class="stars">⭐⭐⭐⭐⭐</div>
-          <p>"Mon CV était prêt en quelques heures. Simple, rapide, professionnel. J'ai décroché un entretien la semaine suivante !"</p>
-          <div class="testimonial-author">— Marlène T., Cayenne</div>
+          <p data-i18n="testi1_quote">"Mon CV était prêt en quelques heures. Simple, rapide, professionnel. J'ai décroché un entretien la semaine suivante !"</p>
+          <div class="testimonial-author" data-i18n="testi1_author">— Marlène T., Cayenne</div>
         </div>
         <div class="card testimonial reveal">
           <div class="stars">⭐⭐⭐⭐⭐</div>
-          <p>"Je ne savais pas comment rédiger ma lettre de motivation. Dok'péyi l'a fait pour moi et c'était parfait !"</p>
-          <div class="testimonial-author">— Kevin R., Saint-Laurent</div>
+          <p data-i18n="testi2_quote">"Je ne savais pas comment rédiger ma lettre de motivation. Dok'péyi l'a fait pour moi et c'était parfait !"</p>
+          <div class="testimonial-author" data-i18n="testi2_author">— Kevin R., Saint-Laurent</div>
         </div>
         <div class="card testimonial reveal">
           <div class="stars">⭐⭐⭐⭐⭐</div>
-          <p>"Service top ! Mon dossier de logement était complet et bien présenté. Je recommande à tout le monde."</p>
-          <div class="testimonial-author">— Fatima O., Kourou</div>
+          <p data-i18n="testi3_quote">"Service top ! Mon dossier de logement était complet et bien présenté. Je recommande à tout le monde."</p>
+          <div class="testimonial-author" data-i18n="testi3_author">— Fatima O., Kourou</div>
         </div>
       </div>
     </div>
@@ -320,25 +320,25 @@
           <h4 data-i18n="footer_nav">Navigation</h4>
           <a href="#comment" data-i18n="nav_comment">Comment ça marche</a>
           <a href="#services" data-i18n="nav_services">Services</a>
-          <a href="/a-propos">À propos</a>
+          <a href="/a-propos" data-i18n="nav_about">À propos</a>
           <a href="#services" data-i18n="nav_cta">Faire ma demande</a>
         </div>
         <div class="footer-contact">
           <h4 data-i18n="footer_contact">Contact</h4>
           <p>📧 contact@dokpeyi.com</p>
-          <p>📱 WhatsApp disponible</p>
-          <p>🕐 Lun–Sam · 8h–20h</p>
+          <p data-i18n="contact_whatsapp">📱 WhatsApp disponible</p>
+          <p data-i18n="contact_hours">🕐 Lun–Sam · 8h–20h</p>
         </div>
       </div>
       <div class="footer-legal">
         <p data-i18n="footer_legal">Dok'péyi est un service d'aide à la rédaction et à la préparation de documents. Les informations doivent être vérifiées avant utilisation.</p>
         <p style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap">
-          <span>© 2026 Dok'péyi — Tous droits réservés</span>
-          <a href="/mentions-legales" style="color:#94a3b8;text-decoration:none;font-size:.82rem">Mentions légales</a>
-          <a href="/cgv" style="color:#94a3b8;text-decoration:none;font-size:.82rem">CGV</a>
-          <a href="/confidentialite" style="color:#94a3b8;text-decoration:none;font-size:.82rem">Confidentialité</a>
-          <a href="/cookies" style="color:#94a3b8;text-decoration:none;font-size:.82rem">Cookies</a>
-          <a href="/a-propos" style="color:#60a5fa;text-decoration:none;font-size:.82rem;font-weight:600">À propos</a>
+          <span data-i18n="footer_rights">© 2026 Dok'péyi — Tous droits réservés</span>
+          <a href="/mentions-legales" style="color:#94a3b8;text-decoration:none;font-size:.82rem" data-i18n="link_mentions">Mentions légales</a>
+          <a href="/cgv" style="color:#94a3b8;text-decoration:none;font-size:.82rem" data-i18n="link_cgv">CGV</a>
+          <a href="/confidentialite" style="color:#94a3b8;text-decoration:none;font-size:.82rem" data-i18n="link_confidentialite">Confidentialité</a>
+          <a href="/cookies" style="color:#94a3b8;text-decoration:none;font-size:.82rem" data-i18n="link_cookies">Cookies</a>
+          <a href="/a-propos" style="color:#60a5fa;text-decoration:none;font-size:.82rem;font-weight:600" data-i18n="nav_about">À propos</a>
         </p>
       </div>
     </div>
@@ -364,12 +364,12 @@
   <div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0f172a;color:#e2e8f0;padding:16px 24px;box-shadow:0 -4px 24px rgba(0,0,0,.3);font-family:Inter,sans-serif">
     <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
       <div style="flex:1;min-width:200px;font-size:.82rem;line-height:1.5;color:#cbd5e1">
-        🍪 Dok'péyi utilise des cookies nécessaires au fonctionnement du service. Aucun cookie publicitaire.
-        <a href="/cookies" style="color:#60a5fa">En savoir plus</a>
+        <span data-i18n="cookie_text">🍪 Dok'péyi utilise des cookies nécessaires au fonctionnement du service. Aucun cookie publicitaire.</span>
+        <a href="/cookies" style="color:#60a5fa" data-i18n="cookie_learn_more">En savoir plus</a>
       </div>
       <div style="display:flex;gap:10px;flex-shrink:0">
-        <a href="/mentions-legales" style="padding:8px 16px;border:1px solid #334155;border-radius:8px;color:#94a3b8;text-decoration:none;font-size:.8rem;font-weight:600">Mentions légales</a>
-        <button onclick="dokAcceptCookies()" style="padding:8px 20px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer">J'accepte</button>
+        <a href="/mentions-legales" style="padding:8px 16px;border:1px solid #334155;border-radius:8px;color:#94a3b8;text-decoration:none;font-size:.8rem;font-weight:600" data-i18n="link_mentions">Mentions légales</a>
+        <button onclick="dokAcceptCookies()" style="padding:8px 20px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer" data-i18n="cookie_accept">J'accepte</button>
       </div>
     </div>
   </div>
@@ -392,10 +392,13 @@
       navigator.serviceWorker.register('/sw.js');
       navigator.serviceWorker.addEventListener('message', e => {
         if (e.data?.type !== 'SW_UPDATED') return;
+        var i18n = window.DokPeyiI18n;
+        var updateLabel = i18n?.t('update_available', undefined, 'Nouvelle version disponible') || 'Nouvelle version disponible';
+        var refreshLabel = i18n?.t('update_refresh', undefined, 'Actualiser') || 'Actualiser';
         var b = document.createElement('div');
         b.setAttribute('role', 'alert');
         b.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0f172a;color:#fff;padding:14px 20px;border-radius:12px;display:flex;align-items:center;gap:14px;font-family:Inter,sans-serif;font-size:.88rem;z-index:9999;box-shadow:0 8px 30px rgba(0,0,0,.25)';
-        b.innerHTML = '<span>Nouvelle version disponible</span><button onclick="location.reload()" style="background:#2563eb;color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:.82rem;font-weight:700;cursor:pointer">Actualiser</button><button onclick="this.parentNode.remove()" aria-label="Fermer" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1.1rem;line-height:1">✕</button>';
+        b.innerHTML = '<span>' + updateLabel + '</span><button onclick="location.reload()" style="background:#2563eb;color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:.82rem;font-weight:700;cursor:pointer">' + refreshLabel + '</button><button onclick="this.parentNode.remove()" aria-label="Fermer" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1.1rem;line-height:1">✕</button>';
         document.body.appendChild(b);
       });
     }
