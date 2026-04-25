@@ -211,7 +211,7 @@ const T = {
     ap_svc6_desc: "Compreender, contestar ou escrever para a DGFiP — decodificação completa",
     ap_svc7_desc: "Elegibilidade, constituição de processo, carta — revisão humana incluída",
     ap_guyane_p1: "O nosso serviço é concebido <em>para</em> a Guiana Francesa, não adaptado de outro lugar. Conhecemos os organismos competentes, os interlocutores reais, os prazos efetivos e as especificidades do departamento 973.",
-    ap_guyane_p2: "A Guiana Francesa fala pelo menos sete línguas. Os nossos documentos são redigidos em francês claro, construídos para serem compreendidos e aceites pelas administrações locais — seja a Prefeitura, a CAF ou o Tribunal de Caiena.",
+    ap_guyane_p2: "A Guiana Francesa fala pelo menos sete línguas. Os nossos documentos são redigidos em français clair, construídos para serem compreendidos e aceites pelas administrações locais — seja a Prefeitura, a CAF ou o Tribunal de Caiena.",
     ap_lang_tag_1: 'Francês', ap_lang_tag_2: 'Crioulo da Guiana', ap_lang_tag_3: 'Crioulo haitiano', ap_lang_tag_4: 'Português brasileiro', ap_lang_tag_5: 'Espanhol', ap_lang_tag_6: 'Holandês', ap_lang_tag_7: 'Inglês',
     ap_eng1_d: "O seu documento é gerado em tempo real e entregue por e-mail nas horas seguintes. Prazo garantido em 24h, muitas vezes bem menos.",
     ap_eng2_d: "Os seus dados pessoais nunca são revendidos. Armazenamento seguro, conservação limitada a 12 meses, conformidade total com o RGPD.",
@@ -732,14 +732,138 @@ const T = {
   },
 };
 
+const DEFAULT_LANG = 'fr';
+
+const LOCALE_META = {
+  fr: {
+    lang_title: 'Choisissez votre langue',
+    lang_sub: 'Sélectionnez la langue du site',
+    lang_confirm: 'Continuer →',
+    lang_switch_aria: 'Changer de langue',
+    lang_modal_aria: 'Sélection de la langue',
+  },
+  pt: {
+    lang_title: 'Escolha seu idioma',
+    lang_sub: 'Selecione o idioma do site',
+    lang_confirm: 'Continuar →',
+    lang_switch_aria: 'Mudar idioma',
+    lang_modal_aria: 'Seleção de idioma',
+  },
+  ht: {
+    lang_title: 'Chwazi lang ou',
+    lang_sub: 'Chwazi lang sit la',
+    lang_confirm: 'Kontinye →',
+    lang_switch_aria: 'Chanje lang',
+    lang_modal_aria: 'Seleksyon lang',
+  },
+  nl: {
+    lang_title: 'Kies uw taal',
+    lang_sub: 'Selecteer de taal van de site',
+    lang_confirm: 'Doorgaan →',
+    lang_switch_aria: 'Taal wijzigen',
+    lang_modal_aria: 'Taalselectie',
+  },
+  ar: {
+    lang_title: 'اختر لغتك',
+    lang_sub: 'اختر لغة الموقع',
+    lang_confirm: 'متابعة ←',
+    lang_switch_aria: 'تغيير اللغة',
+    lang_modal_aria: 'اختيار اللغة',
+  },
+  en: {
+    lang_title: 'Choose your language',
+    lang_sub: 'Select the site language',
+    lang_confirm: 'Continue →',
+    lang_switch_aria: 'Change language',
+    lang_modal_aria: 'Language selection',
+  },
+  gcr: {
+    lang_title: 'Chwazi lang ou',
+    lang_sub: 'Chwazi lang sit-la',
+    lang_confirm: 'Kontinyé →',
+    lang_switch_aria: 'Chanjé lang',
+    lang_modal_aria: 'Séléksyon lang',
+  },
+};
+
 /* ============================================================
    ÉTAT & LOGIQUE
    ============================================================ */
-let currentLang = localStorage.getItem('dok_lang') || null;
-let selectedCode = currentLang || 'fr';
+const langChangeListeners = new Set();
+const storedLang = localStorage.getItem('dok_lang');
+let currentLang = LANGS.some(lang => lang.code === storedLang) ? storedLang : null;
+let selectedCode = currentLang || DEFAULT_LANG;
 
-function getLang() { return LANGS.find(l => l.code === selectedCode) || LANGS[0]; }
-function getTrans() { return T[selectedCode] || T.fr; }
+function isKnownLang(code) {
+  return LANGS.some(lang => lang.code === code);
+}
+
+function normalizeLangCode(code) {
+  return isKnownLang(code) ? code : DEFAULT_LANG;
+}
+
+function getLang(code = selectedCode || currentLang || DEFAULT_LANG) {
+  return LANGS.find(lang => lang.code === normalizeLangCode(code)) || LANGS[0];
+}
+
+function getTrans(code = currentLang || selectedCode || DEFAULT_LANG) {
+  const normalizedCode = normalizeLangCode(code);
+  return {
+    ...(T.fr || {}),
+    ...(LOCALE_META.fr || {}),
+    ...(T[normalizedCode] || {}),
+    ...(LOCALE_META[normalizedCode] || {}),
+  };
+}
+
+function t(key, code = currentLang || selectedCode || DEFAULT_LANG, fallback = '') {
+  const tr = getTrans(code);
+  if (tr[key] !== undefined) return tr[key];
+  if (T.fr && T.fr[key] !== undefined) return T.fr[key];
+  return fallback || key;
+}
+
+function onLanguageChange(listener) {
+  if (typeof listener !== 'function') return () => {};
+  langChangeListeners.add(listener);
+  return () => offLanguageChange(listener);
+}
+
+function offLanguageChange(listener) {
+  langChangeListeners.delete(listener);
+}
+
+function notifyLanguageChange(code) {
+  const detail = {
+    code,
+    lang: getLang(code),
+    translations: getTrans(code),
+  };
+
+  langChangeListeners.forEach(listener => {
+    try {
+      listener(detail);
+    } catch (error) {
+      console.error('[DokPeyiI18n] listener error', error);
+    }
+  });
+
+  document.dispatchEvent(new CustomEvent('dokpeyi:langchange', { detail }));
+  window.dispatchEvent(new CustomEvent('dokpeyi:langchange', { detail }));
+}
+
+function setLanguage(code, { persist = true, notify = true } = {}) {
+  const normalizedCode = normalizeLangCode(code);
+  currentLang = normalizedCode;
+  selectedCode = normalizedCode;
+
+  if (persist) localStorage.setItem('dok_lang', normalizedCode);
+
+  applyTranslation(normalizedCode);
+
+  if (notify) notifyLanguageChange(normalizedCode);
+  return normalizedCode;
+}
 
 /* ============================================================
    SÉLECTEUR DE LANGUE — Création du DOM
@@ -749,14 +873,14 @@ function createPicker() {
   overlay.className = 'lang-overlay';
   overlay.id = 'lang-overlay';
 
-  const t = T.fr; // Le picker lui-même reste en version neutre
+  const tr = getTrans(selectedCode || DEFAULT_LANG);
 
   overlay.innerHTML = `
-    <div class="lang-modal" id="lang-modal" role="dialog" aria-modal="true" aria-label="Language selection">
+    <div class="lang-modal" id="lang-modal" role="dialog" aria-modal="true" aria-label="${tr.lang_modal_aria}">
       <div class="lang-header">
         <span class="lang-globe">🌍</span>
-        <h2 class="lang-title">${t.lang_title}</h2>
-        <p class="lang-subtitle">${t.lang_sub}</p>
+        <h2 class="lang-title">${tr.lang_title}</h2>
+        <p class="lang-subtitle">${tr.lang_sub}</p>
       </div>
       <div class="lang-grid" id="lang-grid">
         ${LANGS.map(l => `
@@ -773,7 +897,7 @@ function createPicker() {
         `).join('')}
       </div>
       <button class="lang-confirm" id="lang-confirm" onclick="confirmLang()" type="button">
-        ${t.lang_confirm}
+        ${tr.lang_confirm}
       </button>
     </div>
   `;
@@ -795,19 +919,21 @@ function createPicker() {
 }
 
 function selectLang(code) {
-  selectedCode = code;
+  selectedCode = normalizeLangCode(code);
   document.querySelectorAll('.lang-card').forEach(el => {
-    el.classList.toggle('selected', el.dataset.code === code);
+    el.classList.toggle('selected', el.dataset.code === selectedCode);
   });
-  // Mettre à jour le bouton confirm avec la traduction
+
   const confirmBtn = document.getElementById('lang-confirm');
-  if (confirmBtn) confirmBtn.textContent = T[code]?.lang_confirm || 'Continuer →';
+  const modal = document.getElementById('lang-modal');
+  const tr = getTrans(selectedCode);
+
+  if (modal) modal.setAttribute('aria-label', tr.lang_modal_aria);
+  if (confirmBtn) confirmBtn.textContent = tr.lang_confirm;
 }
 
 function confirmLang() {
-  currentLang = selectedCode;
-  localStorage.setItem('dok_lang', selectedCode);
-  applyTranslation(selectedCode);
+  setLanguage(selectedCode);
   closePicker();
 }
 
@@ -829,14 +955,13 @@ function openPicker() {
    APPLICATION DES TRADUCTIONS
    ============================================================ */
 function applyTranslation(code) {
-  const tr = T[code] || T.fr;
-  const lang = LANGS.find(l => l.code === code) || LANGS[0];
+  const normalizedCode = normalizeLangCode(code);
+  const tr = getTrans(normalizedCode);
+  const lang = getLang(normalizedCode);
 
-  // Direction (RTL / LTR)
-  document.documentElement.setAttribute('lang', code);
+  document.documentElement.setAttribute('lang', normalizedCode);
   document.documentElement.setAttribute('dir', lang.dir);
 
-  // Appliquer chaque clé
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
     if (tr[key] !== undefined) el.textContent = tr[key];
@@ -854,8 +979,23 @@ function applyTranslation(code) {
     if (tr[key] !== undefined) el.placeholder = tr[key];
   });
 
-  // Mettre à jour le bouton langue dans la nav
-  updateNavLangBtn(lang);
+  document.querySelectorAll('[data-i18n-title]').forEach(el => {
+    const key = el.getAttribute('data-i18n-title');
+    if (tr[key] !== undefined) el.setAttribute('title', tr[key]);
+  });
+
+  document.querySelectorAll('[data-i18n-aria-label]').forEach(el => {
+    const key = el.getAttribute('data-i18n-aria-label');
+    if (tr[key] !== undefined) el.setAttribute('aria-label', tr[key]);
+  });
+
+  document.querySelectorAll('[data-i18n-value]').forEach(el => {
+    const key = el.getAttribute('data-i18n-value');
+    if (tr[key] !== undefined) el.value = tr[key];
+  });
+
+  updateNavLangBtn(lang, tr);
+  return tr;
 }
 
 /* ============================================================
@@ -863,10 +1003,13 @@ function applyTranslation(code) {
    ============================================================ */
 function createNavLangBtn() {
   const lang = getLang();
+  const tr = getTrans();
   const btn = document.createElement('button');
   btn.className = 'lang-switcher-btn';
-  btn.id = 'lang-switcher-btn';
-  btn.setAttribute('aria-label', 'Changer de langue');
+  btn.type = 'button';
+  btn.dataset.langSwitcher = 'true';
+  btn.setAttribute('aria-label', tr.lang_switch_aria);
+  btn.setAttribute('title', tr.lang_switch_aria);
   btn.onclick = openPicker;
   btn.innerHTML = `
     <span class="lang-flag-sm">${lang.flag}</span>
@@ -875,24 +1018,26 @@ function createNavLangBtn() {
   return btn;
 }
 
-function updateNavLangBtn(lang) {
-  const btn = document.getElementById('lang-switcher-btn');
-  if (!btn) return;
-  btn.innerHTML = `
-    <span class="lang-flag-sm">${lang.flag}</span>
-    <span class="lang-code-sm">${lang.code.toUpperCase()}</span>
-  `;
+function updateNavLangBtn(lang, tr) {
+  document.querySelectorAll('[data-lang-switcher]').forEach(btn => {
+    btn.setAttribute('aria-label', tr.lang_switch_aria);
+    btn.setAttribute('title', tr.lang_switch_aria);
+    btn.innerHTML = `
+      <span class="lang-flag-sm">${lang.flag}</span>
+      <span class="lang-code-sm">${lang.code.toUpperCase()}</span>
+    `;
+  });
 }
 
 function injectNavBtn() {
-  // Desktop nav
   const navLinks = document.querySelector('.nav-links');
-  if (navLinks) navLinks.appendChild(createNavLangBtn());
-  // Mobile menu
+  if (navLinks && !navLinks.querySelector('[data-lang-switcher]')) {
+    navLinks.appendChild(createNavLangBtn());
+  }
+
   const mobileMenu = document.querySelector('.mobile-menu');
-  if (mobileMenu) {
+  if (mobileMenu && !mobileMenu.querySelector('[data-lang-switcher]')) {
     const mobileBtn = createNavLangBtn();
-    mobileBtn.id = 'lang-switcher-btn-mobile';
     mobileBtn.style.marginTop = '4px';
     mobileMenu.appendChild(mobileBtn);
   }
@@ -918,16 +1063,30 @@ function trapFocus(el) {
 /* ============================================================
    INITIALISATION
    ============================================================ */
+window.DokPeyiI18n = {
+  LANGS,
+  getLanguage: () => currentLang || DEFAULT_LANG,
+  getSelectedLanguage: () => selectedCode,
+  getDictionary: getTrans,
+  t,
+  setLanguage,
+  apply: applyTranslation,
+  openPicker,
+  closePicker,
+  selectLanguage: selectLang,
+  confirmLanguage: confirmLang,
+  onChange: onLanguageChange,
+  offChange: offLanguageChange,
+};
+
 document.addEventListener('DOMContentLoaded', () => {
-  // Injecter le bouton dans la nav
   injectNavBtn();
 
   if (currentLang) {
-    // Langue déjà choisie → appliquer directement
     selectedCode = currentLang;
     applyTranslation(currentLang);
+    notifyLanguageChange(currentLang);
   } else {
-    // Première visite → montrer le sélecteur
     setTimeout(createPicker, 400);
   }
 });
