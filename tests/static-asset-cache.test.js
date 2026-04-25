@@ -13,13 +13,15 @@ const serviceWorkerPath = path.join(__dirname, '..', 'sw.js');
 
 describe('service static asset caching', () => {
   test('public pages cache-bust lang.js to avoid stale i18n bundles', async () => {
-    const [indexHtml, aboutHtml] = await Promise.all([
+    const [indexHtml, aboutHtml, serviceHtml] = await Promise.all([
       fs.readFile(indexHtmlPath, 'utf8'),
       fs.readFile(aboutHtmlPath, 'utf8'),
+      fs.readFile(serviceHtmlPath, 'utf8'),
     ]);
 
     assert.match(indexHtml, /src="\/lang\.js\?v=/);
     assert.match(aboutHtml, /src="\/lang\.js\?v=/);
+    assert.match(serviceHtml, /src="\/lang\.js\?v=/);
   });
 
   test('service.html cache-busts service.css to avoid stale immutable CSS', async () => {
