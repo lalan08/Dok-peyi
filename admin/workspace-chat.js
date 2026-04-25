@@ -844,12 +844,39 @@ function fchatInit() {
   _fchatUpdateBadge();
   _fchatRenderMessages();
   _fchatStartPolling();
-  // Sync instantanée entre onglets (storage event)
   window.addEventListener('storage', _fchatOnStorageChange);
-  // Démarrer Firebase dès la connexion (pas uniquement au clic workspace)
   _chatFirebaseListen();
+  _fchatTestFirebase(); // diagnostic automatique au démarrage
   const backdrop = document.getElementById('fchat-backdrop');
   if (backdrop) backdrop.addEventListener('click', fchatClose);
+}
+
+/* ── Diagnostic Firebase ─────────────────────────────────────── */
+function _fchatTestFirebase() {
+  if (typeof db === 'undefined' || !db) {
+    _fchatSetStatus('⚠️ Firebase non initialisé — messages locaux uniquement', '#f59e0b');
+    return;
+  }
+  const testRef = db.ref('workspace/chat/_test_ping');
+  testRef.set({ ts: Date.now() })
+    .then(() => {
+      testRef.remove();
+      _fchatSetStatus('🟢 Firebase synchronisé', '#22c55e');
+    })
+    .catch(err => {
+      _fchatSetStatus('🔴 Firebase bloqué : ' + err.message, '#ef4444');
+      if (typeof showToast === 'function')
+        showToast('🔴 Chat non synchronisé — ' + err.message, 'error');
+    });
+}
+
+function _fchatSetStatus(text, color) {
+  const el = document.getElementById('fchat-sync-status');
+  if (!el) return;
+  el.textContent = text;
+  el.style.color = color;
+  el.style.display = 'block';
+  setTimeout(() => { if (el) el.style.display = 'none'; }, 4000);
 }
 
 /* ── Drag & drop du FAB avec inertie + rebond ───────────────── */
