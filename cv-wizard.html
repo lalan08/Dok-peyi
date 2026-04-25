@@ -1429,14 +1429,39 @@
   </div>
 
   <section id="step2-screen" style="display:none" aria-hidden="true">
-    <div class="container step2-container">
-      <div class="step2-badge">Étape 2 / 4 · CV Professionnel</div>
-      <h2 class="step2-title">Parfait ! Passons à la suite</h2>
-      <div class="step2-summary" id="step2-summary"></div>
-      <div class="step2-actions">
-        <button class="btn-gold btn-gold--disabled" id="btn-continue" aria-disabled="true" title="Bientôt disponible">Continuer →</button>
-        <a href="cv-wizard.html" class="btn-ghost-back">← Changer de template</a>
+    <div class="step2-inner">
+      <div class="step2-confirm">
+        <div class="step2-check-icon">✓</div>
+        <div class="step2-confirm-title">Template sélectionné</div>
+        <div class="step2-template-name" id="step2-template-name">—</div>
+        <div class="step2-photo-badge" id="step2-photo-badge"></div>
       </div>
+      <div class="step2-divider">Comment souhaitez-vous procéder ?</div>
+      <div class="step2-modes">
+        <div class="mode-card" data-mode="scratch"
+             onclick="document.querySelectorAll('.mode-card').forEach(function(c){c.classList.remove('active')});this.classList.add('active');sessionStorage.setItem('cv_mode','scratch');var b=document.getElementById('btn-step2-continue');if(b){b.classList.add('enabled');b.removeAttribute('aria-disabled');}">
+          <span class="mode-card__icon">✦</span>
+          <span class="mode-card__title">Créer de A à Z</span>
+          <span class="mode-card__desc">Je n'ai pas encore de CV</span>
+        </div>
+        <div class="mode-card" data-mode="improve"
+             onclick="document.querySelectorAll('.mode-card').forEach(function(c){c.classList.remove('active')});this.classList.add('active');sessionStorage.setItem('cv_mode','improve');var b=document.getElementById('btn-step2-continue');if(b){b.classList.add('enabled');b.removeAttribute('aria-disabled');}">
+          <span class="mode-card__icon">↑</span>
+          <span class="mode-card__title">Améliorer l'existant</span>
+          <span class="mode-card__desc">J'ai déjà un CV à moderniser</span>
+          <span class="mode-card__badge">PDF accepté</span>
+        </div>
+        <div class="mode-card" data-mode="target"
+             onclick="document.querySelectorAll('.mode-card').forEach(function(c){c.classList.remove('active')});this.classList.add('active');sessionStorage.setItem('cv_mode','target');var b=document.getElementById('btn-step2-continue');if(b){b.classList.add('enabled');b.removeAttribute('aria-disabled');}">
+          <span class="mode-card__icon">◎</span>
+          <span class="mode-card__title">Adapter à une offre</span>
+          <span class="mode-card__desc">Je cible un poste précis</span>
+        </div>
+      </div>
+      <button id="btn-step2-continue" aria-disabled="true"
+              onclick="if(!this.classList.contains('enabled'))return;var mode=sessionStorage.getItem('cv_mode')||'scratch';window.location.href='service.html?service=cv&subtype='+mode;">Continuer →</button>
+      <button id="btn-step2-back"
+              onclick="window.location.href='cv-wizard.html'">← Changer de template</button>
     </div>
   </section>
 

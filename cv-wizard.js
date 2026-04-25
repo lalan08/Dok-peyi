@@ -177,28 +177,30 @@
 
   /* ── Step-2 confirmation screen ── */
   function showStep2Screen() {
+    var TPL_NAMES = {
+      '01': 'Épuré',            '02': 'Sidebar Sombre',       '03': 'Brun Premium',
+      '04': 'Navy Corporate',   '05': 'Full Dark',             '06': 'Dark Green',
+      '07': 'Impact Rouge',     '08': 'Minimaliste Timeline',  '09': 'Géométrique Or',
+      '10': 'Wave Navy',        '11': 'Yellow Dark',           '12': 'Cyber Neon'
+    };
     var tpl    = sessionStorage.getItem('cv_template');
     var photo  = sessionStorage.getItem('cv_with_photo');
     var withPh = photo !== 'false';
 
-    // Hide gallery
     document.querySelectorAll('.gallery-hero, .filter-section, .tpl-section').forEach(function (el) {
       el.style.display = 'none';
     });
 
-    // Show step-2 screen
     var s2 = document.getElementById('step2-screen');
     if (!s2) return;
-    s2.style.display = '';
+    s2.style.display = 'flex';
     s2.removeAttribute('aria-hidden');
 
-    // Fill summary
-    var summaryEl = document.getElementById('step2-summary');
-    if (summaryEl) {
-      summaryEl.innerHTML =
-        '<div class="step2-info"><strong>Template</strong> · N°' + (tpl || '—') + '</div>' +
-        '<div class="step2-info"><strong>Photo</strong> · ' + (withPh ? '📷 Avec photo' : '🚫 Sans photo') + '</div>';
-    }
+    var nameEl = document.getElementById('step2-template-name');
+    if (nameEl) nameEl.textContent = 'N°' + (tpl || '—') + ' · ' + (TPL_NAMES[tpl] || '—');
+
+    var badgeEl = document.getElementById('step2-photo-badge');
+    if (badgeEl) badgeEl.textContent = withPh ? '📷 Avec photo' : '🚫 Sans photo';
   }
 
 })();
