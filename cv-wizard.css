@@ -636,8 +636,6 @@ a { text-decoration: none; color: inherit; }
 .photo-card.active .photo-card__check { opacity: 1; transform: scale(1); }
 .photo-card__icon { font-size: 22px; line-height: 1; }
 .photo-card__title { font-size: 12px; font-weight: 600; color: #f3efe6; letter-spacing: 0.04em; }
-.photo-card__sub { font-size: 10px; color: #9f9685; letter-spacing: 0.06em; text-transform: uppercase; }
-
 /* ── Step-2 screen ── */
 #step2-screen {
   min-height: 100vh;

@@ -202,10 +202,28 @@
     });
   }
 
-  document.querySelectorAll('.photo-card').forEach(function (pc) {
-    pc.addEventListener('click', function () {
-      applyPhotoToggle(pc.dataset.value === 'true');
-    });
+  document.addEventListener('click', function (e) {
+    var card = e.target.closest('.photo-card');
+    if (!card) return;
+    document.querySelectorAll('.photo-card').forEach(function (c) { c.classList.remove('active'); });
+    card.classList.add('active');
+    var withPhoto = card.dataset.value === 'true';
+    withPhotoChoice = withPhoto;
+    sessionStorage.setItem('cv_with_photo', String(withPhoto));
+    var photoZone = document.querySelector('#modal-preview-inner .cv-photo-zone');
+    if (photoZone) {
+      photoZone.style.transition = 'opacity 0.3s ease, max-height 0.4s ease, margin 0.3s ease';
+      if (!withPhoto) {
+        photoZone.style.opacity   = '0';
+        photoZone.style.maxHeight = '0';
+        photoZone.style.overflow  = 'hidden';
+        photoZone.style.margin    = '0';
+      } else {
+        photoZone.style.opacity   = '1';
+        photoZone.style.maxHeight = '300px';
+        photoZone.style.margin    = '';
+      }
+    }
   });
 
   /* ── Init & resize ── */
