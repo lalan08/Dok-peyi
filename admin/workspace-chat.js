@@ -857,7 +857,9 @@ function fchatInit() {
 function _fchatTestFirebase() {
   if (!db && window.db) db = window.db;
   if (typeof db === 'undefined' || !db) {
-    _fchatSetStatus('⚠️ Firebase non initialisé — messages locaux uniquement', '#f59e0b');
+    const diag = window._fbDiag || {};
+    const msg = diag.error || ('firebase:' + diag.firebaseDefined + ' apps:' + diag.appsCount + ' db:' + diag.windowDbSet);
+    _fchatSetStatus('⚠️ Firebase non initialisé — ' + msg, '#f59e0b');
     return;
   }
   const testRef = db.ref('workspace/chat/_test_ping');

@@ -25,6 +25,7 @@
 <!-- ======================================================
      ÉCRAN DE CONNEXION
      ====================================================== -->
+<div id="fb-sdk-err" style="display:none;position:fixed;top:0;left:0;right:0;background:#ef4444;color:#fff;padding:8px;font-size:.8rem;z-index:9999;text-align:center"></div>
 <div id="login-screen" role="dialog" aria-label="Connexion administrateur">
   <div class="login-card">
     <div class="login-logo">Dok'<span>péyi</span></div>
@@ -430,13 +431,28 @@
 </div>
 
 <!-- Firebase SDK (compat v10) -->
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"
+  onerror="document.getElementById('fb-sdk-err').textContent='❌ firebase-app.js non chargé'"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"
+  onerror="document.getElementById('fb-sdk-err').textContent='❌ firebase-database.js non chargé'"></script>
 <!-- Config Firebase — remplie par l'utilisateur -->
-<script src="/firebase-config.js?v=2"></script>
+<script src="/firebase-config.js?v=3"></script>
+<script>
+  // Diagnostic immédiat après firebase-config.js
+  window._fbDiag = {
+    firebaseDefined: typeof firebase !== 'undefined',
+    appsCount: typeof firebase !== 'undefined' ? firebase.apps.length : 0,
+    windowDbSet: !!window.db,
+    error: null
+  };
+  if (!window._fbDiag.firebaseDefined)
+    window._fbDiag.error = 'Firebase SDK non chargé (CDN bloqué ?)';
+  else if (!window._fbDiag.windowDbSet)
+    window._fbDiag.error = 'firebase-config.js n\'a pas initialisé window.db';
+</script>
 <script src="/lib/statuses.js"></script>
 <script src="/admin/admin.js?v=14"></script>
-<script src="/admin/workspace-chat.js?v=8"></script>
+<script src="/admin/workspace-chat.js?v=9"></script>
 <script src="/admin/workspace-projects.js?v=1"></script>
 <script src="/admin/workspace-tasks.js?v=1"></script>
 <script src="/admin/workspace-notes.js?v=1"></script>
