@@ -92,7 +92,22 @@
 
   var currentId       = null;
   var withPhotoChoice = true;
-  var photoElements   = [];
+
+  function handlePhotoZone(withPhoto) {
+    var photoZone = document.querySelector('#modal-preview-inner .cv-photo-zone');
+    if (!photoZone) return;
+    photoZone.style.transition = 'opacity 0.3s ease, max-height 0.4s ease, margin 0.3s ease';
+    if (!withPhoto) {
+      photoZone.style.opacity   = '0';
+      photoZone.style.maxHeight = '0';
+      photoZone.style.overflow  = 'hidden';
+      photoZone.style.margin    = '0';
+    } else {
+      photoZone.style.opacity   = '1';
+      photoZone.style.maxHeight = '300px';
+      photoZone.style.margin    = '';
+    }
+  }
 
   function openModal(card) {
     currentId = card.dataset.tplId;
@@ -110,12 +125,12 @@
       }
     }
 
-    // Detect photo zones then reset toggle to "avec photo"
-    detectPhotos();
+    // Reset toggle to "avec photo"
     withPhotoChoice = true;
     document.querySelectorAll('.photo-card').forEach(function (pc) {
       pc.classList.toggle('active', pc.dataset.value === 'true');
     });
+    handlePhotoZone(true);
 
     if (overlay) overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -164,45 +179,7 @@
   }
 
   /* ── Photo selector ── */
-  function detectPhotos() {
-    photoElements = [];
-    if (!modalPreviewInner) return;
-    modalPreviewInner.querySelectorAll('.cv-photo-zone').forEach(function (el) {
-      el._origStyle = el.getAttribute('style') || '';
-      var hm = /height:\s*(\d+)px/.exec(el._origStyle);
-      var wm = /width:\s*(\d+)px/.exec(el._origStyle);
-      var fm = /flex:\s*0\s+0\s+(\d+)px/.exec(el._origStyle);
-      el._origH = hm ? +hm[1] : wm ? +wm[1] : fm ? +fm[1] : 72;
-      photoElements.push(el);
-    });
-  }
-
-  function applyPhotoToggle(withPhoto) {
-    withPhotoChoice = withPhoto;
-    document.querySelectorAll('.photo-card').forEach(function (pc) {
-      pc.classList.toggle('active', (pc.dataset.value === 'true') === withPhoto);
-    });
-    photoElements.forEach(function (el) {
-      if (withPhoto) {
-        el.style.transition = 'opacity 0.3s ease, max-height 0.3s ease';
-        el.style.maxHeight  = el._origH + 'px';
-        el.style.opacity    = '1';
-        setTimeout(function () { if (el._origStyle) el.setAttribute('style', el._origStyle); }, 350);
-      } else {
-        el.style.overflow  = 'hidden';
-        el.style.maxHeight = el._origH + 'px';
-        requestAnimationFrame(function () {
-          requestAnimationFrame(function () {
-            el.style.transition = 'opacity 0.3s ease, max-height 0.3s ease';
-            el.style.maxHeight  = '0';
-            el.style.opacity    = '0';
-          });
-        });
-      }
-    });
-  }
-
-  document.addEventListener('click', function (e) {
+  document.body.addEventListener('click', function (e) {
     var card = e.target.closest('.photo-card');
     if (!card) return;
     document.querySelectorAll('.photo-card').forEach(function (c) { c.classList.remove('active'); });
@@ -210,20 +187,7 @@
     var withPhoto = card.dataset.value === 'true';
     withPhotoChoice = withPhoto;
     sessionStorage.setItem('cv_with_photo', String(withPhoto));
-    var photoZone = document.querySelector('#modal-preview-inner .cv-photo-zone');
-    if (photoZone) {
-      photoZone.style.transition = 'opacity 0.3s ease, max-height 0.4s ease, margin 0.3s ease';
-      if (!withPhoto) {
-        photoZone.style.opacity   = '0';
-        photoZone.style.maxHeight = '0';
-        photoZone.style.overflow  = 'hidden';
-        photoZone.style.margin    = '0';
-      } else {
-        photoZone.style.opacity   = '1';
-        photoZone.style.maxHeight = '300px';
-        photoZone.style.margin    = '';
-      }
-    }
+    handlePhotoZone(withPhoto);
   });
 
   /* ── Init & resize ── */
