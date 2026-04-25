@@ -113,8 +113,9 @@
     // Detect photo zones then reset toggle to "avec photo"
     detectPhotos();
     withPhotoChoice = true;
-    if (btnWithPhoto)    { btnWithPhoto.classList.add('photo-card--active');    btnWithPhoto.setAttribute('aria-pressed', 'true');  }
-    if (btnWithoutPhoto) { btnWithoutPhoto.classList.remove('photo-card--active'); btnWithoutPhoto.setAttribute('aria-pressed', 'false'); }
+    document.querySelectorAll('.photo-card').forEach(function (pc) {
+      pc.classList.toggle('active', pc.dataset.value === 'true');
+    });
 
     if (overlay) overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -163,24 +164,14 @@
   }
 
   /* ── Photo selector ── */
-  var btnWithPhoto    = document.getElementById('btn-with-photo');
-  var btnWithoutPhoto = document.getElementById('btn-without-photo');
-
   function detectPhotos() {
     photoElements = [];
     if (!modalPreviewInner) return;
-    modalPreviewInner.querySelectorAll('[style]').forEach(function (el) {
-      var s = el.getAttribute('style') || '';
-      var isPhoto = (s.includes('border-radius:50%') && /width:\s*[5-9][0-9]px/.test(s)) ||
-                    (s.includes('clip-path:polygon') && /width:\s*[5-9][0-9]px/.test(s)) ||
-                    (s.includes('background:#e0e0e0') && s.includes('overflow:hidden')) ||
-                    (s.includes('border-radius:10px') && /width:\s*[5-9][0-9]px/.test(s));
-      if (!isPhoto) return;
-      el._origStyle = s;
-      // Parse height from style string (works before modal is visible)
-      var hm = /height:\s*(\d+)px/.exec(s);
-      var wm = /width:\s*(\d+)px/.exec(s);
-      var fm = /flex:\s*0\s+0\s+(\d+)px/.exec(s);
+    modalPreviewInner.querySelectorAll('.cv-photo-zone').forEach(function (el) {
+      el._origStyle = el.getAttribute('style') || '';
+      var hm = /height:\s*(\d+)px/.exec(el._origStyle);
+      var wm = /width:\s*(\d+)px/.exec(el._origStyle);
+      var fm = /flex:\s*0\s+0\s+(\d+)px/.exec(el._origStyle);
       el._origH = hm ? +hm[1] : wm ? +wm[1] : fm ? +fm[1] : 72;
       photoElements.push(el);
     });
@@ -188,8 +179,9 @@
 
   function applyPhotoToggle(withPhoto) {
     withPhotoChoice = withPhoto;
-    if (btnWithPhoto)    { btnWithPhoto.classList.toggle('photo-card--active', withPhoto);  btnWithPhoto.setAttribute('aria-pressed', String(withPhoto));  }
-    if (btnWithoutPhoto) { btnWithoutPhoto.classList.toggle('photo-card--active', !withPhoto); btnWithoutPhoto.setAttribute('aria-pressed', String(!withPhoto)); }
+    document.querySelectorAll('.photo-card').forEach(function (pc) {
+      pc.classList.toggle('active', (pc.dataset.value === 'true') === withPhoto);
+    });
     photoElements.forEach(function (el) {
       if (withPhoto) {
         el.style.transition = 'opacity 0.3s ease, max-height 0.3s ease';
@@ -210,8 +202,11 @@
     });
   }
 
-  if (btnWithPhoto)    btnWithPhoto.addEventListener('click',    function () { applyPhotoToggle(true);  });
-  if (btnWithoutPhoto) btnWithoutPhoto.addEventListener('click', function () { applyPhotoToggle(false); });
+  document.querySelectorAll('.photo-card').forEach(function (pc) {
+    pc.addEventListener('click', function () {
+      applyPhotoToggle(pc.dataset.value === 'true');
+    });
+  });
 
   /* ── Init & resize ── */
   window.addEventListener('DOMContentLoaded', function () {
