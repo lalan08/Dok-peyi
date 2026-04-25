@@ -779,51 +779,42 @@ function _openImageLightbox(src, title) {
    FIREBASE — sync optionnelle
    ============================================================ */
 let _chatFirebaseListened = false;
+const _chatPageLoadTime   = Date.now();
 
 function _chatFirebaseListen() {
   if (typeof db === 'undefined' || !db || _chatFirebaseListened) return;
   _chatFirebaseListened = true;
 
-  const chatRef   = db.ref('workspace/chat');
-  const listenFrom = new Date().toISOString();
-
-  // 1. Listener temps réel immédiat — indépendant du chargement historique
-  chatRef.orderByChild('ts').startAt(listenFrom)
+  // child_added se déclenche pour les 100 derniers messages existants,
+  // puis pour chaque nouveau message — pas besoin de startAt ni de once séparé
+  db.ref('workspace/chat').orderByChild('ts').limitToLast(100)
     .on('child_added', snap => {
       const m = snap.val();
       if (!m || !m.id || wsMessages.some(x => x.id === m.id)) return;
+
       wsMessages.push(m);
       wsMessages.sort((a, b) => new Date(a.ts) - new Date(b.ts));
       _wsSave('dok_ws_chat', wsMessages);
+
       if (_fchatOpen) _fchatRenderMessages();
-      const myId = (typeof currentUser !== 'undefined' && currentUser) ? currentUser.user : null;
-      _fchatOnFirebaseNew(new Set([m.id]), myId);
+      _fchatUpdateBadge();
+
+      // Notification uniquement pour les messages arrivés après le chargement
+      const isNew = new Date(m.ts).getTime() > _chatPageLoadTime;
+      const myId  = (typeof currentUser !== 'undefined' && currentUser) ? currentUser.user : null;
+      if (isNew && m.userId !== myId) _fchatOnFirebaseNew(new Set([m.id]), myId);
     }, err => {
       console.warn('[Chat] Firebase écoute échouée:', err.message);
-      _chatFirebaseListened = false; // permettre une nouvelle tentative
+      _chatFirebaseListened = false;
     });
-
-  // 2. Chargement historique séparé (50 derniers messages)
-  chatRef.orderByChild('ts').limitToLast(50).once('value', snap => {
-    const data = snap.val();
-    if (!data) return;
-    const ids = new Set(wsMessages.map(m => m.id));
-    Object.values(data).forEach(m => { if (!ids.has(m.id)) wsMessages.push(m); });
-    wsMessages.sort((a, b) => new Date(a.ts) - new Date(b.ts));
-    _wsSave('dok_ws_chat', wsMessages);
-    if (_fchatOpen) _fchatRenderMessages();
-    _fchatUpdateBadge();
-  }, err => {
-    console.warn('[Chat] Firebase historique échoué:', err.message);
-  });
 }
 
 function _chatFirebasePush(msg) {
   if (typeof db === 'undefined' || !db) return;
-  db.ref(`workspace/chat/${msg.id}`).set(msg).catch(err => {
+  db.ref('workspace/chat/' + msg.id).set(msg).catch(err => {
     console.warn('[Chat] Firebase push échoué:', err.message);
     if (typeof showToast === 'function')
-      showToast('⚠️ Message non synchronisé entre appareils (Firebase)', 'error');
+      showToast('⚠️ Message non synchronisé (Firebase)', 'error');
   });
 }
 
