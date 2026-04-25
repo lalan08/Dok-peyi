@@ -876,7 +876,6 @@ function _fchatSetStatus(text, color) {
   el.textContent = text;
   el.style.color = color;
   el.style.display = 'block';
-  setTimeout(() => { if (el) el.style.display = 'none'; }, 4000);
 }
 
 /* ── Drag & drop du FAB avec inertie + rebond ───────────────── */
@@ -1076,13 +1075,13 @@ function fchatOpen() {
 
   document.getElementById('fchat-drawer')?.classList.add('open');
   document.getElementById('fchat-fab')?.classList.add('open');
-  // Changer l'icône en ✕
   const ico = document.getElementById('fchat-fab-icon');
   if (ico) ico.textContent = '✕';
 
   if (window.innerWidth <= 600)
     document.getElementById('fchat-backdrop')?.classList.add('open');
   _fchatMarkRead();
+  _fchatTestFirebase(); // statut Firebase visible à chaque ouverture
   setTimeout(() => { document.getElementById('fchat-input')?.focus(); }, 300);
 }
 
