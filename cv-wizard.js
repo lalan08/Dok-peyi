@@ -90,24 +90,7 @@
   var btnClose         = document.getElementById('btn-close-modal');
   var btnClose2        = document.getElementById('btn-close-modal-2');
 
-  var currentId       = null;
-  var withPhotoChoice = true;
-
-  function handlePhotoZone(withPhoto) {
-    var photoZone = document.querySelector('#modal-preview-inner .cv-photo-zone');
-    if (!photoZone) return;
-    photoZone.style.transition = 'opacity 0.3s ease, max-height 0.4s ease, margin 0.3s ease';
-    if (!withPhoto) {
-      photoZone.style.opacity   = '0';
-      photoZone.style.maxHeight = '0';
-      photoZone.style.overflow  = 'hidden';
-      photoZone.style.margin    = '0';
-    } else {
-      photoZone.style.opacity   = '1';
-      photoZone.style.maxHeight = '300px';
-      photoZone.style.margin    = '';
-    }
-  }
+  var currentId = null;
 
   function openModal(card) {
     currentId = card.dataset.tplId;
@@ -126,11 +109,9 @@
     }
 
     // Reset toggle to "avec photo"
-    withPhotoChoice = true;
     document.querySelectorAll('.photo-card').forEach(function (pc) {
       pc.classList.toggle('active', pc.dataset.value === 'true');
     });
-    handlePhotoZone(true);
 
     if (overlay) overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -173,22 +154,11 @@
     btnChoose.addEventListener('click', function () {
       if (!currentId) return;
       sessionStorage.setItem('cv_template', currentId);
-      sessionStorage.setItem('cv_with_photo', withPhotoChoice ? 'true' : 'false');
+      var cvWithPhoto = sessionStorage.getItem('cv_with_photo');
+      if (cvWithPhoto === null) sessionStorage.setItem('cv_with_photo', 'true');
       window.location.href = 'cv-wizard.html?step=2';
     });
   }
-
-  /* ── Photo selector ── */
-  document.body.addEventListener('click', function (e) {
-    var card = e.target.closest('.photo-card');
-    if (!card) return;
-    document.querySelectorAll('.photo-card').forEach(function (c) { c.classList.remove('active'); });
-    card.classList.add('active');
-    var withPhoto = card.dataset.value === 'true';
-    withPhotoChoice = withPhoto;
-    sessionStorage.setItem('cv_with_photo', String(withPhoto));
-    handlePhotoZone(withPhoto);
-  });
 
   /* ── Init & resize ── */
   window.addEventListener('DOMContentLoaded', function () {

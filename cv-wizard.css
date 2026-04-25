@@ -610,9 +610,7 @@ a { text-decoration: none; color: inherit; }
   cursor: pointer;
   transition: all 0.2s ease;
   user-select: none;
-}
-.photo-card * { pointer-events: none; }
-.photo-card:hover { background: rgba(214,189,122,0.06); border-color: rgba(214,189,122,0.3); }
+}.photo-card:hover { background: rgba(214,189,122,0.06); border-color: rgba(214,189,122,0.3); }
 .photo-card.active {
   background: rgba(214,189,122,0.08);
   border-color: #d4a853;

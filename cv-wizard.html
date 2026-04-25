@@ -1405,12 +1405,14 @@
           <div class="photo-selector">
             <span class="photo-selector__label">Photo sur votre CV ?</span>
             <div class="photo-selector__cards">
-              <div class="photo-card active" data-value="true">
+              <div class="photo-card active" data-value="true"
+                   onclick="document.querySelectorAll('.photo-card').forEach(function(c){c.classList.remove('active')});this.classList.add('active');sessionStorage.setItem('cv_with_photo','true');var z=document.querySelector('.cv-photo-zone');if(z){z.style.transition='opacity 0.3s ease, max-height 0.4s ease';z.style.opacity='1';z.style.maxHeight='300px';}">
                 <div class="photo-card__check">✓</div>
                 <div class="photo-card__icon">👤</div>
                 <div class="photo-card__title">Avec photo</div>
               </div>
-              <div class="photo-card" data-value="false">
+              <div class="photo-card" data-value="false"
+                   onclick="document.querySelectorAll('.photo-card').forEach(function(c){c.classList.remove('active')});this.classList.add('active');sessionStorage.setItem('cv_with_photo','false');var z=document.querySelector('.cv-photo-zone');if(z){z.style.transition='opacity 0.3s ease, max-height 0.4s ease';z.style.opacity='0';z.style.maxHeight='0';z.style.overflow='hidden';z.style.margin='0';}">
                 <div class="photo-card__check">✓</div>
                 <div class="photo-card__icon">✦</div>
                 <div class="photo-card__title">Sans photo</div>
