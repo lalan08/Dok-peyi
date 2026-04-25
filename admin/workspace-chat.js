@@ -781,26 +781,94 @@ function _openImageLightbox(src, title) {
 let _chatFirebaseListened = false;
 const _chatPageLoadTime   = Date.now();
 
+/* URL de la base Firebase — lue depuis FIREBASE_CONFIG si dispo */
+function _chatDbUrl() {
+  return (typeof FIREBASE_CONFIG !== 'undefined' && FIREBASE_CONFIG.databaseURL)
+    ? FIREBASE_CONFIG.databaseURL
+    : null;
+}
+
+/* ── Mode REST (fallback quand le SDK Firebase ne charge pas) ─ */
+let _chatRestTimer = null;
+
+function _chatRestStart() {
+  if (_chatRestTimer) return;
+  _chatRestPoll(); // chargement immédiat
+  _chatRestTimer = setInterval(_chatRestPoll, 5000);
+}
+
+async function _chatRestPoll() {
+  const base = _chatDbUrl();
+  if (!base) return;
+  try {
+    const url = base + '/workspace/chat.json?orderBy=%22ts%22&limitToLast=50';
+    const res  = await fetch(url);
+    if (!res.ok) return;
+    const data = await res.json();
+    if (!data) return;
+    const ids = new Set(wsMessages.map(m => m.id));
+    const newIds = new Set();
+    Object.values(data).forEach(m => {
+      if (!m || !m.id || ids.has(m.id)) return;
+      wsMessages.push(m);
+      const isNew = new Date(m.ts).getTime() > _chatPageLoadTime;
+      const myId  = (typeof currentUser !== 'undefined' && currentUser) ? currentUser.user : null;
+      if (isNew && m.userId !== myId) newIds.add(m.id);
+    });
+    if (!newIds.size && Object.keys(data).length === wsMessages.length) return;
+    wsMessages.sort((a, b) => new Date(a.ts) - new Date(b.ts));
+    _wsSave('dok_ws_chat', wsMessages);
+    if (_fchatOpen) _fchatRenderMessages();
+    _fchatUpdateBadge();
+    if (newIds.size) {
+      const myId = (typeof currentUser !== 'undefined' && currentUser) ? currentUser.user : null;
+      _fchatOnFirebaseNew(newIds, myId);
+    }
+  } catch(e) { /* silencieux */ }
+}
+
+async function _chatRestPush(msg) {
+  const base = _chatDbUrl();
+  if (!base) return;
+  try {
+    await fetch(base + '/workspace/chat/' + msg.id + '.json', {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(msg)
+    });
+  } catch(e) {
+    if (typeof showToast === 'function') showToast('⚠️ Message non synchronisé', 'error');
+  }
+}
+
+/* Routeur : SDK Firebase si dispo, sinon REST */
+async function _chatFirebasePush(msg) {
+  if (!db && window.db) db = window.db;
+  if (db) {
+    db.ref('workspace/chat/' + msg.id).set(msg)
+      .catch(err => {
+        console.warn('[Chat] Firebase push échoué:', err.message);
+        if (typeof showToast === 'function') showToast('⚠️ Message non synchronisé', 'error');
+      });
+  } else {
+    await _chatRestPush(msg);
+  }
+}
+
 function _chatFirebaseListen() {
   if (!db && window.db) db = window.db;
   if (typeof db === 'undefined' || !db || _chatFirebaseListened) return;
   _chatFirebaseListened = true;
 
-  // child_added se déclenche pour les 100 derniers messages existants,
-  // puis pour chaque nouveau message — pas besoin de startAt ni de once séparé
   db.ref('workspace/chat').orderByChild('ts').limitToLast(100)
     .on('child_added', snap => {
       const m = snap.val();
       if (!m || !m.id || wsMessages.some(x => x.id === m.id)) return;
-
       wsMessages.push(m);
       wsMessages.sort((a, b) => new Date(a.ts) - new Date(b.ts));
       _wsSave('dok_ws_chat', wsMessages);
-
       if (_fchatOpen) _fchatRenderMessages();
       _fchatUpdateBadge();
-
-      // Notification uniquement pour les messages arrivés après le chargement
       const isNew = new Date(m.ts).getTime() > _chatPageLoadTime;
       const myId  = (typeof currentUser !== 'undefined' && currentUser) ? currentUser.user : null;
       if (isNew && m.userId !== myId) _fchatOnFirebaseNew(new Set([m.id]), myId);
@@ -810,15 +878,6 @@ function _chatFirebaseListen() {
     });
 }
 
-function _chatFirebasePush(msg) {
-  if (!db && window.db) db = window.db;
-  if (typeof db === 'undefined' || !db) return;
-  db.ref('workspace/chat/' + msg.id).set(msg).catch(err => {
-    console.warn('[Chat] Firebase push échoué:', err.message);
-    if (typeof showToast === 'function')
-      showToast('⚠️ Message non synchronisé (Firebase)', 'error');
-  });
-}
 
 
 /* ============================================================
@@ -848,7 +907,8 @@ function fchatInit() {
   _fchatStartPolling();
   window.addEventListener('storage', _fchatOnStorageChange);
   _chatFirebaseListen();
-  _fchatTestFirebase(); // diagnostic automatique au démarrage
+  if (!db && !window.db) _chatRestStart(); // SDK absent → polling REST
+  _fchatTestFirebase();
   const backdrop = document.getElementById('fchat-backdrop');
   if (backdrop) backdrop.addEventListener('click', fchatClose);
 }
@@ -857,22 +917,24 @@ function fchatInit() {
 function _fchatTestFirebase() {
   if (!db && window.db) db = window.db;
   if (typeof db === 'undefined' || !db) {
-    const diag = window._fbDiag || {};
-    const msg = diag.error || ('firebase:' + diag.firebaseDefined + ' apps:' + diag.appsCount + ' db:' + diag.windowDbSet);
-    _fchatSetStatus('⚠️ Firebase non initialisé — ' + msg, '#f59e0b');
+    // SDK absent — tester le mode REST
+    const base = _chatDbUrl();
+    if (base) {
+      fetch(base + '/workspace/chat/_test.json', {
+        method: 'PUT', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ ts: Date.now() })
+      }).then(r => {
+        if (r.ok) _fchatSetStatus('🟡 Sync REST (toutes les 5s)', '#f59e0b');
+        else       _fchatSetStatus('🔴 REST bloqué : ' + r.status, '#ef4444');
+      }).catch(() => _fchatSetStatus('🔴 Réseau inaccessible', '#ef4444'));
+    } else {
+      _fchatSetStatus('⚠️ Firebase non configuré', '#ef4444');
+    }
     return;
   }
-  const testRef = db.ref('workspace/chat/_test_ping');
-  testRef.set({ ts: Date.now() })
-    .then(() => {
-      testRef.remove();
-      _fchatSetStatus('🟢 Firebase synchronisé', '#22c55e');
-    })
-    .catch(err => {
-      _fchatSetStatus('🔴 Firebase bloqué : ' + err.message, '#ef4444');
-      if (typeof showToast === 'function')
-        showToast('🔴 Chat non synchronisé — ' + err.message, 'error');
-    });
+  db.ref('workspace/chat/_test_ping').set({ ts: Date.now() })
+    .then(() => { _fchatSetStatus('🟢 Firebase temps réel', '#22c55e'); })
+    .catch(err => _fchatSetStatus('🔴 Firebase bloqué : ' + err.message, '#ef4444'));
 }
 
 function _fchatSetStatus(text, color) {
