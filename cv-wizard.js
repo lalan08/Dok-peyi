@@ -5,6 +5,15 @@
 (function () {
   'use strict';
 
+  /* ── Step=2 routing: redirect to wizard with chosen template ── */
+  var _params = new URLSearchParams(window.location.search);
+  if (_params.get('step') === '2') {
+    var _tpl = _params.get('template') || sessionStorage.getItem('cv_template');
+    if (_tpl) sessionStorage.setItem('cv_template', _tpl);
+    window.location.replace('/service?s=cv');
+    return;
+  }
+
   /* ── Scale preview wrappers to fill their container ── */
   const INNER_WIDTH = 680; // px — fixed width of template inner div
 
