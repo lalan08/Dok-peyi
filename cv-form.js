@@ -45,7 +45,7 @@
       '</div>' +
       '<div class="field-group"><label class="field-label">Intitulé du poste <span class="field-required">*</span></label>' +
         '<input class="field-input" type="text" placeholder="Ex : Assistant Administratif"' +
-        ' oninput="updateExp(' + n + ',\'poste\',this.value);updatePreview();triggerSuggestions(\'missions_' + n + '\',cvData.profil.poste||\'\')">' +
+        ' oninput="updateExp(' + n + ',\'poste\',this.value);updatePreview();triggerSuggestions(\'missions_' + n + '\',cvData.profil.poste||this.value,\'\')">' +
       '</div>' +
       '<div class="field-group"><label class="field-label">Entreprise / Organisation <span class="field-required">*</span></label>' +
         '<input class="field-input" type="text" placeholder="Ex : Préfecture de Guyane"' +
@@ -61,8 +61,9 @@
       '</div>' +
       '<div class="field-group"><label class="field-label">Missions</label>' +
         '<textarea class="field-textarea" placeholder="• Géré les dossiers administratifs&#10;• Accueilli 50+ usagers/semaine"' +
-        ' oninput="updateExp(' + n + ',\'missions\',this.value);updatePreview()"></textarea>' +
-        '<div class="suggestions-wrap" id="suggestions-exp-' + n + '"></div>' +
+        ' oninput="updateExp(' + n + ',\'missions\',this.value);updatePreview();' +
+        'triggerSuggestions(\'missions_' + n + '\',cvData.profil.poste||cvData.experiences[' + (n - 1) + ']&&cvData.experiences[' + (n - 1) + '].poste||\'\',cvData.experiences[' + (n - 1) + ']&&cvData.experiences[' + (n - 1) + '].entreprise||\'\')"></textarea>' +
+        '<div class="suggestions-wrap" id="suggestions-missions_' + n + '"></div>' +
       '</div>';
     var container = document.getElementById('experiences-container');
     if (container) container.appendChild(card);
@@ -267,38 +268,60 @@
     reader.readAsDataURL(file);
   }
 
-  /* ── Suggestions ── */
-  var STATIC_SUGGESTIONS = {
-    poste: ['Assistant Administratif', 'Secrétaire', 'Agent Administratif',
-            'Chargé de mission', 'Responsable administratif'],
-    accroche: ['Rigoureux et organisé avec X ans d\'expérience',
-               'Maîtrise des outils bureautiques et administratifs',
-               'Disponible immédiatement sur le territoire guyanais'],
-    missions: ['Géré les dossiers administratifs', 'Accueilli 50+ usagers/semaine',
-               'Rédigé des courriers officiels', 'Assuré le classement et l\'archivage']
-  };
+  /* ── Suggestions IA ── */
+  var suggestDebounceTimer = {};
 
-  function triggerSuggestions(field, poste) {
-    var key = field.startsWith('missions') ? 'missions' : field;
-    var suggestions = STATIC_SUGGESTIONS[key] || [];
+  function triggerSuggestions(field, poste, context) {
+    if (!poste || poste.length < 3) return;
+    if (suggestDebounceTimer[field]) clearTimeout(suggestDebounceTimer[field]);
     var container = document.getElementById('suggestions-' + field);
-    if (!container || !suggestions.length) return;
-    container.innerHTML = suggestions.map(function (s) {
-      return '<span class="suggestion-chip" onclick="applySuggestion(\'' +
-        field + '\',\'' + s.replace(/'/g, "\\'") + '\')">' + s + '</span>';
-    }).join('');
+    if (!container) return;
+    container.innerHTML = '<span class="suggestions-loading">✦ L\'IA génère des suggestions…</span>';
+    suggestDebounceTimer[field] = setTimeout(function () {
+      fetch('/api/suggest', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ field: field, poste: poste, context: context || '' })
+      })
+        .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+        .then(function (data) {
+          var suggestions = data.suggestions || [];
+          if (!suggestions.length) { container.innerHTML = ''; return; }
+          container.innerHTML = suggestions.map(function (s) {
+            return '<span class="suggestion-chip" onclick="applySuggestion(\'' +
+              field + '\',this.textContent)">' + s + '</span>';
+          }).join('');
+        })
+        .catch(function () {
+          container.innerHTML = '<span class="suggestions-loading">Suggestions indisponibles</span>';
+        });
+    }, 600);
   }
 
   function applySuggestion(field, value) {
-    var container = document.getElementById('suggestions-' + field);
-    var input = container ? container.previousElementSibling : null;
-    if (!input) return;
-    if (input.tagName === 'TEXTAREA') {
-      input.value += (input.value ? '\n' : '') + '• ' + value;
-    } else {
-      input.value = value;
+    value = (value || '').trim();
+    if (!value) return;
+    if (field === 'accroche') {
+      var el = document.querySelector('textarea[data-field="accroche"]');
+      if (el) { el.value = value; el.dispatchEvent(new Event('input')); }
+    } else if (field.startsWith('missions')) {
+      var idx = field.split('_')[1];
+      var sel = idx ? '#exp-card-' + idx + ' textarea' : '.dynamic-card textarea';
+      var ta = document.querySelector(sel);
+      if (ta) { ta.value += (ta.value ? '\n' : '') + '• ' + value; ta.dispatchEvent(new Event('input')); }
+    } else if (field === 'competences') {
+      if (cvData.competences.indexOf(value) === -1) {
+        cvData.competences.push(value);
+        renderTags('competences');
+        updatePreview();
+      }
+    } else if (field === 'interets') {
+      var inp = document.querySelector('input[data-field="interets"]');
+      if (inp) {
+        inp.value = inp.value ? inp.value + ', ' + value : value;
+        inp.dispatchEvent(new Event('input'));
+      }
     }
-    input.dispatchEvent(new Event('input'));
   }
 
   /* ── Preview ── */
@@ -460,6 +483,7 @@
 
     currentStep = n;
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (n === 5) triggerSuggestions('competences', cvData.profil.poste || '', '');
   }
 
   function nextStep() {

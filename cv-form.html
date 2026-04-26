@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/lang.css">
-  <link rel="stylesheet" href="/cv-form.css?v=20260426-render">
+  <link rel="stylesheet" href="/cv-form.css?v=20260426-suggest">
 </head>
 <body>
 
@@ -108,15 +108,15 @@
           <label class="field-label">Poste visé <span class="field-required">*</span></label>
           <input class="field-input" type="text" data-field="poste"
             placeholder="Ex : Assistante Administrative"
-            oninput="updateCvData('profil','poste',this.value);updatePreview();triggerSuggestions('poste',this.value)">
+            oninput="updateCvData('profil','poste',this.value);updatePreview();triggerSuggestions('accroche',this.value,'')">
           <div class="suggestions-wrap" id="suggestions-poste"></div>
         </div>
 
         <div class="field-group">
           <label class="field-label">Accroche professionnelle <span class="field-required">*</span></label>
-          <textarea class="field-textarea" rows="4"
+          <textarea class="field-textarea" rows="4" data-field="accroche"
             placeholder="Décrivez votre profil en 3-4 phrases..."
-            oninput="updateCvData('profil','accroche',this.value);updatePreview()"></textarea>
+            oninput="updateCvData('profil','accroche',this.value);updatePreview();triggerSuggestions('accroche',cvData.profil.poste,'')"></textarea>
           <div class="suggestions-wrap" id="suggestions-accroche"></div>
         </div>
 
@@ -193,8 +193,10 @@
 
         <div class="field-group">
           <label class="field-label">Centres d'intérêt</label>
-          <input class="field-input" type="text" placeholder="Ex : Football, Musique, Bénévolat"
-            oninput="updateCvData('extras','interets',this.value);updatePreview()">
+          <input class="field-input" type="text" data-field="interets"
+            placeholder="Ex : Football, Musique, Bénévolat"
+            oninput="updateCvData('extras','interets',this.value);updatePreview();triggerSuggestions('interets',cvData.profil.poste||','','')">
+          <div class="suggestions-wrap" id="suggestions-interets"></div>
         </div>
 
         <div class="field-group">
@@ -233,6 +235,6 @@
   <button id="btn-close-preview" onclick="toggleMobilePreview()">✕ Fermer l'aperçu</button>
 
   <script defer src="/lang.js?v=20260425-cvw-i18n"></script>
-  <script defer src="/cv-form.js?v=20260426-render"></script>
+  <script defer src="/cv-form.js?v=20260426-suggest"></script>
 </body>
 </html>

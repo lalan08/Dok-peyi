@@ -317,6 +317,18 @@ a { text-decoration: none; color: inherit; }
   white-space: nowrap;
 }
 .suggestion-chip:hover { background: rgba(214,189,122,0.15); border-color: #d4a853; }
+.suggestion-chip:active { transform: scale(0.95); background: rgba(214,189,122,0.25); }
+
+.suggestions-loading {
+  font-size: 11px;
+  color: #d4a853;
+  font-style: italic;
+  animation: suggPulse 1.5s ease-in-out infinite;
+}
+@keyframes suggPulse {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 1; }
+}
 .suggestions-loading { font-size: 11px; color: #9f9685; font-style: italic; }
 
 /* ── Badge info IA ── */

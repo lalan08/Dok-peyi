@@ -53,6 +53,10 @@
       ]
     },
     {
+      "source": "/api/suggest",
+      "headers": [{ "key": "Cache-Control", "value": "no-store" }]
+    },
+    {
       "source": "/api/(.*)",
       "headers": [
         {
