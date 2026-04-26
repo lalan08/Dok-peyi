@@ -389,12 +389,25 @@
 
   /* ── Suggestions IA ── */
   var suggestDebounceTimer = {};
+  var lastPoste = '';
 
   function triggerSuggestions(field, poste, context) {
-    if (!poste || poste.length < 3) return;
-    if (suggestDebounceTimer[field]) clearTimeout(suggestDebounceTimer[field]);
     var container = document.getElementById('suggestions-' + field);
     if (!container) return;
+
+    // Changement de poste → vider toutes les suggestions
+    if (field === 'accroche' && poste && poste !== lastPoste) {
+      document.querySelectorAll('.suggestions-wrap').forEach(function (c) { c.innerHTML = ''; });
+      lastPoste = poste;
+    }
+
+    // Chips déjà affichées → geler (pas de re-déclenchement)
+    if (container.querySelector('.suggestion-chip')) return;
+    // Loading en cours → ne pas relancer
+    if (container.querySelector('.suggestions-loading')) return;
+
+    if (!poste || poste.length < 3) return;
+    if (suggestDebounceTimer[field]) clearTimeout(suggestDebounceTimer[field]);
     renderSuggestionState(container, 'loading');
     suggestDebounceTimer[field] = setTimeout(function () {
       fetch('/api/suggest', {
@@ -405,11 +418,10 @@
         .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
         .then(function (data) {
           var suggestions = data.suggestions || [];
-          if (!suggestions.length) { container.innerHTML = ''; renderSuggestionState(container, 'idle'); return; }
-          renderSuggestionState(container, 'idle');
+          if (!suggestions.length) { container.innerHTML = ''; return; }
           container.innerHTML = suggestions.map(function (s) {
             return '<span class="suggestion-chip" onclick="applySuggestion(\'' +
-              field + '\',this.textContent)">' + s + '</span>';
+              field + '\',this.textContent.trim());this.remove()">' + s + '</span>';
           }).join('');
         })
         .catch(function () {
@@ -424,8 +436,8 @@
     if (field === 'accroche') {
       var el = document.querySelector('textarea[data-field="accroche"]');
       if (el) {
-        var current = el.value.trim();
-        el.value = current ? current + ' ' + value : value;
+        var sep = el.value.trim() ? '\n' : '';
+        el.value = el.value.trim() + sep + value;
         el.dispatchEvent(new Event('input'));
       }
     } else if (field.startsWith('missions')) {
@@ -442,21 +454,22 @@
     } else if (field === 'interets') {
       var inp = document.querySelector('input[data-field="interets"]');
       if (inp) {
-        inp.value = inp.value ? inp.value + ', ' + value : value;
+        var sep = inp.value.trim() ? ', ' : '';
+        inp.value = inp.value.trim() + sep + value;
         inp.dispatchEvent(new Event('input'));
       }
     } else if (field === 'certifications') {
       var elCert = document.querySelector('input[data-field="certifications"]');
       if (elCert) {
-        var curCert = elCert.value.trim();
-        elCert.value = curCert ? curCert + ', ' + value : value;
+        var sep = elCert.value.trim() ? ', ' : '';
+        elCert.value = elCert.value.trim() + sep + value;
         elCert.dispatchEvent(new Event('input'));
       }
     } else if (field === 'infos_complementaires') {
       var elInfo = document.querySelector('textarea[data-field="complement"]');
       if (elInfo) {
-        var curInfo = elInfo.value.trim();
-        elInfo.value = curInfo ? curInfo + '\n' + value : value;
+        var sep = elInfo.value.trim() ? '\n' : '';
+        elInfo.value = elInfo.value.trim() + sep + value;
         elInfo.dispatchEvent(new Event('input'));
       }
     }
