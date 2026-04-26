@@ -224,7 +224,7 @@ const SVC = {
       ];
       return [
         { id: 'cv_template', label: 'Modèle de CV', type: 'template-picker', required: false },
-        { id: 'poste',       label: 'Poste recherché *',            type: 'hybrid-select', placeholder: 'Ou saisir un poste non listé…', required: true,  groups: CV_POSTES_GROUPS },
+        { id: 'poste',       label: 'Poste recherché *',            type: 'hybrid-select', placeholder: 'Ou saisir un poste non listé…', required: true,  groups: CV_POSTES_GROUPS, i18nRef: 'cv_poste' },
         { id: 'experience',  label: 'Expériences professionnelles', type: 'textarea',      placeholder: 'Postes occupés, entreprises, durées… (laissez vide si débutant)', required: false },
         { id: 'formation',   label: 'Formation / Diplômes',         type: 'hybrid-select', placeholder: 'Ou saisir un diplôme non listé…', required: false, groups: CV_DIPLOMES_GROUPS },
         { id: 'competences', label: 'Compétences',                  type: 'tags',          placeholder: 'Ajouter vos propres compétences (séparées par des virgules)…', required: false, groups: CV_COMPETENCES_GROUPS },
@@ -247,15 +247,15 @@ const SVC = {
         { id: 'note',  label: 'Ta lettre actuelle + ce que tu veux améliorer', type: 'textarea', placeholder: 'Colle ta lettre ici et décris les améliorations souhaitées…', required: true }
       ];
       if (choice === 'adapt') return [
-        { id: 'poste',          label: 'Nouveau poste visé *',  type: 'hybrid-select', placeholder: 'Ou saisir un poste non listé…', required: true, groups: CV_POSTES_GROUPS },
-        { id: 'entreprise',     label: 'Entreprise cible *',    type: 'hybrid-select', placeholder: 'Ou saisir une entreprise non listée…', required: true, groups: LETTRE_ENTREPRISES_GROUPS },
-        { id: 'secteur_lettre', label: 'Mettez en avant',       type: 'tags',          placeholder: 'Ajouter d\'autres atouts (séparés par des virgules)…', required: false, groups: LETTRE_SECTEUR_TAGS },
+        { id: 'poste',          label: 'Nouveau poste visé *',  type: 'hybrid-select', placeholder: 'Ou saisir un poste non listé…', required: true, groups: CV_POSTES_GROUPS, i18nRef: 'cv_poste' },
+        { id: 'entreprise',     label: 'Entreprise cible *',    type: 'hybrid-select', placeholder: 'Ou saisir une entreprise non listée…', required: true, groups: LETTRE_ENTREPRISES_GROUPS, i18nRef: 'lettre_entreprise' },
+        { id: 'secteur_lettre', label: 'Mettez en avant',       type: 'tags',          placeholder: 'Ajouter d\'autres atouts (séparés par des virgules)…', required: false, groups: LETTRE_SECTEUR_TAGS, i18nRef: 'lettre_atouts' },
         { id: 'note',           label: 'Ta lettre existante',   type: 'textarea',      placeholder: 'Colle ta lettre actuelle ici…', required: true }
       ];
       return [
-        { id: 'poste',          label: 'Poste visé *',                     type: 'hybrid-select', placeholder: 'Ou saisir un poste non listé…', required: true, groups: CV_POSTES_GROUPS },
-        { id: 'entreprise',     label: 'Entreprise / Organisme *',         type: 'hybrid-select', placeholder: 'Ou saisir une entreprise non listée…', required: true, groups: LETTRE_ENTREPRISES_GROUPS },
-        { id: 'secteur_lettre', label: 'Mettez en avant',                  type: 'tags',          placeholder: 'Ajouter d\'autres atouts (séparés par des virgules)…', required: false, groups: LETTRE_SECTEUR_TAGS },
+        { id: 'poste',          label: 'Poste visé *',                     type: 'hybrid-select', placeholder: 'Ou saisir un poste non listé…', required: true, groups: CV_POSTES_GROUPS, i18nRef: 'cv_poste' },
+        { id: 'entreprise',     label: 'Entreprise / Organisme *',         type: 'hybrid-select', placeholder: 'Ou saisir une entreprise non listée…', required: true, groups: LETTRE_ENTREPRISES_GROUPS, i18nRef: 'lettre_entreprise' },
+        { id: 'secteur_lettre', label: 'Mettez en avant',                  type: 'tags',          placeholder: 'Ajouter d\'autres atouts (séparés par des virgules)…', required: false, groups: LETTRE_SECTEUR_TAGS, i18nRef: 'lettre_atouts' },
         { id: 'experience',     label: 'Expérience en lien avec ce poste', type: 'textarea',      placeholder: 'Ce qui te qualifie pour ce poste…', required: false },
         { id: 'motivation',     label: 'Pourquoi ce poste t\'intéresse ?', type: 'textarea',      placeholder: 'Ce qui t\'attire dans ce poste ou cette entreprise…', required: false }
       ];
@@ -272,8 +272,8 @@ const SVC = {
     ],
     questions: function() {
       return [
-        { id: 'destinataire', label: 'Destinataire *',      type: 'hybrid-select', placeholder: 'Ou saisir un destinataire non listé…', required: true, groups: COURRIER_DESTINATAIRES_GROUPS },
-        { id: 'objet_type',   label: 'Type de courrier *',  type: 'tags',          placeholder: '', required: true, single: true, groups: COURRIER_OBJET_TYPES },
+        { id: 'destinataire', label: 'Destinataire *',      type: 'hybrid-select', placeholder: 'Ou saisir un destinataire non listé…', required: true, groups: COURRIER_DESTINATAIRES_GROUPS, i18nRef: 'courrier_destinataire' },
+        { id: 'objet_type',   label: 'Type de courrier *',  type: 'tags',          placeholder: '', required: true, single: true, groups: COURRIER_OBJET_TYPES, i18nRef: 'courrier_objet_type' },
         { id: 'objet',        label: 'Objet du courrier *', type: 'text',          placeholder: 'Résumé en une ligne', required: true },
         { id: 'description',  label: 'Votre situation *',   type: 'textarea',      placeholder: 'Décrivez votre situation et ce que vous demandez…', required: true }
       ];
@@ -519,25 +519,29 @@ function swFormatI18n(template, vars) {
   });
 }
 
+function swTPick(keys, fallback) {
+  for (const key of keys) {
+    if (!key) continue;
+    const translated = swT(key, '__DOK_I18N_MISS__');
+    if (translated !== '__DOK_I18N_MISS__') return translated;
+  }
+  return fallback;
+}
+
 function swTQuestion(q, suffix, fallback) {
-  return swT(
+  return swTPick([
     `wiz_q_${SSW.svc}_${SSW.choice}_${q.id}_${suffix}`,
-    swT(`wiz_q_${SSW.svc}_${q.id}_${suffix}`, fallback)
-  );
+    `wiz_q_${SSW.svc}_${q.id}_${suffix}`,
+    q?.i18nRef ? `wiz_ref_${q.i18nRef}_${suffix}` : ''
+  ], fallback);
 }
 
 function swTQuestionLabel(q, fallback) {
-  return swT(
-    `wiz_q_${SSW.svc}_${SSW.choice}_${q.id}_label`,
-    swT(`wiz_q_${SSW.svc}_${q.id}_label`, fallback)
-  );
+  return swTQuestion(q, 'label', fallback);
 }
 
 function swTQuestionPlaceholder(q, fallback) {
-  return swT(
-    `wiz_q_${SSW.svc}_${SSW.choice}_${q.id}_placeholder`,
-    swT(`wiz_q_${SSW.svc}_${q.id}_placeholder`, fallback)
-  );
+  return swTQuestion(q, 'placeholder', fallback);
 }
 
 function swLocalizeQuestion(q) {

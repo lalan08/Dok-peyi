@@ -19,8 +19,10 @@ describe('service.js dynamic i18n', () => {
   test('localizes dynamic question labels and placeholders through dedicated keys', async () => {
     const source = await fs.readFile(serviceJsPath, 'utf8');
 
-    assert.match(source, /wiz_q_\$\{SSW\.svc\}_\$\{SSW\.choice\}_\$\{q\.id\}_label/);
-    assert.match(source, /wiz_q_\$\{SSW\.svc\}_\$\{SSW\.choice\}_\$\{q\.id\}_placeholder/);
+    assert.match(source, /swTQuestion\(q, 'label'/);
+    assert.match(source, /swTQuestion\(q, 'placeholder'/);
+    assert.match(source, /wiz_q_\$\{SSW\.svc\}_\$\{SSW\.choice\}_\$\{q\.id\}_\$\{suffix\}/);
+    assert.match(source, /wiz_q_\$\{SSW\.svc\}_\$\{q\.id\}_\$\{suffix\}/);
   });
 
   test('defines dedicated translation keys for dynamic wizard services, fields and feedback', async () => {
@@ -37,5 +39,19 @@ describe('service.js dynamic i18n', () => {
     assert.match(source, /wiz_service_sejour_review_msg/);
     assert.match(source, /wiz_q_cv_scratch_poste_label/);
     assert.match(source, /wiz_q_cv_scratch_poste_placeholder/);
+  });
+
+  test('covers lettre and courrier deep wizard catalogs through shared refs and dedicated keys', async () => {
+    const serviceSource = await fs.readFile(serviceJsPath, 'utf8');
+    const langSource = await fs.readFile(langJsPath, 'utf8');
+
+    assert.match(serviceSource, /q\.i18nRef/);
+    assert.match(langSource, /wiz_ref_cv_poste_group_0_label/);
+    assert.match(langSource, /wiz_ref_lettre_entreprise_group_0_label/);
+    assert.match(langSource, /wiz_ref_lettre_atouts_group_0_option_0/);
+    assert.match(langSource, /wiz_ref_courrier_destinataire_group_0_label/);
+    assert.match(langSource, /wiz_ref_courrier_objet_type_group_0_option_0/);
+    assert.match(langSource, /wiz_q_lettre_create_experience_label/);
+    assert.match(langSource, /wiz_q_courrier_objet_placeholder/);
   });
 });
