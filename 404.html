@@ -10,6 +10,7 @@
   <meta name="theme-color" content="#2563eb">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/lang.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -19,9 +20,65 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      padding: 24px;
+    }
+    .shell {
+      width: min(960px, 100%);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 8px 0 32px;
+    }
+    .nav-logo {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #0f172a;
+      text-decoration: none;
+      letter-spacing: -.02em;
+      flex-shrink: 0;
+    }
+    .nav-logo span {
+      color: #2563eb;
+    }
+    .nav-links {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-left: auto;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .nav-links a {
+      color: #475569;
+      text-decoration: none;
+      font-size: .92rem;
+      font-weight: 600;
+    }
+    .nav-links a:hover {
+      color: #0f172a;
+    }
+    .nav-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #2563eb !important;
+    }
+    .main-wrap {
+      flex: 1;
+      display: flex;
       align-items: center;
       justify-content: center;
-      padding: 24px;
     }
     .card {
       background: #fff;
@@ -116,30 +173,66 @@
       transition: background .15s;
     }
     .service-links a:hover { background: #dbeafe; }
+    @media (max-width: 720px) {
+      body {
+        padding: 18px;
+      }
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 14px;
+        padding-bottom: 24px;
+      }
+      .nav-links {
+        margin-left: 0;
+        width: 100%;
+        justify-content: flex-start;
+      }
+      .card {
+        padding: 44px 28px;
+      }
+      .code {
+        font-size: 4.6rem;
+      }
+    }
   </style>
 </head>
 <body>
-  <main class="card" role="main">
-    <div class="code">404</div>
-    <div class="icon" aria-hidden="true">🗺️</div>
-    <h1>Page introuvable</h1>
-    <p>La page que vous cherchez n'existe pas ou a été déplacée.<br>Retournez à l'accueil pour continuer.</p>
+  <div class="shell">
+    <nav class="topbar" aria-label="Navigation 404">
+      <a href="/" class="nav-logo">Dok'<span>péyi</span></a>
+      <ul class="nav-links">
+        <li><a href="/#services" data-i18n="nav_services">Services</a></li>
+        <li><a href="/a-propos" data-i18n="nav_about">À propos</a></li>
+        <li><a href="/" class="nav-home" data-i18n="err404_nav_home">Retour à l'accueil</a></li>
+      </ul>
+    </nav>
 
-    <div class="actions">
-      <a href="/" class="btn-primary">← Accueil</a>
-      <a href="/#services" class="btn-ghost">Voir les services</a>
-    </div>
+    <div class="main-wrap">
+      <main class="card" role="main">
+        <div class="code">404</div>
+        <div class="icon" aria-hidden="true">🗺️</div>
+        <h1 data-i18n="err404_title">Page introuvable</h1>
+        <p data-i18n-html="err404_desc_html">La page que vous cherchez n'existe pas ou a été déplacée.<br>Retournez à l'accueil pour continuer.</p>
 
-    <div class="services">
-      <p>Accéder directement à un service :</p>
-      <div class="service-links">
-        <a href="/service?s=cv">CV</a>
-        <a href="/service?s=lettre">Lettre de motivation</a>
-        <a href="/service?s=courrier">Courrier</a>
-        <a href="/service?s=dossier">Dossier</a>
-        <a href="/service?s=sejour">Titre de séjour</a>
-      </div>
+        <div class="actions">
+          <a href="/" class="btn-primary" data-i18n="err404_btn_home">← Accueil</a>
+          <a href="/#services" class="btn-ghost" data-i18n="err404_btn_services">Voir les services</a>
+        </div>
+
+        <div class="services">
+          <p data-i18n="err404_direct_label">Accéder directement à un service :</p>
+          <div class="service-links">
+            <a href="/service?s=cv" data-i18n="err404_link_cv">CV</a>
+            <a href="/service?s=lettre" data-i18n="err404_link_lettre">Lettre de motivation</a>
+            <a href="/service?s=courrier" data-i18n="err404_link_courrier">Courrier</a>
+            <a href="/service?s=dossier" data-i18n="err404_link_dossier">Dossier</a>
+            <a href="/service?s=sejour" data-i18n="err404_link_sejour">Titre de séjour</a>
+          </div>
+        </div>
+      </main>
     </div>
-  </main>
+  </div>
+  <script defer src="/lang.js?v=20260426-404-i18n"></script>
 </body>
 </html>
