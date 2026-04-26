@@ -48,17 +48,106 @@
       <div class="form-step" data-step="1" style="display:none">
         <h2 class="step-title">Votre identité</h2>
         <p class="step-subtitle">Ces informations apparaîtront en haut de votre CV</p>
-        <!-- contenu S3-B -->
+
+        <div class="photo-upload-zone" id="photo-upload-zone" onclick="document.getElementById('photo-input').click()">
+          <div class="photo-upload-icon">📷</div>
+          <div class="photo-upload-label">Ajouter une photo</div>
+        </div>
+        <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="handlePhotoUpload(this)">
+
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">Prénom <span class="field-required">*</span></label>
+            <input class="field-input" type="text" data-field="prenom" placeholder="Ex : Yonel"
+              oninput="updateCvData('identite','prenom',this.value);updatePreview()">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Nom <span class="field-required">*</span></label>
+            <input class="field-input" type="text" data-field="nom" placeholder="Ex : GOVINDIN"
+              oninput="updateCvData('identite','nom',this.value);updatePreview()">
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Email <span class="field-required">*</span></label>
+          <input class="field-input" type="email" data-field="email" placeholder="votre@email.com"
+            oninput="updateCvData('identite','email',this.value);updatePreview()">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Téléphone <span class="field-required">*</span></label>
+          <input class="field-input" type="tel" data-field="tel" placeholder="06 XX XX XX XX"
+            oninput="updateCvData('identite','tel',this.value);updatePreview()">
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">Ville <span class="field-required">*</span></label>
+            <input class="field-input" type="text" data-field="ville" placeholder="Cayenne"
+              oninput="updateCvData('identite','ville',this.value);updatePreview()">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Code postal</label>
+            <input class="field-input" type="text" data-field="codepostal" placeholder="97300"
+              oninput="updateCvData('identite','codepostal',this.value);updatePreview()">
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">LinkedIn</label>
+          <input class="field-input" type="text" data-field="linkedin" placeholder="linkedin.com/in/votre-profil"
+            oninput="updateCvData('identite','linkedin',this.value);updatePreview()">
+        </div>
       </div>
 
       <div class="form-step" data-step="2" style="display:none">
         <h2 class="step-title">Votre profil</h2>
         <p class="step-subtitle">Le poste visé et votre accroche professionnelle</p>
+
+        <div class="field-group">
+          <label class="field-label">Poste visé <span class="field-required">*</span></label>
+          <input class="field-input" type="text" data-field="poste"
+            placeholder="Ex : Assistante Administrative"
+            oninput="updateCvData('profil','poste',this.value);updatePreview();triggerSuggestions('poste',this.value)">
+          <div class="suggestions-wrap" id="suggestions-poste"></div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Accroche professionnelle <span class="field-required">*</span></label>
+          <textarea class="field-textarea" rows="4"
+            placeholder="Décrivez votre profil en 3-4 phrases..."
+            oninput="updateCvData('profil','accroche',this.value);updatePreview()"></textarea>
+          <div class="suggestions-wrap" id="suggestions-accroche"></div>
+        </div>
+
+        <div id="offre-cible-section" style="display:none">
+          <div class="field-group">
+            <label class="field-label">Offre d'emploi ciblée</label>
+            <textarea class="field-textarea" rows="3"
+              placeholder="Copiez-collez le texte de l'offre ici. L'IA optimisera votre CV pour ce poste."
+              oninput="updateCvData('profil','offre_cible',this.value)"></textarea>
+            <div class="ai-info-badge">✦ L'IA analysera cette offre pour adapter votre CV</div>
+          </div>
+        </div>
       </div>
 
       <div class="form-step" data-step="3" style="display:none">
         <h2 class="step-title">Vos expériences</h2>
         <p class="step-subtitle">Ajoutez vos expériences professionnelles</p>
+
+        <div id="pdf-upload-section" style="display:none">
+          <div class="pdf-upload-zone" onclick="document.getElementById('pdf-input').click()">
+            📄 Cliquez pour importer votre CV (PDF)
+          </div>
+          <input type="file" id="pdf-input" accept=".pdf" style="display:none"
+            onchange="handlePdfUpload(this.files[0])">
+          <div class="ai-info-badge" style="margin-top:12px">L'IA extraira automatiquement vos informations</div>
+        </div>
+
+        <div id="experiences-section">
+          <div id="experiences-container"></div>
+          <button class="btn-add-card" onclick="addExperience()">+ Ajouter une expérience</button>
+        </div>
       </div>
 
       <div class="form-step" data-step="4" style="display:none">
