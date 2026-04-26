@@ -12,6 +12,7 @@ const legalNoticeHtmlPath = path.join(__dirname, '..', 'mentions-legales.html');
 const termsHtmlPath = path.join(__dirname, '..', 'cgv.html');
 const privacyHtmlPath = path.join(__dirname, '..', 'confidentialite.html');
 const cookiesHtmlPath = path.join(__dirname, '..', 'cookies.html');
+const legacyLegalHubHtmlPath = path.join(__dirname, '..', 'legales.html');
 const cvCatalogueHtmlPath = path.join(__dirname, '..', 'cv-catalogue.html');
 const serviceHtmlPath = path.join(__dirname, '..', 'service.html');
 const vercelConfigPath = path.join(__dirname, '..', 'vercel.json');
@@ -19,7 +20,7 @@ const serviceWorkerPath = path.join(__dirname, '..', 'sw.js');
 
 describe('service static asset caching', () => {
   test('public pages cache-bust lang.js to avoid stale i18n bundles', async () => {
-    const [notFoundHtml, indexHtml, aboutHtml, legalNoticeHtml, termsHtml, privacyHtml, cookiesHtml, cvCatalogueHtml, serviceHtml] = await Promise.all([
+    const [notFoundHtml, indexHtml, aboutHtml, legalNoticeHtml, termsHtml, privacyHtml, cookiesHtml, legacyLegalHubHtml, cvCatalogueHtml, serviceHtml] = await Promise.all([
       fs.readFile(notFoundHtmlPath, 'utf8'),
       fs.readFile(indexHtmlPath, 'utf8'),
       fs.readFile(aboutHtmlPath, 'utf8'),
@@ -27,6 +28,7 @@ describe('service static asset caching', () => {
       fs.readFile(termsHtmlPath, 'utf8'),
       fs.readFile(privacyHtmlPath, 'utf8'),
       fs.readFile(cookiesHtmlPath, 'utf8'),
+      fs.readFile(legacyLegalHubHtmlPath, 'utf8'),
       fs.readFile(cvCatalogueHtmlPath, 'utf8'),
       fs.readFile(serviceHtmlPath, 'utf8'),
     ]);
@@ -38,6 +40,7 @@ describe('service static asset caching', () => {
     assert.match(termsHtml, /src="\/lang\.js\?v=/);
     assert.match(privacyHtml, /src="\/lang\.js\?v=/);
     assert.match(cookiesHtml, /src="\/lang\.js\?v=/);
+    assert.match(legacyLegalHubHtml, /src="\/lang\.js\?v=/);
     assert.match(cvCatalogueHtml, /src="\/lang\.js\?v=/);
     assert.match(serviceHtml, /src="\/lang\.js\?v=/);
   });
