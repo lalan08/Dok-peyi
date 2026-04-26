@@ -28,7 +28,7 @@ Si CLAUDE.md n'est pas à jour → ne pas committer.
 - DB : Firebase Realtime Database EU-west1
 - Email : Resend API
 - Paiement : Stripe Checkout + webhook HMAC-SHA256 + Mobile Money (Momo) + PayPal manuel
-- Tests : `node --test` natif (pas de framework externe), 200 tests / 65 suites
+- Tests : `node --test` natif (pas de framework externe), 202 tests / 66 suites
 - CI : GitHub Actions (`ci.yml`, `tests.yml`, `secret-scan.yml`)
 - Zéro dépendance npm (`package.json` ne contient que `"type": "module"` et le script test)
 
@@ -139,11 +139,12 @@ workspace-* (projets, tâches, chat, IA, QC, agents, notes, dashboard)
 | `tests/service-dynamic-i18n.test.js` | Test de régression i18n dynamique — vérifie que `service.js` est branché sur `DokPeyiI18n` et écoute `dokpeyi:langchange`, et que `lang.js` expose les clés de traduction du wizard principal pour services / choix / titres dynamiques. |
 | `tests/cv-catalogue-i18n.test.js` | Test de régression i18n catalogue CV — vérifie que `cv-catalogue.html` charge `lang.css` + `lang.js`, expose les hooks de traduction de la nav publique, que les cartes templates sont branchées sur `DokPeyiI18n` / `dokpeyi:langchange`, et que `lang.js` expose les clés `cvcat_*` de la page catalogue. |
 | `tests/cv-wizard-i18n.test.js` | Test de régression i18n tunnel CV — vérifie que `cv-wizard.html` charge `lang.css` + `lang.js`, expose les hooks de traduction de la nav publique, que `cv-wizard.js` est branché sur `DokPeyiI18n` / `dokpeyi:langchange`, et que `lang.js` expose les clés `cvw_*` du tunnel CV. |
-| `tests/static-asset-cache.test.js` | Test de régression cache statique — vérifie que `404.html`, `index.html`, `a-propos.html`, `mentions-legales.html`, `cv-catalogue.html` et `service.html` versionnent `lang.js`, que `service.html` versionne `service.css` et que `vercel.json` n'applique plus `immutable` aux CSS non hashés. |
+| `tests/static-asset-cache.test.js` | Test de régression cache statique — vérifie que `404.html`, `index.html`, `a-propos.html`, `mentions-legales.html`, `cgv.html`, `cv-catalogue.html` et `service.html` versionnent `lang.js`, que `service.html` versionne `service.css` et que `vercel.json` n'applique plus `immutable` aux CSS non hashés. |
 | `tests/404-i18n.test.js` | Test de régression i18n page 404 — vérifie que `404.html` charge `lang.css` + `lang.js`, expose les hooks de traduction des textes visibles et conserve les liens vers les 5 services principaux. |
 | `tests/mentions-legales-i18n.test.js` | Test de régression i18n mentions légales — vérifie que `mentions-legales.html` charge `lang.css` + `lang.js`, expose les hooks de traduction des textes visibles et que `lang.js` contient les clés `ml_*` dédiées. |
+| `tests/cgv-i18n.test.js` | Test de régression i18n CGV — vérifie que `cgv.html` charge `lang.css` + `lang.js`, expose les hooks de traduction des textes visibles et que `lang.js` contient les clés `cgv_*` dédiées. |
 | `mentions-legales.html` | Mentions légales — page légale statique maintenant branchée sur `lang.js` (`lang.css` + `lang.js?v=20260425-mentions-i18n`) avec topbar légère compatible bouton langue, sections éditeur / publication / hébergeur / propriété intellectuelle / données personnelles / cookies / droit applicable / contact traduisibles, et footer branché sur les clés communes. |
-| `cgv.html` | Conditions Générales de Vente (tarifs détaillés, délais, remboursement, disclaimer IA, CIMADE Guyane) |
+| `cgv.html` | Conditions Générales de Vente — page légale statique maintenant branchée sur `lang.js` (`lang.css` + `lang.js?v=20260425-cgv-i18n`) avec topbar légère compatible bouton langue, tableau des tarifs, suppléments CV, options, remboursement, rétractation, disclaimer IA, responsabilité, données personnelles, juridiction et footer traduisibles. |
 | `confidentialite.html` | Politique de confidentialité RGPD (données collectées, sous-traitants, droits, CNIL) |
 | `cookies.html` | Politique cookies (tableau des cookies strictement nécessaires, aucun tracking tiers) |
 | `404.html` | Page d'erreur 404 branded — `noindex`, topbar minimaliste avec bouton langue injecté via `.nav-links`, CTA retour accueil / `#services`, liens directs vers les 5 services principaux. Tous les textes visibles sont maintenant branchés sur `lang.js` (`lang.css` + `lang.js?v=20260426-404-i18n`). |
@@ -237,7 +238,7 @@ Pour les services utilisant `lib/pipeline.js` (via `/api/pipeline` action `gener
 ## Branches Git
 - **Branche principale** : `claude/create-website-AhMOy`
 - **Convention commits** : `<type>(<scope>): <message>` — types `feat`, `fix`, `chore`, `refactor`, `test`, `merge`, scopes courants : `cv`, `lettre`, `courrier`, `dossier`, `sejour`, `impot`, `naturalisation`, `prompt`, `impot`
-- **Tests obligatoires avant push** : `node --test tests/*.test.js` (200 / 200 OK)
+- **Tests obligatoires avant push** : `node --test tests/*.test.js` (202 / 202 OK)
 
 ## Déploiement Vercel
 - **Production Branch** : `claude/create-website-AhMOy` (auto-deploy sur chaque push)
@@ -254,7 +255,7 @@ Pour les services utilisant `lib/pipeline.js` (via `/api/pipeline` action `gener
 
 ## Tests
 - **Commande** : `npm test` (équivalent à `node --test tests/*.test.js`)
-- **Résultat actuel** : 200 tests / 65 suites / 200 pass / 0 fail
+- **Résultat actuel** : 202 tests / 66 suites / 202 pass / 0 fail
 - **Couverture** :
   - `api/admin-auth.js` — 11 tests
   - `api/ai-chat.js` — couvert
@@ -270,9 +271,10 @@ Pour les services utilisant `lib/pipeline.js` (via `/api/pipeline` action `gener
   - `service.html` — 2 tests de régression sur la navigation publique et la structure premium du header
   - `404.html` + `lang.js` — 3 tests de régression i18n sur la page 404
   - `mentions-legales.html` + `lang.js` — 2 tests de régression i18n sur les mentions légales
+  - `cgv.html` + `lang.js` — 2 tests de régression i18n sur la page CGV
   - `cv-catalogue.html` + `lang.js` — 3 tests de régression i18n sur le catalogue des 6 templates CV
   - `cv-wizard.html` + `cv-wizard.js` + `lang.js` — 3 tests de régression i18n sur le tunnel CV
-  - `404.html` + `index.html` + `a-propos.html` + `mentions-legales.html` + `cv-catalogue.html` + `service.html` + `vercel.json` — 4 tests de régression sur le cache des assets statiques i18n/CSS
+  - `404.html` + `index.html` + `a-propos.html` + `mentions-legales.html` + `cgv.html` + `cv-catalogue.html` + `service.html` + `vercel.json` — 4 tests de régression sur le cache des assets statiques i18n/CSS
 - **Non couvert** :
   - Wizard client (`service.js`) — aucun test unitaire sur la logique interactive
   - Flows E2E (navigation complète service → paiement → livraison)
@@ -297,7 +299,7 @@ Pour les services utilisant `lib/pipeline.js` (via `/api/pipeline` action `gener
 - **Phase 1 — i18n expérience client** : design validé — cible = tout le site public + wizard, uniquement textes visibles à l'écran, hors admin et hors documents générés (spec : `docs/superpowers/specs/2026-04-25-i18n-site-public-wizard-design.md`)
 - **Phase 1 — Prompts production** : ✅ terminé (prompts enrichis par service et sous-type, contexte Guyane, 7 services fonctionnels)
 - **Phase 2 — Pipeline multi-agents** : ✅ implémenté (`api/orchestrate.js`) — Emma → Viktor → Sofia → Léa orchestré serveur. Mémoire partagée entre agents : à venir (Phase 2b)
-- **Phase 3 — Premium et croissance** : en cours — Tunnel CV Page 1 (galerie 12 templates) ✅ livré. Le shell visible du tunnel CV est maintenant branché sur l'i18n centralisée (`lang.js`) avec sélecteur de langue dans la nav et rerender dynamique des cartes / modale / étape 2. Le catalogue 6 templates `cv-catalogue.html` est aussi branché sur l'i18n centralisée avec sélecteur de langue et rerender dynamique des cartes. Les pages `404.html` et `mentions-legales.html` sont maintenant branchées sur l'i18n centralisée avec topbar légère et sélecteur de langue. Pages 2–4 (infos, paiement, confirmation) : à venir. Fondation i18n JS+DOM centralisée posée dans `lang.js`. `index.html`, `a-propos.html`, `service.html` (shell), `cv-catalogue.html`, `cv-wizard.html` (shell + tunnel dynamique), `404.html` et `mentions-legales.html` sont maintenant branchés pour les textes visibles ; reste à couvrir le reste de `service.js` et les autres pages publiques.
+- **Phase 3 — Premium et croissance** : en cours — Tunnel CV Page 1 (galerie 12 templates) ✅ livré. Le shell visible du tunnel CV est maintenant branché sur l'i18n centralisée (`lang.js`) avec sélecteur de langue dans la nav et rerender dynamique des cartes / modale / étape 2. Le catalogue 6 templates `cv-catalogue.html` est aussi branché sur l'i18n centralisée avec sélecteur de langue et rerender dynamique des cartes. Les pages `404.html`, `mentions-legales.html` et `cgv.html` sont maintenant branchées sur l'i18n centralisée avec topbar légère et sélecteur de langue. Pages 2–4 (infos, paiement, confirmation) : à venir. Fondation i18n JS+DOM centralisée posée dans `lang.js`. `index.html`, `a-propos.html`, `service.html` (shell), `cv-catalogue.html`, `cv-wizard.html` (shell + tunnel dynamique), `404.html`, `mentions-legales.html` et `cgv.html` sont maintenant branchés pour les textes visibles ; reste à couvrir le reste de `service.js` et les autres pages publiques.
 
 ## Équipe
 - **Marvin** : produit, IA, prompts, wizard, SEO, contenu
