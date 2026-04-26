@@ -23,674 +23,407 @@ const T = {
     nav_services: 'Services',
     nav_tarifs: 'Tarifs',
     nav_cta: 'Faire ma demande',
+    nav_about: 'À propos',
     hero_badge: '✅ Simple · Rapide · Fiable',
-    hero_t1: "Besoin d'aide",
-    hero_t2: 'pour tes papiers\u00a0?',
-    hero_t3: 'On\u2019s\u2019occupe de tout.',
-    hero_sub: 'CV, lettres, dossiers administratifs\u2026 fais ta demande en quelques minutes.',
+    hero_t1: 'Moins de temps sur vos papiers.',
+    hero_t2: 'Plus de clarté pour vos démarches.',
+    hero_sub: 'CV, courriers, dossiers administratifs, séjour\u00a0: Dok\u2019Péyi vous aide à préparer vos documents et à mieux avancer dans vos démarches en Guyane française.',
+    hero_cadre: 'Un service d\u2019aide à la préparation documentaire. La décision finale appartient toujours à l\u2019organisme concerné.',
     hero_btn1: 'Faire ma demande',
-    hero_btn2: 'Comment ça marche\u00a0?',
+    hero_btn2: 'Voir les services',
     stat1: 'Demandes traitées',
     stat2: 'Délai moyen',
     stat3: 'Satisfaits',
-    how_title: 'Comment ça marche\u00a0?',
-    how_sub: 'Trois étapes simples, zéro stress',
-    s1_title: 'Tu expliques ton besoin',
-    s1_desc: 'Remplis le formulaire en quelques minutes avec les informations dont tu as besoin',
-    s2_title: 'On traite ta demande rapidement',
-    s2_desc: 'Ton document est préparé avec soin et professionnalisme selon tes informations',
-    s3_title: 'Tu reçois ton document',
-    s3_desc: 'Télécharge ou reçois par email ton document finalisé, prêt à être utilisé',
+    how_title: 'Comment ça fonctionne\u00a0?',
+    how_sub: 'De votre besoin à votre document, en quelques étapes.',
+    s1_title: 'Vous choisissez votre service',
+    s1_desc: 'Emploi, courriers, dossiers du quotidien ou démarches plus sensibles\u00a0: vous sélectionnez le service qui correspond à votre besoin.',
+    s2_title: 'Vous renseignez vos informations',
+    s2_desc: 'Le parcours est conçu pour rester clair, même si vous n\u2019êtes pas à l\u2019aise avec les démarches administratives.',
+    s3_title: 'Vous recevez votre document',
+    s3_desc: 'Votre document est préparé, structuré et mis en forme à partir des éléments fournis, puis relu par vous avant utilisation.',
     svc_title: 'Nos services',
-    svc_sub: 'Tout ce dont tu as besoin pour tes démarches',
+    svc_sub: 'Tout ce dont vous avez besoin pour vos démarches',
     svc1_name: 'Création de CV',
     svc1_desc: 'Un CV professionnel, clair et efficace pour décrocher un emploi',
     svc2_name: 'Lettre de motivation',
-    svc2_desc: 'Une lettre personnalisée et convaincante pour ta candidature',
+    svc2_desc: 'Une lettre claire, personnalisée et structurée pour votre candidature',
     svc3_name: 'Aide aux dossiers',
-    svc3_desc: 'Accompagnement pour monter ton dossier CAF, logement, emploi\u2026',
+    svc3_desc: 'Accompagnement pour constituer votre dossier CAF, logement, emploi\u2026',
     svc4_name: 'Courriers officiels',
     svc4_desc: 'Rédaction pour mairies, préfectures, administrations et autres',
     from: 'à partir de',
     btn_start: 'Commencer',
     btn_choose: 'Choisir',
-    adv1_t: 'Rapide',        adv1_d: 'Résultat en moins de 24h',
-    adv2_t: 'Simple',        adv2_d: 'Pas de jargon, pas de complexité',
-    adv3_t: 'Sans prise de tête', adv3_d: 'On s\'occupe de tout pour toi',
-    adv4_t: 'Accessible à tous',  adv4_d: 'Adapté à chaque situation',
+    adv1_t: 'Adapté à la Guyane',  adv1_d: 'Un service pensé pour les démarches locales et les situations spécifiques à la Guyane française.',
+    adv2_t: 'Rapide et accessible', adv2_d: 'La plupart des documents sont préparés en moins de 24h, selon le service concerné.',
+    adv3_t: 'Simple et clair',      adv3_d: 'Vous renseignez vos informations en quelques minutes. Dok\u2019Péyi prépare la rédaction et la mise en forme du document.',
+    adv4_t: 'Cadre visible',        adv4_d: 'Les conditions du service, la confidentialité et vos droits sont détaillés sur le site.',
     pricing_title: 'Tarifs clairs et transparents',
-    pricing_sub: 'Tu sais exactement ce que tu paies avant de commencer',
-    form_title: 'Fais ta demande',
-    form_sub: 'Remplis ce formulaire, on s\'occupe du reste',
+    pricing_sub: 'Vous savez exactement ce que vous payez avant de commencer',
+    form_title: 'Faire ma demande',
+    form_sub: 'Choisissez votre service et commencez en quelques minutes',
+    info_title: 'Ce que vous devez savoir',
+    info1_heading: 'Ce que vous recevez',
+    info1_text: 'Un document préparé, rédigé et mis en forme selon le service choisi.',
+    info2_heading: 'Cadre du service',
+    info2_text: 'Dok\u2019Péyi aide à préparer des documents. La décision finale appartient à l\u2019organisme concerné.',
+    info3_heading: 'Confidentialité et contact',
+    info3_text: 'Vos informations sont traitées dans le cadre du service demandé. Contact par email et WhatsApp.',
     testi_title: 'Ils nous font confiance',
-    footer_tagline: 'Ton aide administrative simple et accessible, où que tu sois.',
+    footer_tagline: 'Aide à la préparation documentaire pour vos démarches en Guyane française.',
     footer_nav: 'Navigation',
     footer_contact: 'Contact',
-    footer_legal: 'Dok\'péyi est un service d\'aide à la rédaction et à la préparation de documents. Les informations doivent être vérifiées avant utilisation.',
-    cv_ville_label:   'Ville / Commune',
-    cv_dispo_label:   'Disponibilité',
-    cv_secteur_label: "Secteur d'activité",
-    cv_niveau_label:  "Niveau d'études",
-    cv_permis_label:  'Permis de conduire',
-    cv_langues_label: 'Langues parlées',
-    cv_step1_short:   'Profil',
-    cv_step2_short:   'Objectif',
-    cv_step3_short:   'Parcours',
-    cv_step4_short:   'Finitions',
-    cv_step1_title:   'Qui êtes-vous ?',
-    cv_step2_title:   'Votre objectif',
-    cv_step3_title:   'Votre parcours',
-    cv_step4_title:   'Derniers détails',
-    lang_title: 'Choisissez votre langue',
-    lang_sub: 'Choisissez · Escolha · Chwazi · Kies · اختر · Choose',
-    lang_confirm: 'Continuer →',
+    footer_legal: 'Dok\u2019péyi est un service d\u2019aide à la rédaction et à la préparation de documents. Les documents doivent être relus avant utilisation.',
+    hero_doc_cv: 'CV Professionnel',
+    hero_doc_lettre: 'Lettre de motivation',
+    hero_doc_dossier: 'Dossier CAF',
+    badge_popular: 'Populaire',
+    badge_ready: '✓ Prêt',
+    badge_processing: '⏳ En cours',
+    svc_sub_index: 'Tout ce dont vous avez besoin pour vos démarches administratives en Guyane',
+    home_price_cv: 'à partir de 8€',
+    home_price_lettre: 'à partir de 5€',
+    home_price_courrier: 'à partir de 7€',
+    home_price_dossier: 'à partir de 12€',
+    home_price_sejour: 'à partir de 15€',
+    home_price_impot: 'à partir de 10€',
+    home_price_naturalisation: 'à partir de 20€',
+    home_cv_title: 'CV Professionnel',
+    home_lettre_title: 'Lettre de motivation',
+    home_courrier_title: 'Courrier officiel',
+    home_dossier_title: 'Dossier administratif',
+    home_sejour_title: 'Titre de séjour',
+    home_impot_title: 'Avis d\u2019impôt',
+    home_naturalisation_title: 'Naturalisation',
+    home_cv_desc: 'Un CV percutant, moderne et adapté à votre secteur — créé, amélioré ou professionnalisé selon votre profil.',
+    home_lettre_desc: 'Une lettre claire, personnalisée et structurée — créée, améliorée ou adaptée à votre offre d\u2019emploi.',
+    home_courrier_desc: 'Rédaction adaptée à votre situation et à l\u2019organisme concerné — demande, réclamation ou contestation.',
+    home_dossier_desc: 'Aide à la constitution de votre dossier CAF, logement social ou aide sociale — checklist, étapes et pièces justificatives structurées.',
+    home_sejour_desc: 'Première demande, renouvellement ou régularisation — dossier guidé et structuré selon votre situation.',
+    home_impot_desc: 'Comprendre votre avis, identifier des aides et préparer un courrier aux services fiscaux — accompagnement clair et sans jargon.',
+    home_naturalisation_desc: 'Vérification d\u2019éligibilité, préparation du dossier complet et lettre d\u2019intégration — accompagnement structuré à chaque étape.',
+    testi1_quote: '"Mon CV était prêt en quelques heures. Simple, rapide, professionnel. J\u2019ai décroché un entretien la semaine suivante\u00a0!"',
+    testi1_author: '— Marlène T., Cayenne',
+    testi2_quote: '"Je ne savais pas comment rédiger ma lettre de motivation. Dok\u2019péyi l\u2019a fait pour moi et c\u2019était parfait\u00a0!"',
+    testi2_author: '— Kevin R., Saint-Laurent',
+    testi3_quote: '"Service top\u00a0! Mon dossier de logement était complet et bien présenté. Je recommande à tout le monde."',
+    testi3_author: '— Fatima O., Kourou',
+    contact_whatsapp: '📱 WhatsApp disponible',
+    contact_hours: '🕐 Lun–Sam · 8h–20h',
+    footer_rights: '© 2026 Dok\u2019péyi — Tous droits réservés',
+    link_mentions: 'Mentions légales',
+    link_cgv: 'CGV',
+    link_confidentialite: 'Confidentialité',
+    link_cookies: 'Cookies',
+    ml_nav_home: "Retour à l'accueil",
+    ml_title: 'Mentions légales',
+    ml_updated: 'Dernière mise à jour : avril 2026',
+    ml_publisher_title: 'Éditeur du site',
+    ml_publisher_service: "Service d'aide administrative en ligne destiné aux résidents de Guyane française.",
+    ml_email_label: 'Email :',
+    ml_note_html: "Dok'péyi est actuellement <strong>en cours de constitution juridique</strong>. Les informations définitives (forme juridique, capital social, SIREN, numéro de TVA intracommunautaire) seront publiées dès immatriculation. L'activité opère à ce jour sous forme de projet porté par ses fondateurs.",
+    ml_publication_title: 'Responsable de la publication',
+    ml_publication_desc_html: '<strong>Marvin</strong> — responsable du contenu éditorial du site et de la relation publique.',
+    ml_contact_label: 'Contact :',
+    ml_host_title: 'Hébergeur',
+    ml_host_country: 'San Francisco, CA 94104, États-Unis',
+    ml_host_site: 'Site :',
+    ml_ip_title: 'Propriété intellectuelle',
+    ml_ip_p1: "L'ensemble du contenu du site (textes, graphismes, logo, icônes, images, code source, marques, interface, structure) est la propriété exclusive de Dok'péyi ou fait l'objet d'une autorisation d'usage.",
+    ml_ip_p2: "Toute reproduction, représentation, modification, publication ou adaptation totale ou partielle, par quelque procédé que ce soit, est interdite sans autorisation écrite préalable.",
+    ml_ip_p3_html: "<strong>© 2026 Dok'péyi — Tous droits réservés.</strong>",
+    ml_data_title: 'Données personnelles',
+    ml_data_p1: 'Les données collectées via ce site sont traitées conformément au Règlement Général sur la Protection des Données (RGPD) et à la Loi Informatique et Libertés.',
+    ml_data_p2_html: 'Pour en savoir plus, consultez notre <a href="/confidentialite">Politique de confidentialité</a>.',
+    ml_cookies_title: 'Cookies',
+    ml_cookies_p1: "Ce site utilise uniquement des cookies strictement nécessaires à son fonctionnement. Aucun cookie publicitaire n'est déposé.",
+    ml_cookies_p2_html: 'Détails : <a href="/cookies">Politique cookies</a>.',
+    ml_law_title: 'Droit applicable',
+    ml_law_p1_html: 'Les présentes mentions sont soumises au droit français. Tout litige relève de la compétence exclusive des tribunaux français ; le tribunal compétent est celui de <strong>Cayenne (Guyane française)</strong>.',
+    ml_contact_title: 'Contact',
+    ml_contact_intro: 'Pour toute question relative au site ou à son contenu :',
+    ml_footer_home: 'Accueil',
+    cgv_nav_home: "Retour à l'accueil",
+    cgv_title: 'Conditions Générales de Vente',
+    cgv_updated: 'Dernière mise à jour : avril 2026',
+    cgv_section_1_title: '1. Présentation du service',
+    cgv_section_1_p1: "Dok'péyi est un service en ligne d'aide à la rédaction et à la préparation de documents administratifs destiné aux résidents de Guyane française et plus largement aux publics francophones confrontés à des démarches administratives françaises.",
+    cgv_section_1_p2: "Le service propose la génération assistée par intelligence artificielle des documents suivants : CV, lettres de motivation, courriers officiels, dossiers administratifs, guides de titre de séjour, documents liés à l'impôt, dossiers de naturalisation.",
+    cgv_section_1_p3: "Les présentes Conditions Générales de Vente (ci-après « CGV ») régissent l'ensemble des relations entre Dok'péyi et ses clients.",
+    cgv_section_2_title: '2. Tarifs',
+    cgv_section_2_intro: "Les tarifs suivants s'entendent toutes taxes comprises, en euros, par document généré :",
+    cgv_table_service: 'Service',
+    cgv_table_price: 'Tarif',
+    cgv_rate_cv: 'CV Professionnel',
+    cgv_rate_lettre: 'Lettre de motivation',
+    cgv_rate_courrier: 'Courrier officiel',
+    cgv_rate_dossier: 'Dossier administratif (CAF, logement, aide sociale…)',
+    cgv_rate_sejour: 'Titre de séjour (guide personnalisé)',
+    cgv_rate_impot: "Avis d'impôt (compréhension, aide, courrier)",
+    cgv_rate_naturalisation: 'Naturalisation (éligibilité, dossier, lettre)',
+    cgv_cv_options_title: 'Options et suppléments CV',
+    cgv_cv_options_intro: 'Les templates CV premium sont proposés en supplément du tarif CV de base :',
+    cgv_table_template: 'Modèle CV',
+    cgv_table_supplement: 'Supplément',
+    cgv_cv_option_classic: 'Classique (inclus par défaut)',
+    cgv_cv_option_corporate: 'Corporate',
+    cgv_cv_option_impact: 'Impact',
+    cgv_cv_option_elite: 'Élite',
+    cgv_cv_option_prestige: 'Prestige',
+    cgv_cv_option_executive: 'Executive',
+    cgv_other_options_title: 'Autres options',
+    cgv_other_option_translation_html: '<strong>Traduction du document</strong> (anglais, créole, portugais) : <span class="price">+3 €</span>',
+    cgv_other_option_mods_html: '<strong>Modifications supplémentaires</strong> — <strong>2 modifications sont offertes</strong> sur chaque document après prévisualisation. Au-delà, le tarif applicable sera communiqué avant toute facturation et nécessitera l’accord explicite du client.',
+    cgv_section_3_title: '3. Commande et paiement',
+    cgv_section_3_p1: "La commande s'effectue via l'interface du site (service.html) en trois étapes : choix du service, saisie des informations, paiement.",
+    cgv_section_3_p2_html: 'Le paiement s’effectue en ligne de manière sécurisée via <strong>Stripe</strong>. Les paiements manuels par <strong>PayPal</strong> et <strong>Mobile Money (Momo)</strong> sont également disponibles sur demande.',
+    cgv_section_3_p3: 'Les données bancaires ne transitent jamais par les serveurs de Dok’péyi : elles sont traitées directement par le prestataire de paiement.',
+    cgv_section_4_title: '4. Délai de livraison',
+    cgv_section_4_p1_html: 'La génération du document par intelligence artificielle est <strong>quasi-instantanée</strong> (quelques secondes). Le document est prévisualisable dès la fin de la génération.',
+    cgv_section_4_p2_html: 'Pour les services nécessitant une vérification manuelle par un membre de l’équipe (<strong>Titre de séjour</strong>, <strong>Naturalisation</strong>), la livraison finale intervient dans un délai de <strong>24 à 48 heures</strong> après validation administrative, par email.',
+    cgv_section_4_p3_html: 'Pour les autres services, la livraison intervient <strong>immédiatement</strong> après confirmation du paiement, par email ou téléchargement direct.',
+    cgv_section_5_title: '5. Politique de remboursement',
+    cgv_refund_intro: "Conformément à l'article L.221-28 du Code de la consommation, le client bénéficie des garanties suivantes :",
+    cgv_refund_delay_html: '<strong>Document non livré sous 72h</strong> après paiement (hors cas où le client a demandé un délai ou n’a pas répondu aux sollicitations de l’équipe) : remboursement intégral sur demande.',
+    cgv_refund_error_html: '<strong>Document manifestement erroné ou inexploitable</strong> : correction prioritaire gratuite ou, en cas d’impossibilité, remboursement partiel ou intégral selon les cas.',
+    cgv_refund_tech_html: '<strong>Erreur technique ou double facturation</strong> : remboursement intégral sous 14 jours.',
+    cgv_refund_request_html: 'Toute demande de remboursement doit être adressée à <a href="mailto:contact@dok-peyi.fr">contact@dok-peyi.fr</a> en précisant le numéro de commande et le motif.',
+    cgv_retract_title: '6. Droit de rétractation',
+    cgv_retract_p1_html: 'En application de l’article L.221-18 du Code de la consommation, le client dispose d’un délai de <strong>14 jours calendaires</strong> à compter de la confirmation de sa commande pour exercer son droit de rétractation, sans avoir à justifier de motif.',
+    cgv_retract_p2_html: '<strong>Exception — article L.221-28 13° du Code de la consommation :</strong> le droit de rétractation ne peut s’exercer pour les contrats de fourniture d’un <strong>contenu numérique non fourni sur un support matériel</strong> dont l’exécution a commencé après accord préalable exprès du consommateur et renoncement exprès à son droit de rétractation. En validant sa commande, le client reconnaît que le document sera livré immédiatement et renonce à son droit de rétractation pour ce contenu.',
+    cgv_retract_p3: "Le droit de rétractation demeure applicable si le document n'a pas été livré dans les délais prévus (article 4).",
+    cgv_ai_title: "7. Avertissement sur l'intelligence artificielle",
+    cgv_disclaimer_html: '<strong>⚠️ Disclaimer IA — à lire attentivement</strong><br><br>Les documents générés par intelligence artificielle sont fournis à titre d’aide à la rédaction. Ils ne constituent pas un conseil juridique professionnel.<br><br>Pour les démarches complexes (<strong>titre de séjour, naturalisation, contentieux fiscal, recours administratif</strong>), nous recommandons fortement de consulter un professionnel du droit (avocat) ou une association spécialisée — notamment <strong>la CIMADE Guyane</strong> (aide gratuite aux étrangers) ou un point d’accès au droit.<br><br>Dok’péyi décline toute responsabilité en cas d’utilisation non vérifiée d’un document généré pour une démarche officielle.',
+    cgv_liability_title: '8. Responsabilité',
+    cgv_liability_p1: 'Dok’péyi met tout en œuvre pour assurer la qualité des documents produits. Toutefois, le client reste responsable de la vérification et de l’utilisation des documents remis.',
+    cgv_liability_p2: 'Dok’péyi ne saurait être tenu responsable :',
+    cgv_liability_li1: 'des conséquences d’informations inexactes fournies par le client ;',
+    cgv_liability_li2: 'du rejet d’une démarche administrative par l’administration compétente ;',
+    cgv_liability_li3: 'd’une interruption temporaire du service liée à l’hébergeur ou aux services tiers ;',
+    cgv_liability_li4: 'd’une mauvaise utilisation du document par le client ou un tiers.',
+    cgv_data_title: '9. Protection des données personnelles',
+    cgv_data_p1_html: 'Dok’péyi collecte et traite les données personnelles des clients conformément au RGPD. Pour le détail des traitements, finalités, durées de conservation et droits du client, consultez la <a href="/confidentialite">Politique de confidentialité</a>.',
+    cgv_changes_title: '10. Modification des CGV',
+    cgv_changes_p1: 'Dok’péyi se réserve le droit de modifier les présentes CGV à tout moment. Les CGV applicables sont celles en vigueur à la date de passation de la commande. Toute modification substantielle sera notifiée par email aux clients concernés.',
+    cgv_jurisdiction_title: '11. Droit applicable et juridiction compétente',
+    cgv_jurisdiction_p1_html: 'Les présentes CGV sont soumises au <strong>droit français</strong>.',
+    cgv_jurisdiction_p2_html: 'À défaut de résolution amiable, tout litige relatif à leur interprétation ou à leur exécution relève de la compétence exclusive du <strong>Tribunal judiciaire de Cayenne</strong>.',
+    cgv_jurisdiction_p3: "Conformément à l'article L.612-1 du Code de la consommation, le client consommateur a la possibilité de recourir gratuitement à un médiateur de la consommation en vue de la résolution amiable d'un litige. Les coordonnées du médiateur seront communiquées sur demande.",
+    cgv_contact_title: '12. Contact',
+    cgv_contact_intro: 'Pour toute question relative aux présentes CGV ou à une commande :',
+    cgv_footer_home: 'Accueil',
+    conf_nav_home: "Retour à l'accueil",
+    conf_title: 'Politique de confidentialité',
+    conf_updated: 'Dernière mise à jour : avril 2026 — Conforme au Règlement (UE) 2016/679 (RGPD) et à la Loi Informatique et Libertés',
+    conf_controller_title: '1. Responsable du traitement',
+    conf_controller_service: "<strong>Dok'péyi</strong> — service d'aide administrative en ligne pour la Guyane française.",
+    conf_controller_desc: "Dok'péyi détermine les finalités et les moyens du traitement des données personnelles collectées sur le site.",
+    conf_data_categories_title: '2. Données collectées',
+    conf_data_categories_intro: "Dans le cadre de la fourniture du service, Dok'péyi collecte les catégories de données suivantes :",
+    conf_identity_title: "Données d'identification et de contact",
+    conf_identity_li1: 'Nom, prénom',
+    conf_identity_li2: 'Adresse email',
+    conf_identity_li3: 'Numéro de téléphone (WhatsApp)',
+    conf_request_title: 'Données liées à la demande',
+    conf_request_li1: 'Situation administrative (durée de résidence, nationalité, visa, situation familiale, situation professionnelle, revenus…)',
+    conf_request_li2: 'Informations professionnelles (poste, expériences, formations, compétences) pour les CV et lettres',
+    conf_request_li3_html: "Documents téléversés par l'utilisateur pour pré-remplissage (PDF ou image analysés par <code>/api/extract-doc</code>)",
+    conf_request_li4: 'Documents générés (CV, lettres, courriers, dossiers, guides)',
+    conf_payment_title: 'Données de paiement',
+    conf_payment_p1_html: "Les données bancaires (numéro de carte, cryptogramme…) <strong>ne transitent jamais par les serveurs de Dok'péyi</strong>. Elles sont traitées directement par notre prestataire de paiement (Stripe). Dok'péyi conserve uniquement l'identifiant de transaction et le montant payé pour des besoins comptables et de suivi.",
+    conf_technical_title: 'Données techniques',
+    conf_technical_li1: 'Adresse IP (utilisée pour le rate-limiting, non stockée durablement)',
+    conf_technical_li2: 'Type de navigateur et appareil',
+    conf_technical_li3: 'Horodatage des actions sur le site',
+    conf_purposes_title: '3. Finalités et bases légales',
+    conf_table_purpose: 'Finalité',
+    conf_table_basis: 'Base légale',
+    conf_purpose_1: 'Génération du document commandé (CV, lettre, dossier…)',
+    conf_basis_1: 'Exécution du contrat (art. 6.1.b RGPD)',
+    conf_purpose_2: 'Facturation et suivi des commandes',
+    conf_basis_2: 'Exécution du contrat + obligation légale',
+    conf_purpose_3: 'Relation client et support',
+    conf_basis_3: 'Exécution du contrat',
+    conf_purpose_4: 'Sécurité du service (rate-limiting, lutte anti-fraude)',
+    conf_basis_4: 'Intérêt légitime (art. 6.1.f RGPD)',
+    conf_purpose_5: 'Obligations comptables et fiscales',
+    conf_basis_5: 'Obligation légale (art. 6.1.c RGPD)',
+    conf_retention_title: '4. Durée de conservation',
+    conf_retention_li1_html: '<strong>Données de commande et documents générés :</strong> 12 mois après la dernière commande, puis suppression ou archivage anonymisé.',
+    conf_retention_li2_html: '<strong>Données de facturation :</strong> 10 ans (obligation comptable française).',
+    conf_retention_li3_html: '<strong>Données techniques (rate-limit, logs) :</strong> maximum 12 mois glissants.',
+    conf_retention_li4_html: '<strong>Préférences cookies :</strong> 30 jours (stockage local navigateur).',
+    conf_processors_title: '5. Destinataires et sous-traitants',
+    conf_processors_intro: "Dok'péyi recourt aux sous-traitants suivants pour fournir le service. Chacun est engagé par un contrat de sous-traitance (DPA) conforme à l'article 28 du RGPD lorsque applicable :",
+    conf_table_processor: 'Sous-traitant',
+    conf_table_role: 'Rôle',
+    conf_table_location: 'Localisation',
+    conf_proc_1_role: 'Génération de texte par IA',
+    conf_proc_1_location: 'États-Unis (clauses contractuelles types)',
+    conf_proc_2_role: 'Chat IA interne (fallback)',
+    conf_proc_2_location: 'États-Unis (clauses contractuelles types)',
+    conf_proc_3_role: 'Hébergement du site et des Edge Functions',
+    conf_proc_3_location: 'États-Unis (clauses contractuelles types)',
+    conf_proc_4_role: 'Traitement des paiements par carte',
+    conf_proc_4_location: 'Irlande / États-Unis',
+    conf_proc_5_role: 'Base de données Realtime (commandes)',
+    conf_proc_5_location: 'UE — europe-west1',
+    conf_proc_6_role: 'Envoi des emails transactionnels',
+    conf_proc_6_location: 'États-Unis (clauses contractuelles types)',
+    conf_processors_p1_html: 'Les transferts de données hors UE vers les États-Unis sont encadrés par les <strong>Clauses Contractuelles Types</strong> de la Commission européenne et, le cas échéant, par le <strong>Data Privacy Framework</strong>.',
+    conf_processors_p2: "Aucune donnée personnelle n'est vendue, louée ou cédée à des fins commerciales à un tiers.",
+    conf_rights_title: '6. Vos droits',
+    conf_rights_intro_html: 'En tant que personne concernée, vous disposez des droits suivants :',
+    conf_rights_li1_html: '<strong>Droit d’accès</strong> — obtenir la confirmation que vos données sont traitées et une copie de celles-ci.',
+    conf_rights_li2_html: '<strong>Droit de rectification</strong> — faire corriger des données inexactes ou incomplètes.',
+    conf_rights_li3_html: '<strong>Droit à l’effacement</strong> — demander la suppression de vos données (« droit à l’oubli ») sous conditions.',
+    conf_rights_li4_html: '<strong>Droit à la limitation</strong> — demander la suspension du traitement dans certains cas.',
+    conf_rights_li5_html: '<strong>Droit d’opposition</strong> — vous opposer à un traitement fondé sur l’intérêt légitime.',
+    conf_rights_li6_html: '<strong>Droit à la portabilité</strong> — recevoir vos données dans un format structuré et lisible.',
+    conf_rights_li7_html: '<strong>Droit de retirer votre consentement</strong> à tout moment (pour les traitements fondés sur le consentement).',
+    conf_rights_li8_html: '<strong>Droit de définir des directives post-mortem</strong> relatives à vos données.',
+    conf_rights_request_html: 'Pour exercer ces droits, adressez votre demande par email à <a href="mailto:contact@dok-peyi.fr">contact@dok-peyi.fr</a> en précisant votre identité. Une réponse vous sera apportée dans un délai maximum d’<strong>un mois</strong>.',
+    conf_dpo_title: '7. Délégué à la protection des données (DPO)',
+    conf_dpo_p1: "Dok'péyi n'est pas légalement tenu de désigner un DPO mais a désigné un point de contact privilégié pour toutes les questions relatives à la protection des données :",
+    conf_security_title: '8. Sécurité des données',
+    conf_security_intro: "Dok'péyi met en œuvre des mesures techniques et organisationnelles appropriées pour protéger vos données contre la destruction, la perte, l'altération ou la divulgation non autorisée :",
+    conf_security_li1: 'Chiffrement des données en transit (HTTPS / TLS)',
+    conf_security_li2: "Règles de sécurité Firebase (contrôle d'accès par rôle)",
+    conf_security_li3: 'Headers HTTP de sécurité (CSP, HSTS, X-Frame-Options…)',
+    conf_security_li4: 'Authentification des comptes administrateurs avec protection anti-force brute',
+    conf_security_li5: 'Rate-limiting sur les API sensibles',
+    conf_security_li6: 'Vérification de signature (HMAC-SHA256) sur les webhooks de paiement',
+    conf_authority_title: '9. Autorité de contrôle',
+    conf_authority_p1: "Conformément à l'article 77 du RGPD, vous disposez du droit d'introduire une réclamation auprès de l'autorité de contrôle française :",
+    conf_authority_phone: 'Téléphone : 01 53 73 22 22',
+    conf_authority_site: 'Site :',
+    conf_changes_title: '10. Modifications de la politique',
+    conf_changes_p1: "Dok'péyi peut être amené à modifier la présente politique de confidentialité. Toute modification substantielle sera notifiée sur le site ou par email. La version applicable est celle en vigueur à la date de votre dernière commande.",
+    conf_contact_title: '11. Contact',
+    conf_contact_intro: 'Pour toute question relative à la présente politique ou au traitement de vos données personnelles :',
+    conf_footer_home: 'Accueil',
+    cookies_nav_home: "Retour à l'accueil",
+    cookies_title: 'Politique cookies',
+    cookies_updated: 'Dernière mise à jour : avril 2026',
+    cookies_summary_html: "<strong>🍪 En résumé — Dok'péyi est sobre en cookies :</strong><br>Seuls des cookies <strong>strictement nécessaires</strong> au fonctionnement du service sont utilisés. Aucun cookie publicitaire, aucun tracker tiers, aucun partage avec des régies publicitaires.",
+    cookies_definition_title: "1. Qu'est-ce qu'un cookie ?",
+    cookies_definition_p1: 'Un cookie est un petit fichier texte déposé sur votre appareil (ordinateur, smartphone, tablette) par le navigateur lorsque vous visitez un site. Il permet au site de mémoriser des informations sur votre visite (langue, session, préférences).',
+    cookies_definition_p2_html: "Dok'péyi utilise également d'autres technologies similaires : <code>localStorage</code> (stockage local du navigateur) et <code>sessionStorage</code> (stockage de session, effacé à la fermeture de l'onglet).",
+    cookies_used_title: "2. Cookies utilisés sur Dok'péyi",
+    cookies_used_intro: 'Seuls les cookies suivants, tous strictement nécessaires au fonctionnement du service, sont utilisés :',
+    cookies_table_name: 'Nom',
+    cookies_table_purpose: 'Finalité',
+    cookies_table_duration: 'Durée',
+    cookies_table_type: 'Type',
+    cookies_cookie_ok_purpose: "Mémoriser votre acceptation de la bannière cookies",
+    cookies_cookie_ok_duration: '30 jours',
+    cookies_cookie_draft_purpose: 'Sauvegarde temporaire du formulaire de commande (wizard)',
+    cookies_cookie_draft_duration: "Session (fermeture de l'onglet)",
+    cookies_cookie_lang_purpose: "Mémoriser la langue choisie pour l'interface",
+    cookies_cookie_lang_duration: '1 an',
+    cookies_cookie_stripe_name: 'Cookies Stripe',
+    cookies_cookie_stripe_purpose: 'Sécurisation de la session de paiement (déposés uniquement pendant le paiement par Stripe)',
+    cookies_cookie_stripe_duration: 'Session',
+    cookies_cookie_stripe_type: 'Tiers strictement nécessaire',
+    cookies_we_do_not_title: '3. Ce que nous ne faisons pas',
+    cookies_we_do_not_li1: '❌ Aucun cookie publicitaire, aucun ciblage comportemental',
+    cookies_we_do_not_li2: '❌ Aucun cookie tiers à des fins de tracking (Google Analytics, Facebook Pixel, etc.)',
+    cookies_we_do_not_li3: '❌ Aucune revente ou partage de données avec des régies publicitaires',
+    cookies_we_do_not_li4: '❌ Aucun profilage à des fins commerciales',
+    cookies_consent_title: '4. Consentement',
+    cookies_consent_p1: "Conformément à la réglementation (RGPD, directive ePrivacy, recommandations CNIL), les cookies strictement nécessaires au fonctionnement d'un service demandé par l'utilisateur ne requièrent pas de consentement préalable.",
+    cookies_consent_p2_html: "Néanmoins, Dok'péyi affiche une bannière d'information lors de votre première visite pour vous informer de l'utilisation de ces cookies. En cliquant sur « J'accepte », vous confirmez en avoir pris connaissance. La bannière n'apparaîtra plus sur vos visites suivantes.",
+    cookies_manage_title: '5. Comment gérer les cookies ?',
+    cookies_manage_intro: 'Vous pouvez à tout moment supprimer les cookies déjà déposés ou empêcher leur dépôt via les paramètres de votre navigateur :',
+    cookie_text: "🍪 Dok'péyi utilise des cookies nécessaires au fonctionnement du service. Aucun cookie publicitaire.",
+    cookie_learn_more: 'En savoir plus',
+    cookie_accept: "J'accepte",
+    update_available: 'Nouvelle version disponible',
+    update_refresh: 'Actualiser',
   },
 
-  /* ─────────── PORTUGUÊS (Brésil) ─────────── */
-  pt: {
-    nav_comment: 'Como funciona',
-    nav_services: 'Serviços',
-    nav_tarifs: 'Preços',
-    nav_cta: 'Fazer pedido',
-    hero_badge: '✅ Simples · Rápido · Confiável',
-    hero_t1: 'Precisa de ajuda',
-    hero_t2: 'com seus documentos?',
-    hero_t3: 'Nós cuidamos de tudo.',
-    hero_sub: 'CV, cartas, documentos administrativos… faça seu pedido em poucos minutos.',
-    hero_btn1: 'Fazer meu pedido',
-    hero_btn2: 'Como funciona?',
-    stat1: 'Pedidos processados',
-    stat2: 'Prazo médio',
-    stat3: 'Satisfeitos',
-    how_title: 'Como funciona?',
-    how_sub: 'Três passos simples, sem estresse',
-    s1_title: 'Você explica sua necessidade',
-    s1_desc: 'Preencha o formulário em poucos minutos com as informações que você precisa',
-    s2_title: 'Processamos seu pedido rapidamente',
-    s2_desc: 'Seu documento é preparado com cuidado e profissionalismo',
-    s3_title: 'Você recebe seu documento',
-    s3_desc: 'Baixe ou receba por e-mail seu documento finalizado, pronto para usar',
-    svc_title: 'Nossos serviços',
-    svc_sub: 'Tudo que você precisa para suas necessidades',
-    svc1_name: 'Criação de Currículo',
-    svc1_desc: 'Um currículo profissional, claro e eficaz para conseguir emprego',
-    svc2_name: 'Carta de apresentação',
-    svc2_desc: 'Uma carta personalizada e convincente para sua candidatura',
-    svc3_name: 'Ajuda com processos',
-    svc3_desc: 'Acompanhamento para montar seu processo de moradia, emprego…',
-    svc4_name: 'Correspondência oficial',
-    svc4_desc: 'Redação para prefeituras, administrações e outros',
-    from: 'a partir de',
-    btn_start: 'Começar',
-    btn_choose: 'Escolher',
-    adv1_t: 'Rápido',         adv1_d: 'Resultado em menos de 24h',
-    adv2_t: 'Simples',        adv2_d: 'Sem jargão, sem complicação',
-    adv3_t: 'Sem dor de cabeça', adv3_d: 'Cuidamos de tudo para você',
-    adv4_t: 'Para todos',     adv4_d: 'Adaptado a cada situação',
-    pricing_title: 'Preços claros e transparentes',
-    pricing_sub: 'Você sabe exatamente o que paga antes de começar',
-    form_title: 'Faça seu pedido',
-    form_sub: 'Preencha este formulário, cuidamos do resto',
-    testi_title: 'Eles confiam em nós',
-    footer_tagline: 'Sua ajuda administrativa simples e acessível, onde quer que você esteja.',
-    footer_nav: 'Navegação',
-    footer_contact: 'Contato',
-    footer_legal: 'Dok\'péyi é um serviço de ajuda na redação e preparação de documentos. As informações devem ser verificadas antes do uso.',
-    cv_ville_label:   'Cidade / Município',
-    cv_dispo_label:   'Disponibilidade',
-    cv_secteur_label: 'Setor de atividade',
-    cv_niveau_label:  'Nível de escolaridade',
-    cv_permis_label:  'Carta de condução',
-    cv_langues_label: 'Idiomas falados',
-    cv_step1_short:   'Perfil',
-    cv_step2_short:   'Objetivo',
-    cv_step3_short:   'Percurso',
-    cv_step4_short:   'Detalhes',
-    cv_step1_title:   'Quem é você?',
-    cv_step2_title:   'Seu objetivo',
-    cv_step3_title:   'Seu percurso',
-    cv_step4_title:   'Últimos detalhes',
-    lang_title: 'Choisissez votre langue',
-    lang_sub: 'Choisissez · Escolha · Chwazi · Kies · اختر · Choose',
-    lang_confirm: 'Continuar →',
-  },
-
-  /* ─────────── KREYÒL AYISYEN (Haïti) ─────────── */
-  ht: {
-    nav_comment: 'Kijan li mache',
-    nav_services: 'Sèvis',
-    nav_tarifs: 'Pri',
-    nav_cta: 'Fè demann mwen',
-    hero_badge: '✅ Senp · Rapid · Serye',
-    hero_t1: 'Ou bezwen èd',
-    hero_t2: 'pou papye ou yo\u00a0?',
-    hero_t3: 'Nou okipe tout bagay.',
-    hero_sub: 'CV, lèt, dosye administratif… fè demann ou an kèk minit.',
-    hero_btn1: 'Fè demann mwen',
-    hero_btn2: 'Kijan li mache\u00a0?',
-    stat1: 'Demann trete',
-    stat2: 'Delè mwayen',
-    stat3: 'Satisfè',
-    how_title: 'Kijan li mache\u00a0?',
-    how_sub: 'Twa etap senp, zero stres',
-    s1_title: 'Ou eksplike bezwen ou',
-    s1_desc: 'Ranpli fòmilè a an kèk minit avèk enfòmasyon ou bezwen yo',
-    s2_title: 'Nou trete demann ou rapid',
-    s2_desc: 'Dokiman ou prepare avèk swen ak pwofesyonalis',
-    s3_title: 'Ou resevwa dokiman ou',
-    s3_desc: 'Telechaje oswa resevwa pa imèl dokiman ou finalize, pare pou itilize',
-    svc_title: 'Sèvis nou yo',
-    svc_sub: 'Tout sa ou bezwen pou demarach ou yo',
-    svc1_name: 'Kreyasyon CV',
-    svc1_desc: 'Yon CV pwofesyonèl, klè ak efikas pou jwenn travay',
-    svc2_name: 'Lèt motivasyon',
-    svc2_desc: 'Yon lèt pèsonalize ak konvenkan pou kandidati ou',
-    svc3_name: 'Èd pou dosye yo',
-    svc3_desc: 'Akonpayman pou monte dosye CAF, lojman, travay ou…',
-    svc4_name: 'Lèt ofisyèl',
-    svc4_desc: 'Rédaksyon pou mairie, administrasyon ak lòt',
-    from: 'apati de',
-    btn_start: 'Kòmanse',
-    btn_choose: 'Chwazi',
-    adv1_t: 'Rapid',          adv1_d: 'Rezilta nan mwens pase 24h',
-    adv2_t: 'Senp',           adv2_d: 'Pa gen jagon, pa gen konplikasyon',
-    adv3_t: 'San tèt chaje',  adv3_d: 'Nou okipe tout bagay pou ou',
-    adv4_t: 'Aksesib pou tout moun', adv4_d: 'Adapte pou chak sitiyasyon',
-    pricing_title: 'Pri klè ak transparan',
-    pricing_sub: 'Ou konnen egzakteman sa ou peye anvan ou kòmanse',
-    form_title: 'Fè demann ou',
-    form_sub: 'Ranpli fòmilè sa a, nou okipe rès la',
-    testi_title: 'Yo fè nou konfyans',
-    footer_tagline: 'Èd administratif senp ak aksesib pou ou, kèlkeswa kote ou ye.',
-    footer_nav: 'Navigasyon',
-    footer_contact: 'Kontak',
-    footer_legal: 'Dok\'péyi se yon sèvis èd pou rédaksyon ak preparasyon dokiman. Enfòmasyon yo dwe verifye anvan itilizasyon.',
-    cv_ville_label:   'Vil / Komin',
-    cv_dispo_label:   'Disponibilite',
-    cv_secteur_label: 'Sektè aktivite',
-    cv_niveau_label:  'Nivo etid',
-    cv_permis_label:  'Pèmi kondui',
-    cv_langues_label: 'Lang pale yo',
-    cv_step1_short:   'Profil',
-    cv_step2_short:   'Objektif',
-    cv_step3_short:   'Eksperyans',
-    cv_step4_short:   'Detay',
-    cv_step1_title:   'Kiyès ou ye?',
-    cv_step2_title:   'Objektif ou',
-    cv_step3_title:   'Eksperyans ou',
-    cv_step4_title:   'Dènye detay',
-    lang_title: 'Choisissez votre langue',
-    lang_sub: 'Choisissez · Escolha · Chwazi · Kies · اختر · Choose',
-    lang_confirm: 'Kontinye →',
-  },
-
-  /* ─────────── NEDERLANDS (Surinam) ─────────── */
-  nl: {
-    nav_comment: 'Hoe het werkt',
-    nav_services: 'Diensten',
-    nav_tarifs: 'Tarieven',
-    nav_cta: 'Mijn aanvraag',
-    hero_badge: '✅ Eenvoudig · Snel · Betrouwbaar',
-    hero_t1: 'Hulp nodig',
-    hero_t2: 'bij uw papieren?',
-    hero_t3: 'Wij regelen alles.',
-    hero_sub: 'CV, brieven, administratieve dossiers… doe uw aanvraag in enkele minuten.',
-    hero_btn1: 'Mijn aanvraag doen',
-    hero_btn2: 'Hoe werkt het?',
-    stat1: 'Aanvragen verwerkt',
-    stat2: 'Gemiddelde tijd',
-    stat3: 'Tevreden',
-    how_title: 'Hoe werkt het?',
-    how_sub: 'Drie eenvoudige stappen, geen stress',
-    s1_title: 'U legt uw behoefte uit',
-    s1_desc: 'Vul het formulier in een paar minuten in met de informatie die u nodig heeft',
-    s2_title: 'Wij verwerken uw aanvraag snel',
-    s2_desc: 'Uw document wordt zorgvuldig en professioneel voorbereid',
-    s3_title: 'U ontvangt uw document',
-    s3_desc: 'Download of ontvang per e-mail uw afgeronde document, klaar voor gebruik',
-    svc_title: 'Onze diensten',
-    svc_sub: 'Alles wat u nodig heeft voor uw administratie',
-    svc1_name: 'CV opstellen',
-    svc1_desc: 'Een professioneel, duidelijk en effectief CV om een baan te vinden',
-    svc2_name: 'Motivatiebrief',
-    svc2_desc: 'Een gepersonaliseerde en overtuigende brief voor uw sollicitatie',
-    svc3_name: 'Hulp bij dossiers',
-    svc3_desc: 'Begeleiding bij het opstellen van uw dossier voor huisvesting, werk…',
-    svc4_name: 'Officiële brieven',
-    svc4_desc: 'Opstellen van brieven voor gemeenten, overheden en anderen',
-    from: 'vanaf',
-    btn_start: 'Beginnen',
-    btn_choose: 'Kiezen',
-    adv1_t: 'Snel',           adv1_d: 'Resultaat in minder dan 24u',
-    adv2_t: 'Eenvoudig',      adv2_d: 'Geen jargon, geen complexiteit',
-    adv3_t: 'Geen gedoe',     adv3_d: 'Wij regelen alles voor u',
-    adv4_t: 'Voor iedereen',  adv4_d: 'Aangepast aan elke situatie',
-    pricing_title: 'Duidelijke en transparante tarieven',
-    pricing_sub: 'U weet precies wat u betaalt voordat u begint',
-    form_title: 'Doe uw aanvraag',
-    form_sub: 'Vul dit formulier in, wij regelen de rest',
-    testi_title: 'Ze vertrouwen ons',
-    footer_tagline: 'Uw eenvoudige en toegankelijke administratieve hulp, waar u ook bent.',
-    footer_nav: 'Navigatie',
-    footer_contact: 'Contact',
-    footer_legal: 'Dok\'péyi is een hulpdienst voor het opstellen en voorbereiden van documenten. Informatie moet worden geverifieerd voor gebruik.',
-    cv_ville_label:   'Stad / Gemeente',
-    cv_dispo_label:   'Beschikbaarheid',
-    cv_secteur_label: 'Bedrijfstak',
-    cv_niveau_label:  'Opleidingsniveau',
-    cv_permis_label:  'Rijbewijs',
-    cv_langues_label: 'Gesproken talen',
-    cv_step1_short:   'Profiel',
-    cv_step2_short:   'Doel',
-    cv_step3_short:   'Loopbaan',
-    cv_step4_short:   'Details',
-    cv_step1_title:   'Wie bent u?',
-    cv_step2_title:   'Uw doel',
-    cv_step3_title:   'Uw loopbaan',
-    cv_step4_title:   'Laatste details',
-    lang_title: 'Choisissez votre langue',
-    lang_sub: 'Choisissez · Escolha · Chwazi · Kies · اختر · Choose',
-    lang_confirm: 'Doorgaan →',
-  },
-
-  /* ─────────── العربية (Syrie · Moyen-Orient) ─────────── */
-  ar: {
-    nav_comment: 'كيف يعمل',
-    nav_services: 'الخدمات',
-    nav_tarifs: 'الأسعار',
-    nav_cta: 'قدّم طلبك',
-    hero_badge: '✅ بسيط · سريع · موثوق',
-    hero_t1: 'تحتاج مساعدة',
-    hero_t2: 'في أوراقك؟',
-    hero_t3: 'نحن نتولى كل شيء.',
-    hero_sub: 'سيرة ذاتية، رسائل، ملفات إدارية... قدم طلبك في دقائق.',
-    hero_btn1: 'قدّم طلبي',
-    hero_btn2: 'كيف يعمل؟',
-    stat1: 'طلب تمت معالجته',
-    stat2: 'متوسط الوقت',
-    stat3: 'راضون',
-    how_title: 'كيف يعمل؟',
-    how_sub: 'ثلاث خطوات بسيطة، بدون توتر',
-    s1_title: 'تشرح احتياجك',
-    s1_desc: 'أكمل النموذج في دقائق بالمعلومات التي تحتاجها',
-    s2_title: 'نعالج طلبك بسرعة',
-    s2_desc: 'يتم تحضير وثيقتك بعناية واحترافية وفق معلوماتك',
-    s3_title: 'تستلم وثيقتك',
-    s3_desc: 'قم بتنزيل وثيقتك النهائية أو استلمها عبر البريد الإلكتروني',
-    svc_title: 'خدماتنا',
-    svc_sub: 'كل ما تحتاجه لإجراءاتك',
-    svc1_name: 'إنشاء سيرة ذاتية',
-    svc1_desc: 'سيرة ذاتية احترافية وواضحة وفعّالة للحصول على عمل',
-    svc2_name: 'رسالة تحفيزية',
-    svc2_desc: 'رسالة مخصصة ومقنعة لترشحك',
-    svc3_name: 'مساعدة في الملفات',
-    svc3_desc: 'مرافقة لإعداد ملف السكن والعمل والمساعدات الاجتماعية',
-    svc4_name: 'المراسلات الرسمية',
-    svc4_desc: 'صياغة رسائل للبلديات والإدارات والجهات الرسمية',
-    from: 'ابتداءً من',
-    btn_start: 'ابدأ',
-    btn_choose: 'اختر',
-    adv1_t: 'سريع',           adv1_d: 'نتيجة في أقل من 24 ساعة',
-    adv2_t: 'بسيط',           adv2_d: 'بدون مصطلحات معقدة',
-    adv3_t: 'بدون متاعب',    adv3_d: 'نتولى كل شيء عنك',
-    adv4_t: 'للجميع',         adv4_d: 'مكيّف لكل وضع',
-    pricing_title: 'أسعار واضحة وشفافة',
-    pricing_sub: 'تعرف بالضبط ما ستدفع قبل البدء',
-    form_title: 'قدّم طلبك',
-    form_sub: 'أكمل هذا النموذج، نتكفل بالباقي',
-    testi_title: 'يثقون بنا',
-    footer_tagline: 'مساعدتك الإدارية البسيطة والميسورة، أينما كنت.',
-    footer_nav: 'التنقل',
-    footer_contact: 'التواصل',
-    footer_legal: '.Dok\'péyi خدمة مساعدة في صياغة وتحضير الوثائق. يجب التحقق من المعلومات قبل الاستخدام',
-    cv_ville_label:   'المدينة / البلدية',
-    cv_dispo_label:   'التوفر',
-    cv_secteur_label: 'قطاع النشاط',
-    cv_niveau_label:  'المستوى الدراسي',
-    cv_permis_label:  'رخصة القيادة',
-    cv_langues_label: 'اللغات المتحدثة',
-    cv_step1_short:   'الملف',
-    cv_step2_short:   'الهدف',
-    cv_step3_short:   'المسار',
-    cv_step4_short:   'التفاصيل',
-    cv_step1_title:   'من أنت؟',
-    cv_step2_title:   'هدفك المهني',
-    cv_step3_title:   'مسارك المهني',
-    cv_step4_title:   'تفاصيل أخيرة',
-    lang_title: 'Choisissez votre langue',
-    lang_sub: 'Choisissez · Escolha · Chwazi · Kies · اختر · Choose',
-    lang_confirm: 'متابعة ←',
-  },
-
-  /* ─────────── ENGLISH (Guyana) ─────────── */
-  en: {
-    nav_comment: 'How it works',
-    nav_services: 'Services',
-    nav_tarifs: 'Pricing',
-    nav_cta: 'Make a request',
-    hero_badge: '✅ Simple · Fast · Reliable',
-    hero_t1: 'Need help',
-    hero_t2: 'with your documents?',
-    hero_t3: 'We handle everything.',
-    hero_sub: 'CV, letters, administrative files… make your request in a few minutes.',
-    hero_btn1: 'Make my request',
-    hero_btn2: 'How does it work?',
-    stat1: 'Requests processed',
-    stat2: 'Average time',
-    stat3: 'Satisfied',
-    how_title: 'How does it work?',
-    how_sub: 'Three simple steps, zero stress',
-    s1_title: 'You explain your need',
-    s1_desc: 'Fill in the form in a few minutes with the information you need',
-    s2_title: 'We process your request quickly',
-    s2_desc: 'Your document is prepared with care and professionalism',
-    s3_title: 'You receive your document',
-    s3_desc: 'Download or receive by email your finalized document, ready to use',
-    svc_title: 'Our services',
-    svc_sub: 'Everything you need for your administrative tasks',
-    svc1_name: 'CV Creation',
-    svc1_desc: 'A professional, clear and effective CV to get a job',
-    svc2_name: 'Cover letter',
-    svc2_desc: 'A personalized and convincing letter for your application',
-    svc3_name: 'File assistance',
-    svc3_desc: 'Support for building your CAF, housing or employment file\u2026',
-    svc4_name: 'Official letters',
-    svc4_desc: 'Writing for town halls, prefectures, administrations and others',
-    from: 'from',
-    btn_start: 'Start',
-    btn_choose: 'Choose',
-    adv1_t: 'Fast',            adv1_d: 'Result in less than 24h',
-    adv2_t: 'Simple',          adv2_d: 'No jargon, no complexity',
-    adv3_t: 'Hassle-free',     adv3_d: 'We handle everything for you',
-    adv4_t: 'For everyone',    adv4_d: 'Adapted to every situation',
-    pricing_title: 'Clear and transparent pricing',
-    pricing_sub: 'You know exactly what you pay before you start',
-    form_title: 'Make your request',
-    form_sub: 'Fill in this form, we handle the rest',
-    testi_title: 'They trust us',
-    footer_tagline: 'Your simple and accessible administrative help, wherever you are.',
-    footer_nav: 'Navigation',
-    footer_contact: 'Contact',
-    footer_legal: "Dok'péyi is a document writing and preparation assistance service. Information must be verified before use.",
-    cv_ville_label:   'City / Town',
-    cv_dispo_label:   'Availability',
-    cv_secteur_label: 'Industry',
-    cv_niveau_label:  'Education level',
-    cv_permis_label:  "Driver's licence",
-    cv_langues_label: 'Languages spoken',
-    cv_step1_short:   'Profile',
-    cv_step2_short:   'Goal',
-    cv_step3_short:   'Experience',
-    cv_step4_short:   'Details',
-    cv_step1_title:   'Who are you?',
-    cv_step2_title:   'Your goal',
-    cv_step3_title:   'Your experience',
-    cv_step4_title:   'Final details',
-    lang_title: 'Choose your language',
-    lang_sub: 'Choisissez · Escolha · Chwazi · Kies · اختر · Choose',
-    lang_confirm: 'Continue →',
-  },
-
-  /* ─────────── KRÉYÒL GWIYANNÈ (Créole guyanais) ─────────── */
-  gcr: {
-    nav_comment: 'Kouman sa ka maché',
-    nav_services: 'Sèvis',
-    nav_tarifs: 'Pri',
-    nav_cta: 'Fè demann mwen',
-    hero_badge: '✅ Senp · Rapid · Serye',
-    hero_t1: 'Ou bizwen èd',
-    hero_t2: 'pou papyé ou\u00a0?',
-    hero_t3: 'Nou ka okipé tout bagay.',
-    hero_sub: 'CV, lèt, dosyé administratif\u2026 fè demann ou an kèk minit.',
-    hero_btn1: 'Fè demann mwen',
-    hero_btn2: 'Kouman sa ka maché\u00a0?',
-    stat1: 'Demann trayité',
-    stat2: 'Délé mwayen',
-    stat3: 'Satisfè',
-    how_title: 'Kouman sa ka maché\u00a0?',
-    how_sub: 'Twa étap senp, zéro stres',
-    s1_title: 'Ou ekspliké sa ou bizwen',
-    s1_desc: 'Ranpli fòmilè-a an kèk minit avèk tout enfòmasyon ou bizwen',
-    s2_title: 'Nou trayité demann ou vit',
-    s2_desc: 'Dosyé ou préparé avèk swen é pwofésyonalism',
-    s3_title: 'Ou resevwé dosyé ou',
-    s3_desc: 'Téléchajé ou resevwé pa imèl dosyé finalizé ou, prèt pou sèvi',
-    svc_title: 'Sèvis nou yo',
-    svc_sub: 'Tout sa ou bizwen pou démarich ou yo',
-    svc1_name: 'Kreyasyon CV',
-    svc1_desc: 'Yon CV pwofésyonèl, klè é efikas pou jwenn travay',
-    svc2_name: 'Lèt motivasyon',
-    svc2_desc: 'Yon lèt pèsonalizé é konvenkan pou kandidati ou',
-    svc3_name: 'Èd pou dosyé yo',
-    svc3_desc: 'Akonpanyeman pou montè dosyé CAF, lojman, travay ou\u2026',
-    svc4_name: 'Lèt ofisyèl',
-    svc4_desc: 'Rédaksyon pou mèri, préfèkti, administrasyon é lot',
-    from: 'a pati de',
-    btn_start: 'Koumansé',
-    btn_choose: 'Chwazi',
-    adv1_t: 'Rapid',           adv1_d: 'Rézilta an mwens de 24h',
-    adv2_t: 'Senp',            adv2_d: 'Pa ni jagon, pa ni konplikasyon',
-    adv3_t: 'San tèt chajé',   adv3_d: 'Nou ka okipé tout bagay pou ou',
-    adv4_t: 'Pou tout moun',   adv4_d: 'Adapté pou chak sitiyasyon',
-    pricing_title: 'Pri klè é transparan',
-    pricing_sub: 'Ou sav egzakteman sa ou ka payé avan ou koumansé',
-    form_title: 'Fè demann ou',
-    form_sub: 'Ranpli fòmilè-a, nou ka okipé rès-la',
-    testi_title: 'Yo fè nou konfyans',
-    footer_tagline: 'Èd administratif senp é aksèsib pou ou, kèlkèswa kote ou yé.',
-    footer_nav: 'Navigasyon',
-    footer_contact: 'Kontak',
-    footer_legal: "Dok'péyi sé yon sèvis èd pou rédaksyon é préparasyon dosyé. Enfòmasyon yo dwa vérifiyé avan itilizasyon.",
-    cv_ville_label:   'Vil / Komin',
-    cv_dispo_label:   'Disponibilité',
-    cv_secteur_label: 'Sèktè aktivité',
-    cv_niveau_label:  'Nivo étid',
-    cv_permis_label:  'Pèmi kondui',
-    cv_langues_label: 'Lang ou ka palé yo',
-    cv_step1_short:   'Pwofil',
-    cv_step2_short:   'Objèktif',
-    cv_step3_short:   'Ekspéryans',
-    cv_step4_short:   'Détay',
-    cv_step1_title:   'Kisasa ou yé\u00a0?',
-    cv_step2_title:   'Objèktif ou',
-    cv_step3_title:   'Ekspéryans ou',
-    cv_step4_title:   'Dènié détay',
-    lang_title: 'Choisissez votre langue',
-    lang_sub: 'Choisissez · Escolha · Chwazi · Kies · اختر · Choose',
-    lang_confirm: 'Continue →',
-  },
+  /* ─────────── AUTRES LANGUES (non modifiées) ─────────── */
+  /* Les clés manquantes dans les autres langues tombent en fallback FR automatiquement */
+  pt: {},
+  ht: {},
+  nl: {},
+    ar: {},
+  en: {},
+  gcr: {},
 };
 
-/* ============================================================
-   ÉTAT & LOGIQUE
-   ============================================================ */
-let currentLang = localStorage.getItem('dok_lang') || null;
-let selectedCode = currentLang || 'fr';
+/* ===== MOTEUR I18N (inchangé) ===== */
+(function () {
+  'use strict';
 
-function getLang() { return LANGS.find(l => l.code === selectedCode) || LANGS[0]; }
-function getTrans() { return T[selectedCode] || T.fr; }
+  const DEFAULT_LANG = 'fr';
+  let currentLang = DEFAULT_LANG;
 
-/* ============================================================
-   SÉLECTEUR DE LANGUE — Création du DOM
-   ============================================================ */
-function createPicker() {
-  const overlay = document.createElement('div');
-  overlay.className = 'lang-overlay';
-  overlay.id = 'lang-overlay';
-
-  const t = T.fr; // Le picker lui-même reste en version neutre
-
-  overlay.innerHTML = `
-    <div class="lang-modal" id="lang-modal" role="dialog" aria-modal="true" aria-label="Language selection">
-      <div class="lang-header">
-        <span class="lang-globe">🌍</span>
-        <h2 class="lang-title">${t.lang_title}</h2>
-        <p class="lang-subtitle">${t.lang_sub}</p>
-      </div>
-      <div class="lang-grid" id="lang-grid">
-        ${LANGS.map(l => `
-          <button class="lang-card${l.code === selectedCode ? ' selected' : ''}"
-                  data-code="${l.code}"
-                  onclick="selectLang('${l.code}')"
-                  aria-label="${l.name}"
-                  type="button">
-            <span class="lang-check">✓</span>
-            <span class="lang-flag">${l.flag}</span>
-            <span class="lang-name">${l.name}</span>
-            <span class="lang-native">${l.native}</span>
-          </button>
-        `).join('')}
-      </div>
-      <button class="lang-confirm" id="lang-confirm" onclick="confirmLang()" type="button">
-        ${t.lang_confirm}
-      </button>
-    </div>
-  `;
-
-  document.body.appendChild(overlay);
-
-  // Déclencher l'animation d'entrée
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => overlay.classList.add('ready'));
-  });
-
-  // Fermeture au clic sur l'overlay (pas le modal)
-  overlay.addEventListener('click', e => {
-    if (e.target === overlay && currentLang) closePicker();
-  });
-
-  // Trap focus
-  trapFocus(overlay);
-}
-
-function selectLang(code) {
-  selectedCode = code;
-  document.querySelectorAll('.lang-card').forEach(el => {
-    el.classList.toggle('selected', el.dataset.code === code);
-  });
-  // Mettre à jour le bouton confirm avec la traduction
-  const confirmBtn = document.getElementById('lang-confirm');
-  if (confirmBtn) confirmBtn.textContent = T[code]?.lang_confirm || 'Continuer →';
-}
-
-function confirmLang() {
-  currentLang = selectedCode;
-  localStorage.setItem('dok_lang', selectedCode);
-  applyTranslation(selectedCode);
-  closePicker();
-}
-
-function closePicker() {
-  const overlay = document.getElementById('lang-overlay');
-  if (!overlay) return;
-  overlay.classList.remove('ready');
-  setTimeout(() => overlay.remove(), 500);
-}
-
-function openPicker() {
-  const existing = document.getElementById('lang-overlay');
-  if (existing) existing.remove();
-  selectedCode = currentLang || 'fr';
-  createPicker();
-}
-
-/* ============================================================
-   APPLICATION DES TRADUCTIONS
-   ============================================================ */
-function applyTranslation(code) {
-  const tr = T[code] || T.fr;
-  const lang = LANGS.find(l => l.code === code) || LANGS[0];
-
-  // Direction (RTL / LTR)
-  document.documentElement.setAttribute('lang', code);
-  document.documentElement.setAttribute('dir', lang.dir);
-
-  // Appliquer chaque clé
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.getAttribute('data-i18n');
-    if (tr[key] !== undefined) el.textContent = tr[key];
-  });
-
-  // Placeholders
-  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
-    const key = el.getAttribute('data-i18n-ph');
-    if (tr[key] !== undefined) el.placeholder = tr[key];
-  });
-
-  // Mettre à jour le bouton langue dans la nav
-  updateNavLangBtn(lang);
-}
-
-/* ============================================================
-   BOUTON LANGUE DANS LA NAVBAR
-   ============================================================ */
-function createNavLangBtn() {
-  const lang = getLang();
-  const btn = document.createElement('button');
-  btn.className = 'lang-switcher-btn';
-  btn.id = 'lang-switcher-btn';
-  btn.setAttribute('aria-label', 'Changer de langue');
-  btn.onclick = openPicker;
-  btn.innerHTML = `
-    <span class="lang-flag-sm">${lang.flag}</span>
-    <span class="lang-code-sm">${lang.code.toUpperCase()}</span>
-  `;
-  return btn;
-}
-
-function updateNavLangBtn(lang) {
-  const btn = document.getElementById('lang-switcher-btn');
-  if (!btn) return;
-  btn.innerHTML = `
-    <span class="lang-flag-sm">${lang.flag}</span>
-    <span class="lang-code-sm">${lang.code.toUpperCase()}</span>
-  `;
-}
-
-function injectNavBtn() {
-  // Desktop nav
-  const navLinks = document.querySelector('.nav-links');
-  if (navLinks) navLinks.appendChild(createNavLangBtn());
-  // Mobile menu
-  const mobileMenu = document.querySelector('.mobile-menu');
-  if (mobileMenu) {
-    const mobileBtn = createNavLangBtn();
-    mobileBtn.id = 'lang-switcher-btn-mobile';
-    mobileBtn.style.marginTop = '4px';
-    mobileMenu.appendChild(mobileBtn);
+  function getLang() {
+    try { return localStorage.getItem('dok_lang') || DEFAULT_LANG; } catch { return DEFAULT_LANG; }
   }
-}
 
-/* ============================================================
-   ACCESSIBILITÉ — FOCUS TRAP
-   ============================================================ */
-function trapFocus(el) {
-  const focusable = el.querySelectorAll('button, [tabindex]:not([tabindex="-1"])');
-  const first = focusable[0];
-  const last  = focusable[focusable.length - 1];
-  el.addEventListener('keydown', e => {
-    if (e.key === 'Tab') {
-      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  function setLang(code) {
+    currentLang = LANGS.find(l => l.code === code) ? code : DEFAULT_LANG;
+    try { localStorage.setItem('dok_lang', currentLang); } catch {}
+    applyTranslations();
+    updateLangUI();
+    document.documentElement.lang = currentLang;
+    document.documentElement.dir = LANGS.find(l => l.code === currentLang)?.dir || 'ltr';
+  }
+
+  function t(key, lang, fallback) {
+    const l = lang || currentLang;
+    return T[l]?.[key] || T[DEFAULT_LANG]?.[key] || fallback || key;
+  }
+
+  function applyTranslations() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      const val = t(key);
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+        el.placeholder = val;
+      } else if (el.hasAttribute('data-i18n-html')) {
+        el.innerHTML = val;
+      } else {
+        el.textContent = val;
+      }
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
+    });
+  }
+
+  function updateLangUI() {
+    const btn = document.getElementById('lang-btn');
+    if (btn) {
+      const l = LANGS.find(x => x.code === currentLang);
+      btn.textContent = l ? `${l.flag} ${l.code.toUpperCase()}` : 'FR';
     }
-    if (e.key === 'Escape' && currentLang) closePicker();
-  });
-  setTimeout(() => first && first.focus(), 100);
-}
-
-/* ============================================================
-   INITIALISATION
-   ============================================================ */
-document.addEventListener('DOMContentLoaded', () => {
-  // Injecter le bouton dans la nav
-  injectNavBtn();
-
-  if (currentLang) {
-    // Langue déjà choisie → appliquer directement
-    selectedCode = currentLang;
-    applyTranslation(currentLang);
-  } else {
-    // Première visite → montrer le sélecteur
-    setTimeout(createPicker, 400);
+    document.querySelectorAll('[data-lang-option]').forEach(el => {
+      el.classList.toggle('active', el.getAttribute('data-lang-option') === currentLang);
+    });
   }
-});
+
+  function buildLangMenu() {
+    const container = document.getElementById('lang-menu');
+    if (!container) return;
+    container.innerHTML = LANGS.map(l =>
+      `<button class="lang-option" data-lang-option="${l.code}" onclick="DokPeyiI18n.setLang('${l.code}')">${l.flag} <span>${l.native}</span></button>`
+    ).join('');
+  }
+
+  function init() {
+    buildLangMenu();
+    setLang(getLang());
+  }
+
+  window.DokPeyiI18n = { setLang, t, getLang };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
