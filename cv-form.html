@@ -42,180 +42,181 @@
     <section id="form-panel">
       <div id="progress-bar"><div id="progress-fill"></div></div>
       <div id="progress-label">
-        Étape <span id="step-current">1</span> sur <span id="step-total">6</span>
+        <span data-i18n="cvf_progress_step">Étape</span> <span id="step-current">1</span> <span data-i18n="cvf_progress_of">sur</span> <span id="step-total">6</span>
       </div>
 
       <div class="form-step" data-step="1" style="display:none">
-        <h2 class="step-title">Votre identité</h2>
-        <p class="step-subtitle">Ces informations apparaîtront en haut de votre CV</p>
+        <h2 class="step-title" data-i18n="cvf_step1_title">Votre identité</h2>
+        <p class="step-subtitle" data-i18n="cvf_step1_subtitle">Ces informations apparaîtront en haut de votre CV</p>
 
         <div class="photo-upload-zone" id="photo-upload-zone" onclick="document.getElementById('photo-input').click()">
           <div class="photo-upload-icon">📷</div>
-          <div class="photo-upload-label">Ajouter une photo</div>
+          <div class="photo-upload-label" data-i18n="cvf_photo_add">Ajouter une photo</div>
         </div>
         <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="handlePhotoUpload(this)">
 
         <div class="field-row">
           <div class="field-group">
-            <label class="field-label">Prénom <span class="field-required">*</span></label>
-            <input class="field-input" type="text" data-field="prenom" placeholder="Ex : Yonel"
+            <label class="field-label" data-i18n-html="cvf_label_prenom_html">Prénom <span class="field-required">*</span></label>
+            <input class="field-input" type="text" data-field="prenom" placeholder="Ex : Yonel" data-i18n-ph="cvf_ph_prenom"
               oninput="updateCvData('identite','prenom',this.value);updatePreview()">
           </div>
           <div class="field-group">
-            <label class="field-label">Nom <span class="field-required">*</span></label>
-            <input class="field-input" type="text" data-field="nom" placeholder="Ex : GOVINDIN"
+            <label class="field-label" data-i18n-html="cvf_label_nom_html">Nom <span class="field-required">*</span></label>
+            <input class="field-input" type="text" data-field="nom" placeholder="Ex : GOVINDIN" data-i18n-ph="cvf_ph_nom"
               oninput="updateCvData('identite','nom',this.value);updatePreview()">
           </div>
         </div>
 
         <div class="field-group">
-          <label class="field-label">Email <span class="field-required">*</span></label>
-          <input class="field-input" type="email" data-field="email" placeholder="votre@email.com"
+          <label class="field-label" data-i18n-html="cvf_label_email_html">Email <span class="field-required">*</span></label>
+          <input class="field-input" type="email" data-field="email" placeholder="votre@email.com" data-i18n-ph="cvf_ph_email"
             oninput="updateCvData('identite','email',this.value);updatePreview()">
         </div>
 
         <div class="field-group">
-          <label class="field-label">Téléphone <span class="field-required">*</span></label>
-          <input class="field-input" type="tel" data-field="tel" placeholder="06 XX XX XX XX"
+          <label class="field-label" data-i18n-html="cvf_label_tel_html">Téléphone <span class="field-required">*</span></label>
+          <input class="field-input" type="tel" data-field="tel" placeholder="06 XX XX XX XX" data-i18n-ph="cvf_ph_tel"
             oninput="updateCvData('identite','tel',this.value);updatePreview()">
         </div>
 
         <div class="field-row">
           <div class="field-group">
-            <label class="field-label">Ville <span class="field-required">*</span></label>
-            <input class="field-input" type="text" data-field="ville" placeholder="Cayenne"
+            <label class="field-label" data-i18n-html="cvf_label_ville_html">Ville <span class="field-required">*</span></label>
+            <input class="field-input" type="text" data-field="ville" placeholder="Cayenne" data-i18n-ph="cvf_ph_ville"
               oninput="updateCvData('identite','ville',this.value);updatePreview()">
           </div>
           <div class="field-group">
-            <label class="field-label">Code postal</label>
-            <input class="field-input" type="text" data-field="codepostal" placeholder="97300"
+            <label class="field-label" data-i18n="cvf_label_codepostal">Code postal</label>
+            <input class="field-input" type="text" data-field="codepostal" placeholder="97300" data-i18n-ph="cvf_ph_codepostal"
               oninput="updateCvData('identite','codepostal',this.value);updatePreview()">
           </div>
         </div>
 
         <div class="field-group">
-          <label class="field-label">LinkedIn</label>
-          <input class="field-input" type="text" data-field="linkedin" placeholder="linkedin.com/in/votre-profil"
+          <label class="field-label" data-i18n="cvf_label_linkedin">LinkedIn</label>
+          <input class="field-input" type="text" data-field="linkedin" placeholder="linkedin.com/in/votre-profil" data-i18n-ph="cvf_ph_linkedin"
             oninput="updateCvData('identite','linkedin',this.value);updatePreview()">
         </div>
       </div>
 
       <div class="form-step" data-step="2" style="display:none">
-        <h2 class="step-title">Votre profil</h2>
-        <p class="step-subtitle">Le poste visé et votre accroche professionnelle</p>
+        <h2 class="step-title" data-i18n="cvf_step2_title">Votre profil</h2>
+        <p class="step-subtitle" data-i18n="cvf_step2_subtitle">Le poste visé et votre accroche professionnelle</p>
 
         <div class="field-group">
-          <label class="field-label">Poste visé <span class="field-required">*</span></label>
+          <label class="field-label" data-i18n-html="cvf_label_poste_html">Poste visé <span class="field-required">*</span></label>
           <input class="field-input" type="text" data-field="poste"
-            placeholder="Ex : Assistante Administrative"
+            placeholder="Ex : Assistante Administrative" data-i18n-ph="cvf_ph_poste"
             oninput="updateCvData('profil','poste',this.value);updatePreview();triggerSuggestions('accroche',this.value,'')">
           <div class="suggestions-wrap" id="suggestions-poste"></div>
         </div>
 
         <div class="field-group">
-          <label class="field-label">Accroche professionnelle <span class="field-required">*</span></label>
+          <label class="field-label" data-i18n-html="cvf_label_accroche_html">Accroche professionnelle <span class="field-required">*</span></label>
           <textarea class="field-textarea" rows="4" data-field="accroche"
-            placeholder="Décrivez votre profil en 3-4 phrases..."
+            placeholder="Décrivez votre profil en 3-4 phrases..." data-i18n-ph="cvf_ph_accroche"
             oninput="updateCvData('profil','accroche',this.value);updatePreview();triggerSuggestions('accroche',cvData.profil.poste,'')"></textarea>
           <div class="suggestions-wrap" id="suggestions-accroche"></div>
         </div>
 
         <div id="offre-cible-section" style="display:none">
           <div class="field-group">
-            <label class="field-label">Offre d'emploi ciblée</label>
+            <label class="field-label" data-i18n="cvf_label_offre">Offre d'emploi ciblée</label>
             <textarea class="field-textarea" rows="3"
-              placeholder="Copiez-collez le texte de l'offre ici. L'IA optimisera votre CV pour ce poste."
+              placeholder="Copiez-collez le texte de l'offre ici. L'IA optimisera votre CV pour ce poste." data-i18n-ph="cvf_ph_offre"
               oninput="updateCvData('profil','offre_cible',this.value)"></textarea>
-            <div class="ai-info-badge">✦ L'IA analysera cette offre pour adapter votre CV</div>
+            <div class="ai-info-badge" data-i18n="cvf_ai_offer">✦ L'IA analysera cette offre pour adapter votre CV</div>
           </div>
         </div>
       </div>
 
       <div class="form-step" data-step="3" style="display:none">
-        <h2 class="step-title">Vos expériences</h2>
-        <p class="step-subtitle">Ajoutez vos expériences professionnelles</p>
+        <h2 class="step-title" data-i18n="cvf_step3_title">Vos expériences</h2>
+        <p class="step-subtitle" data-i18n="cvf_step3_subtitle">Ajoutez vos expériences professionnelles</p>
 
         <div id="pdf-upload-section" style="display:none">
-          <div class="pdf-upload-zone" onclick="document.getElementById('pdf-input').click()">
-            📄 Cliquez pour importer votre CV (PDF)
+          <div class="pdf-upload-zone" id="pdf-upload-zone" onclick="document.getElementById('pdf-input').click()">
+            <span class="pdf-upload-icon">📄</span>
+            <span id="pdf-upload-label" data-i18n="cvf_pdf_upload">Cliquez pour importer votre CV (PDF)</span>
           </div>
           <input type="file" id="pdf-input" accept=".pdf" style="display:none"
             onchange="handlePdfUpload(this.files[0])">
-          <div class="ai-info-badge" style="margin-top:12px">L'IA extraira automatiquement vos informations</div>
+          <div class="ai-info-badge" style="margin-top:12px" data-i18n="cvf_ai_pdf">L'IA extraira automatiquement vos informations</div>
         </div>
 
         <div id="experiences-section">
           <div id="experiences-container"></div>
-          <button class="btn-add-card" onclick="addExperience()">+ Ajouter une expérience</button>
+          <button class="btn-add-card" onclick="addExperience()" data-i18n="cvf_btn_add_experience">+ Ajouter une expérience</button>
         </div>
       </div>
 
       <div class="form-step" data-step="4" style="display:none">
-        <h2 class="step-title">Votre formation</h2>
-        <p class="step-subtitle">Diplômes et certifications obtenus</p>
+        <h2 class="step-title" data-i18n="cvf_step4_title">Votre formation</h2>
+        <p class="step-subtitle" data-i18n="cvf_step4_subtitle">Diplômes et certifications obtenus</p>
 
         <div id="formations-container"></div>
-        <button class="btn-add-card" onclick="addFormation()">+ Ajouter une formation</button>
+        <button class="btn-add-card" onclick="addFormation()" data-i18n="cvf_btn_add_formation">+ Ajouter une formation</button>
       </div>
 
       <div class="form-step" data-step="5" style="display:none">
-        <h2 class="step-title">Compétences &amp; Langues</h2>
-        <p class="step-subtitle">Vos atouts et niveaux de langue</p>
+        <h2 class="step-title" data-i18n="cvf_step5_title">Compétences &amp; Langues</h2>
+        <p class="step-subtitle" data-i18n="cvf_step5_subtitle">Vos atouts et niveaux de langue</p>
 
         <div class="field-group">
-          <label class="field-label">Compétences</label>
-          <p class="field-hint">Cliquez pour ajouter, ou tapez et appuyez sur Entrée</p>
+          <label class="field-label" data-i18n="cvf_label_competences">Compétences</label>
+          <p class="field-hint" data-i18n="cvf_hint_competences">Cliquez pour ajouter, ou tapez et appuyez sur Entrée</p>
           <div class="tags-input-wrap" id="competences-wrap">
             <div class="tags-list" id="competences-tags"></div>
             <input class="tags-input" id="competences-input" type="text"
-              placeholder="Ex : Pack Office, Accueil clients…"
+              placeholder="Ex : Pack Office, Accueil clients…" data-i18n-ph="cvf_ph_competences"
               onkeydown="handleTagInput(event,'competences')">
           </div>
           <div class="suggestions-wrap" id="suggestions-competences"></div>
         </div>
 
         <div class="field-group" style="margin-top:28px">
-          <label class="field-label">Langues</label>
+          <label class="field-label" data-i18n="cvf_label_langues">Langues</label>
           <div id="langues-container"></div>
-          <button class="btn-add-card" style="margin-top:12px" onclick="addLangue()">+ Ajouter une langue</button>
+          <button class="btn-add-card" style="margin-top:12px" onclick="addLangue()" data-i18n="cvf_btn_add_langue">+ Ajouter une langue</button>
         </div>
       </div>
 
       <div class="form-step" data-step="6" style="display:none">
-        <h2 class="step-title">Informations complémentaires</h2>
-        <p class="step-subtitle">Certifications, centres d'intérêt (optionnel)</p>
+        <h2 class="step-title" data-i18n="cvf_step6_title">Informations complémentaires</h2>
+        <p class="step-subtitle" data-i18n="cvf_step6_subtitle">Certifications, centres d'intérêt (optionnel)</p>
 
         <div class="field-group">
-          <label class="field-label">Certifications / Permis</label>
-          <input class="field-input" type="text" placeholder="Ex : Permis B, PSC1, TOEIC 850"
+          <label class="field-label" data-i18n="cvf_label_certifications">Certifications / Permis</label>
+          <input class="field-input" type="text" placeholder="Ex : Permis B, PSC1, TOEIC 850" data-i18n-ph="cvf_ph_certifications"
             oninput="updateCvData('extras','certifications',this.value);updatePreview()">
         </div>
 
         <div class="field-group">
-          <label class="field-label">Centres d'intérêt</label>
+          <label class="field-label" data-i18n="cvf_label_interets">Centres d'intérêt</label>
           <input class="field-input" type="text" data-field="interets"
-            placeholder="Ex : Football, Musique, Bénévolat"
+            placeholder="Ex : Football, Musique, Bénévolat" data-i18n-ph="cvf_ph_interets"
             oninput="updateCvData('extras','interets',this.value);updatePreview();triggerSuggestions('interets',cvData.profil.poste||','','')">
           <div class="suggestions-wrap" id="suggestions-interets"></div>
         </div>
 
         <div class="field-group">
-          <label class="field-label">Informations complémentaires</label>
+          <label class="field-label" data-i18n="cvf_label_complement">Informations complémentaires</label>
           <textarea class="field-textarea" rows="3"
-            placeholder="Tout ce qui n'entre pas dans les catégories précédentes (mobilité, disponibilité, situation de handicap…)"
+            placeholder="Tout ce qui n'entre pas dans les catégories précédentes (mobilité, disponibilité, situation de handicap…)" data-i18n-ph="cvf_ph_complement"
             oninput="updateCvData('extras','complement',this.value);updatePreview()"></textarea>
         </div>
 
         <div class="recap-box">
-          <div class="recap-title">✦ Récapitulatif de votre CV</div>
-          <div class="recap-body" id="recap-body">Complétez les étapes précédentes pour voir le récapitulatif.</div>
+          <div class="recap-title" data-i18n="cvf_recap_title">✦ Récapitulatif de votre CV</div>
+          <div class="recap-body" id="recap-body" data-i18n="cvf_recap_empty">Complétez les étapes précédentes pour voir le récapitulatif.</div>
         </div>
       </div>
 
       <div id="form-nav">
-        <button id="btn-prev" onclick="prevStep()">← Retour</button>
-        <button id="btn-next" onclick="nextStep()">Continuer →</button>
-        <button id="btn-submit" style="display:none" onclick="submitForm()">Générer mon CV →</button>
+        <button id="btn-prev" onclick="prevStep()" data-i18n="cvf_btn_prev">← Retour</button>
+        <button id="btn-next" onclick="nextStep()" data-i18n="cvf_btn_next">Continuer →</button>
+        <button id="btn-submit" style="display:none" onclick="submitForm()" data-i18n="cvf_btn_submit">Générer mon CV →</button>
       </div>
     </section>
 
@@ -225,16 +226,16 @@
           <!-- Template CV injecté dynamiquement par cv-form.js -->
           <!-- Mis à jour en temps réel à chaque frappe -->
         </div>
-        <div id="preview-watermark">DOK'PÉYI — APERÇU</div>
+        <div id="preview-watermark" data-i18n="cvf_preview_watermark">DOK'PÉYI — APERÇU</div>
       </div>
     </section>
 
   </main>
 
-  <button id="btn-preview-mobile" onclick="toggleMobilePreview()">👁 Aperçu</button>
-  <button id="btn-close-preview" onclick="toggleMobilePreview()">✕ Fermer l'aperçu</button>
+  <button id="btn-preview-mobile" onclick="toggleMobilePreview()" data-i18n="cvf_preview_open">👁 Aperçu</button>
+  <button id="btn-close-preview" onclick="toggleMobilePreview()" data-i18n="cvf_preview_close">✕ Fermer l'aperçu</button>
 
-  <script defer src="/lang.js?v=20260425-cvw-i18n"></script>
-  <script defer src="/cv-form.js?v=20260426-suggest2"></script>
+  <script defer src="/lang.js?v=20260426-cvf-i18n2"></script>
+  <script defer src="/cv-form.js?v=20260426-cvf-i18n2"></script>
 </body>
 </html>

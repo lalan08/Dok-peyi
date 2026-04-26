@@ -25,6 +25,127 @@
   var expCount = 0;
   var formCount = 0;
   var langueCount = 0;
+  var CVF_MENTION_OPTIONS = [
+    { value: '', key: 'cvf_form_mention_none', fallback: '— Sans mention —' },
+    { value: 'Passable', key: 'cvf_mention_passable', fallback: 'Passable' },
+    { value: 'Assez bien', key: 'cvf_mention_ab', fallback: 'Assez bien' },
+    { value: 'Bien', key: 'cvf_mention_bien', fallback: 'Bien' },
+    { value: 'Très bien', key: 'cvf_mention_tb', fallback: 'Très bien' }
+  ];
+  var CVF_LANG_LEVELS = [
+    { value: 'Notions', key: 'cvf_level_notions', fallback: 'Notions' },
+    { value: 'Intermédiaire', key: 'cvf_level_intermediate', fallback: 'Intermédiaire' },
+    { value: 'Courant', key: 'cvf_level_fluent', fallback: 'Courant' },
+    { value: 'Bilingue', key: 'cvf_level_bilingual', fallback: 'Bilingue' },
+    { value: 'Langue maternelle', key: 'cvf_level_native', fallback: 'Langue maternelle' }
+  ];
+
+  function cvfT(key, fallback) {
+    if (window.DokPeyiI18n && typeof window.DokPeyiI18n.t === 'function') {
+      return window.DokPeyiI18n.t(key, undefined, fallback || '');
+    }
+    return fallback || key;
+  }
+
+  function cvfFormat(key, values, fallback) {
+    var text = cvfT(key, fallback || '');
+    Object.entries(values || {}).forEach(function (entry) {
+      text = text.replaceAll('{' + entry[0] + '}', String(entry[1]));
+    });
+    return text;
+  }
+
+  function renderSuggestionState(container, state) {
+    if (!container) return;
+    container.dataset.state = state;
+    if (state === 'loading') {
+      container.innerHTML = '<span class="suggestions-loading">' + cvfT('cvf_suggestions_loading', "✦ L'IA génère des suggestions…") + '</span>';
+      return;
+    }
+    if (state === 'error') {
+      container.innerHTML = '<span class="suggestions-loading">' + cvfT('cvf_suggestions_unavailable', 'Suggestions indisponibles') + '</span>';
+      return;
+    }
+    delete container.dataset.state;
+  }
+
+  function buildMentionOptions(selected) {
+    return CVF_MENTION_OPTIONS.map(function (option) {
+      var selectedAttr = option.value === selected ? ' selected' : '';
+      return '<option value="' + option.value + '"' + selectedAttr + '>' + cvfT(option.key, option.fallback) + '</option>';
+    }).join('');
+  }
+
+  function buildLangLevelOptions(selected) {
+    var placeholder = '<option value="">' + cvfT('cvf_lang_level_placeholder', '— Choisir —') + '</option>';
+    var options = CVF_LANG_LEVELS.map(function (option) {
+      var selectedAttr = option.value === selected ? ' selected' : '';
+      return '<option value="' + option.value + '"' + selectedAttr + '>' + cvfT(option.key, option.fallback) + '</option>';
+    }).join('');
+    return placeholder + options;
+  }
+
+  function setPdfUploadState(state) {
+    var label = document.getElementById('pdf-upload-label');
+    if (!label) return;
+    label.dataset.cvfPdfState = state;
+    var key = 'cvf_pdf_upload';
+    var fallback = 'Cliquez pour importer votre CV (PDF)';
+    if (state === 'loading') {
+      key = 'cvf_pdf_upload_loading';
+      fallback = 'Extraction en cours…';
+    } else if (state === 'success') {
+      key = 'cvf_pdf_upload_success';
+      fallback = 'CV importé — informations extraites';
+    } else if (state === 'error') {
+      key = 'cvf_pdf_upload_error';
+      fallback = 'Erreur extraction — remplissez manuellement';
+    }
+    label.textContent = cvfT(key, fallback);
+  }
+
+  function applyCvFormDynamicTranslations() {
+    document.querySelectorAll('[data-cvf-card-title="experience"]').forEach(function (el) {
+      el.textContent = cvfT('cvf_exp_title', 'Expérience') + ' ' + el.dataset.cvfIndex;
+    });
+    document.querySelectorAll('[data-cvf-card-title="formation"]').forEach(function (el) {
+      el.textContent = cvfT('cvf_form_title', 'Formation') + ' ' + el.dataset.cvfIndex;
+    });
+    document.querySelectorAll('[data-cvf-card-title="langue"]').forEach(function (el) {
+      el.textContent = cvfT('cvf_lang_title', 'Langue') + ' ' + el.dataset.cvfIndex;
+    });
+    document.querySelectorAll('[data-cvf-label-html]').forEach(function (el) {
+      el.innerHTML = cvfT(el.dataset.cvfLabelHtml, el.innerHTML);
+    });
+    document.querySelectorAll('[data-cvf-ph]').forEach(function (el) {
+      el.placeholder = cvfT(el.dataset.cvfPh, el.placeholder);
+    });
+    document.querySelectorAll('[data-cvf-remove-button]').forEach(function (btn) {
+      var label = cvfT('cvf_btn_remove_aria', 'Supprimer');
+      btn.setAttribute('aria-label', label);
+      btn.setAttribute('title', label);
+    });
+    document.querySelectorAll('[data-cvf-select="mention"]').forEach(function (select) {
+      var currentValue = select.value;
+      select.innerHTML = buildMentionOptions(currentValue);
+      select.value = currentValue;
+    });
+    document.querySelectorAll('[data-cvf-select="lang-level"]').forEach(function (select) {
+      var currentValue = select.value;
+      select.innerHTML = buildLangLevelOptions(currentValue);
+      select.value = currentValue;
+    });
+    document.querySelectorAll('.suggestions-wrap').forEach(function (container) {
+      if (container.dataset.state === 'loading' || container.dataset.state === 'error') {
+        renderSuggestionState(container, container.dataset.state);
+      }
+    });
+    if (document.getElementById('pdf-upload-label')) {
+      setPdfUploadState(document.getElementById('pdf-upload-label').dataset.cvfPdfState || 'idle');
+    }
+    renderTags('competences');
+    updateRecap();
+  }
 
   function updateCvData(section, field, value) {
     if (!cvData[section]) cvData[section] = {};
@@ -40,27 +161,27 @@
     card.id = 'exp-card-' + n;
     card.innerHTML =
       '<div class="dynamic-card-header">' +
-        '<span class="dynamic-card-title">Expérience ' + n + '</span>' +
-        '<button class="btn-remove-card" onclick="removeCard(\'exp-card-' + n + '\',\'experiences\',' + n + ')">×</button>' +
+        '<span class="dynamic-card-title" data-cvf-card-title="experience" data-cvf-index="' + n + '">' + cvfT('cvf_exp_title', 'Expérience') + ' ' + n + '</span>' +
+        '<button class="btn-remove-card" data-cvf-remove-button="true" aria-label="' + cvfT('cvf_btn_remove_aria', 'Supprimer') + '" title="' + cvfT('cvf_btn_remove_aria', 'Supprimer') + '" onclick="removeCard(\'exp-card-' + n + '\',\'experiences\',' + n + ')">×</button>' +
       '</div>' +
-      '<div class="field-group"><label class="field-label">Intitulé du poste <span class="field-required">*</span></label>' +
-        '<input class="field-input" type="text" placeholder="Ex : Assistant Administratif"' +
+      '<div class="field-group"><label class="field-label" data-cvf-label-html="cvf_exp_poste_html">' + cvfT('cvf_exp_poste_html', 'Intitulé du poste <span class="field-required">*</span>') + '</label>' +
+        '<input class="field-input" type="text" data-cvf-ph="cvf_exp_poste_ph" placeholder="' + cvfT('cvf_exp_poste_ph', 'Ex : Assistant Administratif') + '"' +
         ' oninput="updateExp(' + n + ',\'poste\',this.value);updatePreview();triggerSuggestions(\'missions_' + n + '\',cvData.profil.poste||this.value,\'\')">' +
       '</div>' +
-      '<div class="field-group"><label class="field-label">Entreprise / Organisation <span class="field-required">*</span></label>' +
-        '<input class="field-input" type="text" placeholder="Ex : Préfecture de Guyane"' +
+      '<div class="field-group"><label class="field-label" data-cvf-label-html="cvf_exp_entreprise_html">' + cvfT('cvf_exp_entreprise_html', 'Entreprise / Organisation <span class="field-required">*</span>') + '</label>' +
+        '<input class="field-input" type="text" data-cvf-ph="cvf_exp_entreprise_ph" placeholder="' + cvfT('cvf_exp_entreprise_ph', 'Ex : Préfecture de Guyane') + '"' +
         ' oninput="updateExp(' + n + ',\'entreprise\',this.value);updatePreview()">' +
       '</div>' +
       '<div class="field-row">' +
-        '<div class="field-group"><label class="field-label">Date de début <span class="field-required">*</span></label>' +
-          '<input class="field-input" type="text" placeholder="Jan 2022"' +
+        '<div class="field-group"><label class="field-label" data-cvf-label-html="cvf_exp_debut_html">' + cvfT('cvf_exp_debut_html', 'Date de début <span class="field-required">*</span>') + '</label>' +
+          '<input class="field-input" type="text" data-cvf-ph="cvf_exp_debut_ph" placeholder="' + cvfT('cvf_exp_debut_ph', 'Jan 2022') + '"' +
           ' oninput="updateExp(' + n + ',\'debut\',this.value);updatePreview()"></div>' +
-        '<div class="field-group"><label class="field-label">Date de fin <span class="field-required">*</span></label>' +
-          '<input class="field-input" type="text" placeholder="Déc 2024 ou Présent"' +
+        '<div class="field-group"><label class="field-label" data-cvf-label-html="cvf_exp_fin_html">' + cvfT('cvf_exp_fin_html', 'Date de fin <span class="field-required">*</span>') + '</label>' +
+          '<input class="field-input" type="text" data-cvf-ph="cvf_exp_fin_ph" placeholder="' + cvfT('cvf_exp_fin_ph', 'Déc 2024 ou Présent') + '"' +
           ' oninput="updateExp(' + n + ',\'fin\',this.value);updatePreview()"></div>' +
       '</div>' +
-      '<div class="field-group"><label class="field-label">Missions</label>' +
-        '<textarea class="field-textarea" placeholder="• Géré les dossiers administratifs&#10;• Accueilli 50+ usagers/semaine"' +
+      '<div class="field-group"><label class="field-label" data-cvf-label-html="cvf_exp_missions">' + cvfT('cvf_exp_missions', 'Missions') + '</label>' +
+        '<textarea class="field-textarea" data-cvf-ph="cvf_exp_missions_ph" placeholder="' + cvfT('cvf_exp_missions_ph', '• Géré les dossiers administratifs&#10;• Accueilli 50+ usagers/semaine') + '"' +
         ' oninput="updateExp(' + n + ',\'missions\',this.value);updatePreview();' +
         'triggerSuggestions(\'missions_' + n + '\',cvData.profil.poste||cvData.experiences[' + (n - 1) + ']&&cvData.experiences[' + (n - 1) + '].poste||\'\',cvData.experiences[' + (n - 1) + ']&&cvData.experiences[' + (n - 1) + '].entreprise||\'\')"></textarea>' +
         '<div class="suggestions-wrap" id="suggestions-missions_' + n + '"></div>' +
@@ -90,26 +211,24 @@
     card.id = 'form-card-' + n;
     card.innerHTML =
       '<div class="dynamic-card-header">' +
-        '<span class="dynamic-card-title">Formation ' + n + '</span>' +
-        '<button class="btn-remove-card" onclick="removeCard(\'form-card-' + n + '\',\'formations\',' + n + ')">×</button>' +
+        '<span class="dynamic-card-title" data-cvf-card-title="formation" data-cvf-index="' + n + '">' + cvfT('cvf_form_title', 'Formation') + ' ' + n + '</span>' +
+        '<button class="btn-remove-card" data-cvf-remove-button="true" aria-label="' + cvfT('cvf_btn_remove_aria', 'Supprimer') + '" title="' + cvfT('cvf_btn_remove_aria', 'Supprimer') + '" onclick="removeCard(\'form-card-' + n + '\',\'formations\',' + n + ')">×</button>' +
       '</div>' +
-      '<div class="field-group"><label class="field-label">Diplôme / Certification <span class="field-required">*</span></label>' +
-        '<input class="field-input" type="text" placeholder="Ex : BTS Gestion de la PME"' +
+      '<div class="field-group"><label class="field-label" data-cvf-label-html="cvf_form_diplome_html">' + cvfT('cvf_form_diplome_html', 'Diplôme / Certification <span class="field-required">*</span>') + '</label>' +
+        '<input class="field-input" type="text" data-cvf-ph="cvf_form_diplome_ph" placeholder="' + cvfT('cvf_form_diplome_ph', 'Ex : BTS Gestion de la PME') + '"' +
         ' oninput="updateFormation(' + n + ',\'diplome\',this.value);updatePreview()">' +
       '</div>' +
-      '<div class="field-group"><label class="field-label">Établissement <span class="field-required">*</span></label>' +
-        '<input class="field-input" type="text" placeholder="Ex : Lycée Melkior-Garré, Cayenne"' +
+      '<div class="field-group"><label class="field-label" data-cvf-label-html="cvf_form_etablissement_html">' + cvfT('cvf_form_etablissement_html', 'Établissement <span class="field-required">*</span>') + '</label>' +
+        '<input class="field-input" type="text" data-cvf-ph="cvf_form_etablissement_ph" placeholder="' + cvfT('cvf_form_etablissement_ph', 'Ex : Lycée Melkior-Garré, Cayenne') + '"' +
         ' oninput="updateFormation(' + n + ',\'etablissement\',this.value);updatePreview()">' +
       '</div>' +
       '<div class="field-row">' +
-        '<div class="field-group"><label class="field-label">Année d\'obtention <span class="field-required">*</span></label>' +
-          '<input class="field-input" type="text" placeholder="2021"' +
+        '<div class="field-group"><label class="field-label" data-cvf-label-html="cvf_form_annee_html">' + cvfT('cvf_form_annee_html', 'Année d\'obtention <span class="field-required">*</span>') + '</label>' +
+          '<input class="field-input" type="text" data-cvf-ph="cvf_form_annee_ph" placeholder="' + cvfT('cvf_form_annee_ph', '2021') + '"' +
           ' oninput="updateFormation(' + n + ',\'annee\',this.value);updatePreview()"></div>' +
-        '<div class="field-group"><label class="field-label">Mention</label>' +
-          '<select class="field-select" onchange="updateFormation(' + n + ',\'mention\',this.value);updatePreview()">' +
-            '<option value="">— Sans mention —</option>' +
-            '<option>Passable</option><option>Assez bien</option>' +
-            '<option>Bien</option><option>Très bien</option>' +
+        '<div class="field-group"><label class="field-label" data-cvf-label-html="cvf_form_mention">' + cvfT('cvf_form_mention', 'Mention') + '</label>' +
+          '<select class="field-select" data-cvf-select="mention" onchange="updateFormation(' + n + ',\'mention\',this.value);updatePreview()">' +
+            buildMentionOptions('') +
           '</select></div>' +
       '</div>';
     var container = document.getElementById('formations-container');
@@ -163,7 +282,7 @@
     var arr = cvData[section] || [];
     list.innerHTML = arr.map(function (t) {
       return '<span class="tag-chip">' + t +
-        '<button class="tag-remove" onclick="removeTag(\'' + section + '\',\'' + t.replace(/'/g, "\\'") + '\')" aria-label="Supprimer">×</button>' +
+        '<button class="tag-remove" onclick="removeTag(\'' + section + '\',\'' + t.replace(/'/g, "\\'") + '\')" aria-label="' + cvfT('cvf_btn_remove_aria', 'Supprimer') + '" title="' + cvfT('cvf_btn_remove_aria', 'Supprimer') + '">×</button>' +
         '</span>';
     }).join('');
   }
@@ -177,8 +296,6 @@
   }
 
   /* ── Langues dynamiques ── */
-  var LANGUE_NIVEAUX = ['Notions', 'Intermédiaire', 'Courant', 'Bilingue', 'Langue maternelle'];
-
   function addLangue() {
     langueCount++;
     var n = langueCount;
@@ -187,17 +304,16 @@
     card.id = 'lang-card-' + n;
     card.innerHTML =
       '<div class="dynamic-card-header">' +
-        '<span class="dynamic-card-title">Langue ' + n + '</span>' +
-        '<button class="btn-remove-card" onclick="removeCard(\'lang-card-' + n + '\',\'langues\',' + n + ')">×</button>' +
+        '<span class="dynamic-card-title" data-cvf-card-title="langue" data-cvf-index="' + n + '">' + cvfT('cvf_lang_title', 'Langue') + ' ' + n + '</span>' +
+        '<button class="btn-remove-card" data-cvf-remove-button="true" aria-label="' + cvfT('cvf_btn_remove_aria', 'Supprimer') + '" title="' + cvfT('cvf_btn_remove_aria', 'Supprimer') + '" onclick="removeCard(\'lang-card-' + n + '\',\'langues\',' + n + ')">×</button>' +
       '</div>' +
       '<div class="field-row">' +
-        '<div class="field-group"><label class="field-label">Langue <span class="field-required">*</span></label>' +
-          '<input class="field-input" type="text" placeholder="Ex : Portugais"' +
+        '<div class="field-group"><label class="field-label" data-cvf-label-html="cvf_lang_name_html">' + cvfT('cvf_lang_name_html', 'Langue <span class="field-required">*</span>') + '</label>' +
+          '<input class="field-input" type="text" data-cvf-ph="cvf_lang_name_ph" placeholder="' + cvfT('cvf_lang_name_ph', 'Ex : Portugais') + '"' +
           ' oninput="updateLangue(' + n + ',\'langue\',this.value);updatePreview()"></div>' +
-        '<div class="field-group"><label class="field-label">Niveau <span class="field-required">*</span></label>' +
-          '<select class="field-select" onchange="updateLangue(' + n + ',\'niveau\',this.value);updatePreview()">' +
-            '<option value="">— Choisir —</option>' +
-            LANGUE_NIVEAUX.map(function (l) { return '<option>' + l + '</option>'; }).join('') +
+        '<div class="field-group"><label class="field-label" data-cvf-label-html="cvf_lang_level_html">' + cvfT('cvf_lang_level_html', 'Niveau <span class="field-required">*</span>') + '</label>' +
+          '<select class="field-select" data-cvf-select="lang-level" onchange="updateLangue(' + n + ',\'niveau\',this.value);updatePreview()">' +
+            buildLangLevelOptions('') +
           '</select></div>' +
       '</div>';
     var container = document.getElementById('langues-container');
@@ -217,23 +333,26 @@
     var lines = [];
     var id = cvData.identite;
     if (id.prenom || id.nom) lines.push('<strong>' + (id.prenom || '') + ' ' + (id.nom || '') + '</strong>');
-    if (cvData.profil.poste) lines.push('Poste visé : ' + cvData.profil.poste);
+    if (cvData.profil.poste) lines.push(cvfFormat('cvf_recap_poste', { value: cvData.profil.poste }, 'Poste visé : {value}'));
     var exps = cvData.experiences.filter(Boolean);
-    if (exps.length) lines.push(exps.length + ' expérience(s)');
+    if (exps.length) lines.push(cvfFormat('cvf_recap_experiences_count', { count: exps.length }, '{count} expérience(s)'));
     var forms = cvData.formations.filter(Boolean);
-    if (forms.length) lines.push(forms.length + ' formation(s)');
+    if (forms.length) lines.push(cvfFormat('cvf_recap_formations_count', { count: forms.length }, '{count} formation(s)'));
     var comps = (cvData.competences || []).filter(Boolean);
-    if (comps.length) lines.push('Compétences : ' + comps.join(', '));
+    if (comps.length) lines.push(cvfFormat('cvf_recap_competences', { value: comps.join(', ') }, 'Compétences : {value}'));
     var langs = (cvData.langues || []).filter(Boolean);
-    if (langs.length) lines.push('Langues : ' + langs.filter(function (l) { return l.langue; }).map(function (l) { return l.langue + (l.niveau ? ' (' + l.niveau + ')' : ''); }).join(', '));
-    box.innerHTML = lines.length ? lines.join('<br>') : 'Complétez les étapes précédentes pour voir le récapitulatif.';
+    if (langs.length) lines.push(cvfFormat('cvf_recap_langues', {
+      value: langs.filter(function (l) { return l.langue; }).map(function (l) {
+        return l.langue + (l.niveau ? ' (' + l.niveau + ')' : '');
+      }).join(', ')
+    }, 'Langues : {value}'));
+    box.innerHTML = lines.length ? lines.join('<br>') : cvfT('cvf_recap_empty', 'Complétez les étapes précédentes pour voir le récapitulatif.');
   }
 
   /* ── Upload PDF ── */
   function handlePdfUpload(file) {
     if (!file) return;
-    var zone = document.querySelector('.pdf-upload-zone');
-    if (zone) zone.textContent = '⏳ Extraction en cours…';
+    setPdfUploadState('loading');
     var formData = new FormData();
     formData.append('file', file);
     fetch('/api/extract-doc', { method: 'POST', body: formData })
@@ -247,10 +366,10 @@
         if (data.accroche)    cvData.profil.accroche   = data.accroche;
         if (data.experiences) cvData.experiences       = data.experiences;
         updatePreview();
-        if (zone) zone.textContent = '✅ CV importé — informations extraites';
+        setPdfUploadState('success');
       })
       .catch(function () {
-        if (zone) zone.textContent = '⚠️ Erreur extraction — remplissez manuellement';
+        setPdfUploadState('error');
       });
   }
 
@@ -276,7 +395,7 @@
     if (suggestDebounceTimer[field]) clearTimeout(suggestDebounceTimer[field]);
     var container = document.getElementById('suggestions-' + field);
     if (!container) return;
-    container.innerHTML = '<span class="suggestions-loading">✦ L\'IA génère des suggestions…</span>';
+    renderSuggestionState(container, 'loading');
     suggestDebounceTimer[field] = setTimeout(function () {
       fetch('/api/suggest', {
         method: 'POST',
@@ -286,14 +405,15 @@
         .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
         .then(function (data) {
           var suggestions = data.suggestions || [];
-          if (!suggestions.length) { container.innerHTML = ''; return; }
+          if (!suggestions.length) { container.innerHTML = ''; renderSuggestionState(container, 'idle'); return; }
+          renderSuggestionState(container, 'idle');
           container.innerHTML = suggestions.map(function (s) {
             return '<span class="suggestion-chip" onclick="applySuggestion(\'' +
               field + '\',this.textContent)">' + s + '</span>';
           }).join('');
         })
         .catch(function () {
-          container.innerHTML = '<span class="suggestions-loading">Suggestions indisponibles</span>';
+          renderSuggestionState(container, 'error');
         });
     }, 600);
   }
@@ -561,6 +681,11 @@
 
     // Preview en dernier — après que tous les containers soient prêts
     updatePreview();
+    applyCvFormDynamicTranslations();
+  });
+
+  document.addEventListener('dokpeyi:langchange', function () {
+    applyCvFormDynamicTranslations();
   });
 
   /* ── Expose globals for inline onclick ── */
