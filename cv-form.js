@@ -23,6 +23,8 @@
   };
 
   var expCount = 0;
+  var formCount = 0;
+  var langueCount = 0;
 
   function updateCvData(section, field, value) {
     if (!cvData[section]) cvData[section] = {};
@@ -75,7 +77,155 @@
   function removeCard(cardId, section, n) {
     var card = document.getElementById(cardId);
     if (card) card.remove();
-    if (section === 'experiences') cvData.experiences[n - 1] = null;
+    if (Array.isArray(cvData[section])) cvData[section][n - 1] = null;
+  }
+
+  /* ── Formations dynamiques ── */
+  function addFormation() {
+    formCount++;
+    var n = formCount;
+    var card = document.createElement('div');
+    card.className = 'dynamic-card';
+    card.id = 'form-card-' + n;
+    card.innerHTML =
+      '<div class="dynamic-card-header">' +
+        '<span class="dynamic-card-title">Formation ' + n + '</span>' +
+        '<button class="btn-remove-card" onclick="removeCard(\'form-card-' + n + '\',\'formations\',' + n + ')">×</button>' +
+      '</div>' +
+      '<div class="field-group"><label class="field-label">Diplôme / Certification <span class="field-required">*</span></label>' +
+        '<input class="field-input" type="text" placeholder="Ex : BTS Gestion de la PME"' +
+        ' oninput="updateFormation(' + n + ',\'diplome\',this.value);updatePreview()">' +
+      '</div>' +
+      '<div class="field-group"><label class="field-label">Établissement <span class="field-required">*</span></label>' +
+        '<input class="field-input" type="text" placeholder="Ex : Lycée Melkior-Garré, Cayenne"' +
+        ' oninput="updateFormation(' + n + ',\'etablissement\',this.value);updatePreview()">' +
+      '</div>' +
+      '<div class="field-row">' +
+        '<div class="field-group"><label class="field-label">Année d\'obtention <span class="field-required">*</span></label>' +
+          '<input class="field-input" type="text" placeholder="2021"' +
+          ' oninput="updateFormation(' + n + ',\'annee\',this.value);updatePreview()"></div>' +
+        '<div class="field-group"><label class="field-label">Mention</label>' +
+          '<select class="field-select" onchange="updateFormation(' + n + ',\'mention\',this.value);updatePreview()">' +
+            '<option value="">— Sans mention —</option>' +
+            '<option>Passable</option><option>Assez bien</option>' +
+            '<option>Bien</option><option>Très bien</option>' +
+          '</select></div>' +
+      '</div>';
+    var container = document.getElementById('formations-container');
+    if (container) container.appendChild(card);
+    if (!cvData.formations[n - 1]) cvData.formations[n - 1] = {};
+  }
+
+  function updateFormation(n, field, value) {
+    if (!cvData.formations[n - 1]) cvData.formations[n - 1] = {};
+    cvData.formations[n - 1][field] = value;
+  }
+
+  /* ── Compétences (tags) ── */
+  var COMP_SUGGESTIONS = [
+    'Pack Office', 'Word', 'Excel', 'PowerPoint', 'Outlook',
+    'Accueil du public', 'Gestion de dossiers', 'Classement/Archivage',
+    'Rédaction administrative', 'Prise de notes', 'Gestion agenda',
+    'Saisie informatique', 'Logiciels comptables', 'Travail en équipe'
+  ];
+
+  function handleTagInput(e, section) {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      var input = e.target;
+      var val = input.value.trim().replace(/,$/, '');
+      if (val) addTag(section, val);
+      input.value = '';
+    }
+  }
+
+  function addTag(section, value) {
+    if (!value) return;
+    var arr = cvData[section];
+    if (!Array.isArray(arr)) { cvData[section] = []; arr = cvData[section]; }
+    if (arr.indexOf(value) !== -1) return;
+    arr.push(value);
+    renderTags(section);
+    updatePreview();
+  }
+
+  function removeTag(section, value) {
+    if (!Array.isArray(cvData[section])) return;
+    cvData[section] = cvData[section].filter(function (t) { return t !== value; });
+    renderTags(section);
+    updatePreview();
+  }
+
+  function renderTags(section) {
+    var list = document.getElementById(section + '-tags');
+    if (!list) return;
+    var arr = cvData[section] || [];
+    list.innerHTML = arr.map(function (t) {
+      return '<span class="tag-chip">' + t +
+        '<button class="tag-remove" onclick="removeTag(\'' + section + '\',\'' + t.replace(/'/g, "\\'") + '\')" aria-label="Supprimer">×</button>' +
+        '</span>';
+    }).join('');
+  }
+
+  function initCompSuggestions() {
+    var container = document.getElementById('suggestions-competences');
+    if (!container) return;
+    container.innerHTML = COMP_SUGGESTIONS.map(function (s) {
+      return '<span class="suggestion-chip" onclick="addTag(\'competences\',\'' + s.replace(/'/g, "\\'") + '\')">' + s + '</span>';
+    }).join('');
+  }
+
+  /* ── Langues dynamiques ── */
+  var LANGUE_NIVEAUX = ['Notions', 'Intermédiaire', 'Courant', 'Bilingue', 'Langue maternelle'];
+
+  function addLangue() {
+    langueCount++;
+    var n = langueCount;
+    var card = document.createElement('div');
+    card.className = 'dynamic-card langue-card';
+    card.id = 'lang-card-' + n;
+    card.innerHTML =
+      '<div class="dynamic-card-header">' +
+        '<span class="dynamic-card-title">Langue ' + n + '</span>' +
+        '<button class="btn-remove-card" onclick="removeCard(\'lang-card-' + n + '\',\'langues\',' + n + ')">×</button>' +
+      '</div>' +
+      '<div class="field-row">' +
+        '<div class="field-group"><label class="field-label">Langue <span class="field-required">*</span></label>' +
+          '<input class="field-input" type="text" placeholder="Ex : Portugais"' +
+          ' oninput="updateLangue(' + n + ',\'langue\',this.value);updatePreview()"></div>' +
+        '<div class="field-group"><label class="field-label">Niveau <span class="field-required">*</span></label>' +
+          '<select class="field-select" onchange="updateLangue(' + n + ',\'niveau\',this.value);updatePreview()">' +
+            '<option value="">— Choisir —</option>' +
+            LANGUE_NIVEAUX.map(function (l) { return '<option>' + l + '</option>'; }).join('') +
+          '</select></div>' +
+      '</div>';
+    var container = document.getElementById('langues-container');
+    if (container) container.appendChild(card);
+    if (!cvData.langues[n - 1]) cvData.langues[n - 1] = {};
+  }
+
+  function updateLangue(n, field, value) {
+    if (!cvData.langues[n - 1]) cvData.langues[n - 1] = {};
+    cvData.langues[n - 1][field] = value;
+  }
+
+  /* ── Récapitulatif (step 6) ── */
+  function updateRecap() {
+    var box = document.getElementById('recap-body');
+    if (!box) return;
+    var lines = [];
+    var id = cvData.identite;
+    if (id.prenom || id.nom) lines.push('<strong>' + (id.prenom || '') + ' ' + (id.nom || '') + '</strong>');
+    if (cvData.profil.poste) lines.push('Poste visé : ' + cvData.profil.poste);
+    var exps = cvData.experiences.filter(Boolean);
+    if (exps.length) lines.push(exps.length + ' expérience(s)');
+    var forms = cvData.formations.filter(Boolean);
+    if (forms.length) lines.push(forms.length + ' formation(s)');
+    var comps = (cvData.competences || []).filter(Boolean);
+    if (comps.length) lines.push('Compétences : ' + comps.join(', '));
+    var langs = (cvData.langues || []).filter(Boolean);
+    if (langs.length) lines.push('Langues : ' + langs.filter(function (l) { return l.langue; }).map(function (l) { return l.langue + (l.niveau ? ' (' + l.niveau + ')' : ''); }).join(', '));
+    box.innerHTML = lines.length ? lines.join('<br>') : 'Complétez les étapes précédentes pour voir le récapitulatif.';
   }
 
   /* ── Upload PDF ── */
@@ -163,6 +313,7 @@
         '<p style="color:#666;margin:4px 0 20px">' + poste + '</p>' +
         '<p style="color:#999;font-size:13px">Aperçu complet disponible après remplissage</p>' +
       '</div>';
+    updateRecap();
   }
 
   /* ── Navigation ── */
@@ -259,6 +410,11 @@
 
     // Suggestions initiales
     triggerSuggestions('poste', '');
+    initCompSuggestions();
+
+    // Première formation et langue vides
+    addFormation();
+    addLangue();
   });
 
   /* ── Expose globals for inline onclick ── */
@@ -275,5 +431,13 @@
   window.triggerSuggestions  = triggerSuggestions;
   window.applySuggestion     = applySuggestion;
   window.updatePreview       = updatePreview;
+  window.addFormation        = addFormation;
+  window.updateFormation     = updateFormation;
+  window.addLangue           = addLangue;
+  window.updateLangue        = updateLangue;
+  window.handleTagInput      = handleTagInput;
+  window.addTag              = addTag;
+  window.removeTag           = removeTag;
+  window.cvData              = cvData;
 
 })();

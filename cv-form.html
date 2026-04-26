@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/lang.css">
-  <link rel="stylesheet" href="/cv-form.css?v=20260425-s3a">
+  <link rel="stylesheet" href="/cv-form.css?v=20260426-s3c">
 </head>
 <body>
 
@@ -153,16 +153,61 @@
       <div class="form-step" data-step="4" style="display:none">
         <h2 class="step-title">Votre formation</h2>
         <p class="step-subtitle">Diplômes et certifications obtenus</p>
+
+        <div id="formations-container"></div>
+        <button class="btn-add-card" onclick="addFormation()">+ Ajouter une formation</button>
       </div>
 
       <div class="form-step" data-step="5" style="display:none">
         <h2 class="step-title">Compétences &amp; Langues</h2>
         <p class="step-subtitle">Vos atouts et niveaux de langue</p>
+
+        <div class="field-group">
+          <label class="field-label">Compétences</label>
+          <p class="field-hint">Cliquez pour ajouter, ou tapez et appuyez sur Entrée</p>
+          <div class="tags-input-wrap" id="competences-wrap">
+            <div class="tags-list" id="competences-tags"></div>
+            <input class="tags-input" id="competences-input" type="text"
+              placeholder="Ex : Pack Office, Accueil clients…"
+              onkeydown="handleTagInput(event,'competences')">
+          </div>
+          <div class="suggestions-wrap" id="suggestions-competences"></div>
+        </div>
+
+        <div class="field-group" style="margin-top:28px">
+          <label class="field-label">Langues</label>
+          <div id="langues-container"></div>
+          <button class="btn-add-card" style="margin-top:12px" onclick="addLangue()">+ Ajouter une langue</button>
+        </div>
       </div>
 
       <div class="form-step" data-step="6" style="display:none">
         <h2 class="step-title">Informations complémentaires</h2>
         <p class="step-subtitle">Certifications, centres d'intérêt (optionnel)</p>
+
+        <div class="field-group">
+          <label class="field-label">Certifications / Permis</label>
+          <input class="field-input" type="text" placeholder="Ex : Permis B, PSC1, TOEIC 850"
+            oninput="updateCvData('extras','certifications',this.value);updatePreview()">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Centres d'intérêt</label>
+          <input class="field-input" type="text" placeholder="Ex : Football, Musique, Bénévolat"
+            oninput="updateCvData('extras','interets',this.value);updatePreview()">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Informations complémentaires</label>
+          <textarea class="field-textarea" rows="3"
+            placeholder="Tout ce qui n'entre pas dans les catégories précédentes (mobilité, disponibilité, situation de handicap…)"
+            oninput="updateCvData('extras','complement',this.value);updatePreview()"></textarea>
+        </div>
+
+        <div class="recap-box">
+          <div class="recap-title">✦ Récapitulatif de votre CV</div>
+          <div class="recap-body" id="recap-body">Complétez les étapes précédentes pour voir le récapitulatif.</div>
+        </div>
       </div>
 
       <div id="form-nav">
@@ -188,6 +233,6 @@
   <button id="btn-close-preview" onclick="toggleMobilePreview()">✕ Fermer l'aperçu</button>
 
   <script defer src="/lang.js?v=20260425-cvw-i18n"></script>
-  <script defer src="/cv-form.js?v=20260425-s3a"></script>
+  <script defer src="/cv-form.js?v=20260426-s3c"></script>
 </body>
 </html>
