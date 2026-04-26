@@ -100,7 +100,6 @@
   var modalCat         = document.getElementById('modal-tpl-cat');
   var modalDesc        = document.getElementById('modal-tpl-desc');
   var modalPreviewInner = document.getElementById('modal-preview-inner');
-  var btnChoose        = document.getElementById('btn-choose');
   var btnClose         = document.getElementById('btn-close-modal');
   var btnClose2        = document.getElementById('btn-close-modal-2');
 
@@ -138,6 +137,10 @@
 
   function openModal(card) {
     currentId = card.dataset.tplId;
+    sessionStorage.setItem('cv_template', currentId);
+    if (sessionStorage.getItem('cv_with_photo') === null) {
+      sessionStorage.setItem('cv_with_photo', 'true');
+    }
     hydrateModalMeta(card);
 
     // Clone inner preview content into modal
@@ -227,17 +230,6 @@
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') closeModal();
   });
-
-  /* ── Choose template → sessionStorage + redirect to step=2 ── */
-  if (btnChoose) {
-    btnChoose.addEventListener('click', function () {
-      if (!currentId) return;
-      sessionStorage.setItem('cv_template', currentId);
-      var cvWithPhoto = sessionStorage.getItem('cv_with_photo');
-      if (cvWithPhoto === null) sessionStorage.setItem('cv_with_photo', 'true');
-      window.location.href = '/cv-wizard.html?step=2';
-    });
-  }
 
   /* ── Single merged DOMContentLoaded ── */
   document.addEventListener('DOMContentLoaded', function () {

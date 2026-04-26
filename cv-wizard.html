@@ -1421,7 +1421,13 @@
             </div>
           </div>
           <div class="modal-actions">
-            <button class="btn-gold" id="btn-choose" data-i18n="cvw_choose_cta">Je veux ce CV →</button>
+            <button class="btn-gold" id="btn-choose" data-i18n="cvw_choose_cta"
+              onclick="
+                var tplId = sessionStorage.getItem('cv_template') || '01';
+                var withPhoto = sessionStorage.getItem('cv_with_photo') || 'true';
+                console.log('[wizard] btnChoose clicked, tplId:', tplId);
+                window.location.href = '/cv-wizard?step=2&template=' + tplId;
+              ">Je veux ce CV →</button>
             <button class="btn-ghost-modal" id="btn-close-modal-2" data-i18n="cvw_close">Fermer</button>
           </div>
         </div>
