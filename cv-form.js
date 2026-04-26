@@ -415,13 +415,17 @@
 
   function updatePreview() {
     var preview = document.getElementById('preview-cv');
+    console.log('[preview] el:', preview);
     if (!preview) return;
     try {
-      preview.innerHTML = renderTemplate(cvData);
+      var html = renderTemplate(cvData);
+      console.log('[preview] html length:', html.length, html.substring(0, 100));
+      preview.innerHTML = html;
       var panel = document.getElementById('preview-panel');
       if (panel) {
         var panelW = panel.offsetWidth - 40;
         var scale  = Math.min(panelW / 794, 1);
+        console.log('[preview] scale:', scale, 'panelW:', panelW);
         preview.style.transform       = 'scale(' + scale + ')';
         preview.style.transformOrigin = 'top center';
       }
