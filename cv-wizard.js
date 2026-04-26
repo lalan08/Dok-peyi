@@ -138,7 +138,7 @@
   function openModal(card) {
     currentId = card.dataset.tplId;
     sessionStorage.setItem('cv_template', currentId);
-    if (sessionStorage.getItem('cv_with_photo') === null) {
+    if (!sessionStorage.getItem('cv_with_photo')) {
       sessionStorage.setItem('cv_with_photo', 'true');
     }
     hydrateModalMeta(card);
