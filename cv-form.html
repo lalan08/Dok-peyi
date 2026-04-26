@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Votre CV — Dok'péyi</title>
+  <meta name="robots" content="noindex">
+  <meta name="description" content="Créez votre CV professionnel en quelques étapes — Dok'péyi">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/lang.css">
+  <link rel="stylesheet" href="/cv-form.css?v=20260425-s3a">
+</head>
+<body>
+
+  <nav class="navbar" id="navbar">
+    <div class="container nav-inner">
+      <a href="/" class="nav-logo">Dok'<span>péyi</span></a>
+      <ul class="nav-links">
+        <li><a href="/#comment" data-i18n="nav_comment">Comment ça marche</a></li>
+        <li><a href="/#services" data-i18n="nav_services">Services</a></li>
+        <li><a href="/a-propos" data-i18n="nav_about">À propos</a></li>
+        <li><a href="/#services" class="nav-cta" data-i18n="nav_cta">Faire ma demande</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menu" data-i18n-aria-label="cvw_nav_menu_aria">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="/#comment" class="mobile-link" data-i18n="nav_comment">Comment ça marche</a>
+      <a href="/#services" class="mobile-link" data-i18n="nav_services">Services</a>
+      <a href="/a-propos" class="mobile-link" data-i18n="nav_about">À propos</a>
+      <a href="/" class="mobile-link" data-i18n="wiz_nav_home">Retour à l'accueil</a>
+      <a href="/#services" class="mobile-link mobile-cta" data-i18n="nav_cta">Faire ma demande</a>
+    </div>
+  </nav>
+
+  <main id="cv-form-layout">
+
+    <section id="form-panel">
+      <div id="progress-bar"><div id="progress-fill"></div></div>
+      <div id="progress-label">
+        Étape <span id="step-current">1</span> sur <span id="step-total">6</span>
+      </div>
+
+      <div class="form-step" data-step="1" style="display:none">
+        <h2 class="step-title">Votre identité</h2>
+        <p class="step-subtitle">Ces informations apparaîtront en haut de votre CV</p>
+        <!-- contenu S3-B -->
+      </div>
+
+      <div class="form-step" data-step="2" style="display:none">
+        <h2 class="step-title">Votre profil</h2>
+        <p class="step-subtitle">Le poste visé et votre accroche professionnelle</p>
+      </div>
+
+      <div class="form-step" data-step="3" style="display:none">
+        <h2 class="step-title">Vos expériences</h2>
+        <p class="step-subtitle">Ajoutez vos expériences professionnelles</p>
+      </div>
+
+      <div class="form-step" data-step="4" style="display:none">
+        <h2 class="step-title">Votre formation</h2>
+        <p class="step-subtitle">Diplômes et certifications obtenus</p>
+      </div>
+
+      <div class="form-step" data-step="5" style="display:none">
+        <h2 class="step-title">Compétences &amp; Langues</h2>
+        <p class="step-subtitle">Vos atouts et niveaux de langue</p>
+      </div>
+
+      <div class="form-step" data-step="6" style="display:none">
+        <h2 class="step-title">Informations complémentaires</h2>
+        <p class="step-subtitle">Certifications, centres d'intérêt (optionnel)</p>
+      </div>
+
+      <div id="form-nav">
+        <button id="btn-prev" onclick="prevStep()">← Retour</button>
+        <button id="btn-next" onclick="nextStep()">Continuer →</button>
+        <button id="btn-submit" style="display:none" onclick="submitForm()">Générer mon CV →</button>
+      </div>
+    </section>
+
+    <section id="preview-panel">
+      <div id="preview-container">
+        <div id="preview-cv">
+          <!-- Template CV injecté dynamiquement par cv-form.js -->
+          <!-- Mis à jour en temps réel à chaque frappe -->
+        </div>
+        <div id="preview-watermark">DOK'PÉYI — APERÇU</div>
+      </div>
+    </section>
+
+  </main>
+
+  <button id="btn-preview-mobile" onclick="toggleMobilePreview()">👁 Aperçu</button>
+  <button id="btn-close-preview" onclick="toggleMobilePreview()">✕ Fermer l'aperçu</button>
+
+  <script defer src="/lang.js?v=20260425-cvw-i18n"></script>
+  <script defer src="/cv-form.js?v=20260425-s3a"></script>
+</body>
+</html>
