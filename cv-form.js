@@ -415,23 +415,21 @@
 
   function updatePreview() {
     var preview = document.getElementById('preview-cv');
-    if (!preview) return;
-    try {
-      var html = renderTemplate(cvData);
-      preview.innerHTML = html;
-      requestAnimationFrame(function () {
-        var panel = document.getElementById('preview-panel');
-        if (!panel) return;
-        var panelW = panel.offsetWidth - 40;
-        if (panelW <= 0) panelW = 600;
-        var scale = Math.min(panelW / 794, 1);
-        preview.style.transform      = 'scale(' + scale + ')';
-        preview.style.transformOrigin = 'top center';
-        preview.style.marginBottom   = '-' + (794 * (1 - scale)) + 'px';
-      });
-    } catch (e) {
-      console.error('[preview] render error:', e);
+    if (!preview) {
+      console.error('[preview] #preview-cv not found');
+      return;
     }
+    console.log('[preview] element found, injecting...');
+    preview.style.cssText =
+      'width:400px;min-height:500px;background:white;' +
+      'padding:20px;color:black;font-size:14px;' +
+      'display:block;visibility:visible;opacity:1;' +
+      'position:relative;z-index:1;';
+    preview.innerHTML =
+      '<h2 style="color:red">PREVIEW TEST</h2>' +
+      '<p>Prénom: ' + (cvData.identite.prenom || 'vide') + '</p>' +
+      '<p>Template: ' + cvData.template + '</p>';
+    console.log('[preview] injected, innerHTML length:', preview.innerHTML.length);
     updateRecap();
   }
 
