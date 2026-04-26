@@ -300,24 +300,29 @@ a { text-decoration: none; color: inherit; }
 
 /* ── Suggestions IA ── */
 .suggestions-wrap {
-  margin-top: 8px;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 8px;
+  margin-top: 10px;
 }
 .suggestion-chip {
-  padding: 6px 12px;
+  display: inline-block;
+  padding: 8px 14px;
   background: rgba(214,189,122,0.08);
   border: 1px solid rgba(214,189,122,0.2);
-  border-radius: 999px;
+  border-radius: 10px;
   color: #d4a853;
   font-size: 12px;
   cursor: pointer;
   transition: all 0.15s ease;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.5;
+  text-align: left;
+  max-width: 100%;
 }
 .suggestion-chip:hover { background: rgba(214,189,122,0.15); border-color: #d4a853; }
-.suggestion-chip:active { transform: scale(0.95); background: rgba(214,189,122,0.25); }
+.suggestion-chip:active { transform: scale(0.98); background: rgba(214,189,122,0.25); }
 
 .suggestions-loading {
   font-size: 11px;

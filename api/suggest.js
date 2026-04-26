@@ -9,22 +9,26 @@ export const config = { runtime: 'edge' };
 import { rateLimit } from '../lib/rate-limit.js';
 import { CORS }      from '../lib/edge-response.js';
 
-const VALID_FIELDS = ['accroche', 'missions', 'competences', 'interets'];
+const VALID_FIELDS = ['accroche', 'missions', 'competences', 'interets', 'certifications', 'infos_complementaires'];
 
 const SYSTEM = 'Tu es un expert en rédaction de CV professionnels en France et en Guyane française. Tu génères des suggestions courtes, précises et professionnelles adaptées au contexte guyanais. Réponds UNIQUEMENT en JSON valide sans markdown.';
 
 function buildPrompt(field, poste, context) {
   var p = poste || 'ce poste';
   if (field === 'accroche')
-    return 'Génère 4 accroches professionnelles courtes (2-3 phrases max) pour un(e) ' + p + '. Contexte Guyane française. Réponds en JSON : {"suggestions": ["...", ...]}';
+    return 'Génère 6 accroches professionnelles courtes (2-3 phrases max) pour un(e) ' + p + '. Contexte Guyane française. Réponds en JSON : {"suggestions": ["...", ...]}';
   if (field === 'missions')
-    return 'Génère 5 missions professionnelles courtes (1 ligne chacune) typiques pour un(e) ' + p + '.' +
+    return 'Génère 8 missions professionnelles courtes (1 ligne chacune) typiques pour un(e) ' + p + '.' +
       (context ? ' Entreprise : ' + context : '') +
       ' Commence chaque mission par un verbe d\'action. Réponds en JSON : {"suggestions": ["...", ...]}';
   if (field === 'competences')
-    return 'Génère 8 compétences clés recherchées pour un(e) ' + p + ' en Guyane française. Compétences courtes (2-4 mots max). Réponds en JSON : {"suggestions": ["...", ...]}';
+    return 'Génère 12 compétences clés recherchées pour un(e) ' + p + ' en Guyane française. Compétences courtes (2-4 mots max). Réponds en JSON : {"suggestions": ["...", ...]}';
   if (field === 'interets')
-    return 'Génère 6 centres d\'intérêt professionnellement valorisants pour un(e) ' + p + '. Courts, variés, adaptés au contexte guyanais et caribéen. Réponds en JSON : {"suggestions": ["...", ...]}';
+    return 'Génère 8 centres d\'intérêt professionnellement valorisants pour un(e) ' + p + '. Courts, variés, adaptés au contexte guyanais et caribéen. Réponds en JSON : {"suggestions": ["...", ...]}';
+  if (field === 'certifications')
+    return 'Génère 6 certifications et permis utiles pour un(e) ' + p + ' en Guyane française. Réponds en JSON : {"suggestions": ["...", ...]}';
+  if (field === 'infos_complementaires')
+    return 'Génère 5 informations complémentaires professionnelles courtes pour un(e) ' + p + ' (mobilité, disponibilité, situation, atouts). Réponds en JSON : {"suggestions": ["...", ...]}';
 }
 
 export default async function handler(req) {
@@ -45,7 +49,8 @@ export default async function handler(req) {
     return new Response(JSON.stringify({ error: 'Corps JSON invalide.' }), { status: 400, headers: jsonH });
   }
 
-  const { field, poste, context } = body || {};
+  const { field: rawField, poste, context } = body || {};
+  const field = rawField && rawField.startsWith('missions') ? 'missions' : rawField;
   if (!field || !VALID_FIELDS.includes(field))
     return new Response(JSON.stringify({ error: 'Champ invalide. Valeurs acceptées : ' + VALID_FIELDS.join(', ') }), {
       status: 400, headers: jsonH
@@ -61,12 +66,16 @@ export default async function handler(req) {
 
   const p = poste || 'ce poste';
   const prompt = field === 'accroche'
-    ? 'Génère 4 accroches professionnelles courtes (2-3 phrases) pour un(e) ' + p + ' en Guyane française. Réponds UNIQUEMENT avec un tableau JSON : ["accroche1","accroche2","accroche3","accroche4"]'
+    ? 'Génère 6 accroches professionnelles courtes (2-3 phrases) pour un(e) ' + p + ' en Guyane française. Réponds UNIQUEMENT avec un tableau JSON : ["accroche1",...]'
     : field === 'missions'
-    ? 'Génère 5 missions professionnelles courtes pour un(e) ' + p + '. Commence chaque mission par un verbe d\'action. Réponds UNIQUEMENT avec un tableau JSON : ["mission1","mission2",...]'
+    ? 'Génère 8 missions professionnelles courtes pour un(e) ' + p + '. Commence chaque mission par un verbe d\'action. Réponds UNIQUEMENT avec un tableau JSON : ["mission1",...]'
     : field === 'competences'
-    ? 'Génère 8 compétences clés pour un(e) ' + p + ' en Guyane. Réponds UNIQUEMENT avec un tableau JSON : ["comp1","comp2",...]'
-    : 'Génère 6 centres d\'intérêt valorisants pour un(e) ' + p + '. Réponds UNIQUEMENT avec un tableau JSON : ["interet1","interet2",...]';
+    ? 'Génère 12 compétences clés pour un(e) ' + p + ' en Guyane. Réponds UNIQUEMENT avec un tableau JSON : ["comp1",...]'
+    : field === 'certifications'
+    ? 'Génère 6 certifications et permis utiles pour un(e) ' + p + ' en Guyane française. Réponds UNIQUEMENT avec un tableau JSON : ["cert1",...]'
+    : field === 'infos_complementaires'
+    ? 'Génère 5 informations complémentaires professionnelles courtes pour un(e) ' + p + ' (mobilité, disponibilité, situation, atouts). Réponds UNIQUEMENT avec un tableau JSON : ["info1",...]'
+    : 'Génère 8 centres d\'intérêt valorisants pour un(e) ' + p + '. Réponds UNIQUEMENT avec un tableau JSON : ["interet1",...]';
 
   var suggestions = [];
   try {

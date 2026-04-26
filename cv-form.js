@@ -166,7 +166,7 @@
       '</div>' +
       '<div class="field-group"><label class="field-label" data-cvf-label-html="cvf_exp_poste_html">' + cvfT('cvf_exp_poste_html', 'Intitulé du poste <span class="field-required">*</span>') + '</label>' +
         '<input class="field-input" type="text" data-cvf-ph="cvf_exp_poste_ph" placeholder="' + cvfT('cvf_exp_poste_ph', 'Ex : Assistant Administratif') + '"' +
-        ' oninput="updateExp(' + n + ',\'poste\',this.value);updatePreview();triggerSuggestions(\'missions_' + n + '\',cvData.profil.poste||this.value,\'\')">' +
+        ' oninput="updateExp(' + n + ',\'poste\',this.value);updatePreview();triggerSuggestions(\'missions_' + n + '\',this.value,\'\')">' +
       '</div>' +
       '<div class="field-group"><label class="field-label" data-cvf-label-html="cvf_exp_entreprise_html">' + cvfT('cvf_exp_entreprise_html', 'Entreprise / Organisation <span class="field-required">*</span>') + '</label>' +
         '<input class="field-input" type="text" data-cvf-ph="cvf_exp_entreprise_ph" placeholder="' + cvfT('cvf_exp_entreprise_ph', 'Ex : Préfecture de Guyane') + '"' +
@@ -423,7 +423,11 @@
     if (!value) return;
     if (field === 'accroche') {
       var el = document.querySelector('textarea[data-field="accroche"]');
-      if (el) { el.value = value; el.dispatchEvent(new Event('input')); }
+      if (el) {
+        var current = el.value.trim();
+        el.value = current ? current + ' ' + value : value;
+        el.dispatchEvent(new Event('input'));
+      }
     } else if (field.startsWith('missions')) {
       var idx = field.split('_')[1];
       var sel = idx ? '#exp-card-' + idx + ' textarea' : '.dynamic-card textarea';
@@ -440,6 +444,20 @@
       if (inp) {
         inp.value = inp.value ? inp.value + ', ' + value : value;
         inp.dispatchEvent(new Event('input'));
+      }
+    } else if (field === 'certifications') {
+      var elCert = document.querySelector('input[data-field="certifications"]');
+      if (elCert) {
+        var curCert = elCert.value.trim();
+        elCert.value = curCert ? curCert + ', ' + value : value;
+        elCert.dispatchEvent(new Event('input'));
+      }
+    } else if (field === 'infos_complementaires') {
+      var elInfo = document.querySelector('textarea[data-field="complement"]');
+      if (elInfo) {
+        var curInfo = elInfo.value.trim();
+        elInfo.value = curInfo ? curInfo + '\n' + value : value;
+        elInfo.dispatchEvent(new Event('input'));
       }
     }
   }
