@@ -50,8 +50,8 @@ describe('api/suggest.js — structure', () => {
     assert.match(src, /claude-haiku-4-5-20251001/);
   });
 
-  test('max_tokens is 300', () => {
-    assert.match(src, /max_tokens\s*:\s*300/);
+  test('max_tokens is 800', () => {
+    assert.match(src, /max_tokens\s*:\s*800/);
   });
 
   test('buildPrompt generates prompt for each field', () => {

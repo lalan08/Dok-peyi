@@ -395,9 +395,14 @@
     var container = document.getElementById('suggestions-' + field);
     if (!container) return;
 
-    // Changement de poste → vider toutes les suggestions
-    if (field === 'accroche' && poste && poste !== lastPoste) {
-      document.querySelectorAll('.suggestions-wrap').forEach(function (c) { c.innerHTML = ''; });
+    // Changement de poste → vider uniquement les champs liés au poste visé
+    var isPosteField = field === 'accroche' || field === 'competences' || field === 'interets';
+    if (isPosteField && poste && poste !== lastPoste) {
+      var fieldsToReset = ['accroche', 'competences', 'interets', 'certifications', 'infos_complementaires'];
+      fieldsToReset.forEach(function (f) {
+        var c = document.getElementById('suggestions-' + f);
+        if (c) c.innerHTML = '';
+      });
       lastPoste = poste;
     }
 
@@ -679,6 +684,7 @@
   /* ── Init ── */
   document.addEventListener('DOMContentLoaded', function () {
     showStep(1);
+    lastPoste = cvData.profil.poste || '';
 
     // Masquer la zone photo si sans photo
     if (!cvData.withPhoto) {
