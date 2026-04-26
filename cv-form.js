@@ -302,17 +302,132 @@
   }
 
   /* ── Preview ── */
+  function getTemplateStyles(tpl) {
+    var map = {
+      '01': { bg:'#fff', sidebar:'#f8f8f8', accent:'#000', text:'#333', chipBg:'#f0f0f0', chipText:'#333', layout:'two-col-right' },
+      '02': { bg:'#fff', sidebar:'#1a1a1a', accent:'#3b82f6', text:'#fff', chipBg:'#3b82f6', chipText:'#fff', layout:'sidebar-left' },
+      '03': { bg:'#fdf6ee', sidebar:'#3d2b1f', accent:'#c9a84c', text:'#f5e6d3', chipBg:'rgba(201,168,76,0.2)', chipText:'#3d2b1f', layout:'sidebar-left' },
+      '04': { bg:'#fff', sidebar:'#1e3a5f', accent:'#1e3a5f', text:'#fff', chipBg:'#1e3a5f', chipText:'#fff', layout:'sidebar-left' },
+      '05': { bg:'#1a1a1a', sidebar:'#111', accent:'#fff', text:'#fff', chipBg:'rgba(255,255,255,0.1)', chipText:'#fff', layout:'sidebar-left' },
+      '06': { bg:'#111', sidebar:'#111', accent:'#22c55e', text:'#fff', chipBg:'rgba(34,197,94,0.15)', chipText:'#22c55e', layout:'two-col-dark' },
+      '07': { bg:'#fff', sidebar:'#1a1a1a', accent:'#dc2626', text:'#fff', chipBg:'rgba(220,38,38,0.1)', chipText:'#dc2626', layout:'sidebar-left' },
+      '08': { bg:'#fff', sidebar:'#2d2d2d', accent:'#3b82f6', text:'#fff', chipBg:'rgba(59,130,246,0.1)', chipText:'#3b82f6', layout:'sidebar-left' },
+      '09': { bg:'#fff', sidebar:'#fff', accent:'#c9a84c', text:'#333', chipBg:'rgba(201,168,76,0.15)', chipText:'#8a6a1a', layout:'centered-gold' },
+      '10': { bg:'#fff', sidebar:'#fff', accent:'#1e3a5f', text:'#333', chipBg:'rgba(30,58,95,0.08)', chipText:'#1e3a5f', layout:'two-col-right' },
+      '11': { bg:'#fff', sidebar:'#1a1a1a', accent:'#eab308', text:'#fff', chipBg:'rgba(234,179,8,0.15)', chipText:'#854d0e', layout:'sidebar-left' },
+      '12': { bg:'#0d0d1a', sidebar:'#0d0d1a', accent:'#ec4899', text:'#fff', chipBg:'rgba(236,72,153,0.15)', chipText:'#ec4899', layout:'sidebar-left' }
+    };
+    return map[tpl] || map['01'];
+  }
+
+  function buildLayout(tpl, s, d) {
+    var base = 'font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:12px;line-height:1.5;color:' + s.text + ';background:' + s.bg + ';min-height:297mm;width:210mm;box-sizing:border-box;';
+    var sectionHead = function (label) {
+      return '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:' + s.accent + ';margin-bottom:10px;padding-bottom:4px;border-bottom:2px solid ' + s.accent + '">' + label + '</div>';
+    };
+    var contactBlock = (d.email ? '<div style="font-size:10px;margin-bottom:4px">✉ ' + d.email + '</div>' : '') +
+      (d.tel ? '<div style="font-size:10px;margin-bottom:4px">📱 ' + d.tel + '</div>' : '') +
+      (d.ville ? '<div style="font-size:10px;margin-bottom:16px">📍 ' + d.ville + '</div>' : '');
+
+    if (s.layout === 'sidebar-left' || s.layout === 'sidebar-left-dark') {
+      var mainColor = (s.layout === 'sidebar-left-dark') ? s.text : '#333';
+      return '<div style="' + base + 'display:grid;grid-template-columns:35% 65%">' +
+        '<div style="background:' + s.sidebar + ';padding:32px 20px;color:' + s.text + '">' +
+        (d.photoHtml ? '<div style="text-align:center;margin-bottom:20px">' + d.photoHtml + '</div>' : '') +
+        '<div style="font-size:17px;font-weight:800;margin-bottom:4px">' + d.name + '</div>' +
+        '<div style="font-size:10px;opacity:0.8;margin-bottom:20px;letter-spacing:0.05em">' + d.poste + '</div>' +
+        (contactBlock ? '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;opacity:0.6">Contact</div>' + contactBlock : '') +
+        (d.compHtml ? '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;opacity:0.6">Compétences</div><div>' + d.compHtml + '</div>' : '') +
+        (d.langHtml ? '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin:16px 0 8px;opacity:0.6">Langues</div>' + d.langHtml : '') +
+        '</div>' +
+        '<div style="padding:32px 24px;background:' + s.bg + ';color:' + mainColor + '">' +
+        (d.accroche ? '<div style="font-size:12px;color:#555;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #eee;line-height:1.7">' + d.accroche + '</div>' : '') +
+        (d.expHtml ? sectionHead('Expériences') + d.expHtml : '') +
+        (d.forHtml ? '<div style="margin-top:16px">' + sectionHead('Formation') + d.forHtml + '</div>' : '') +
+        '</div></div>';
+    }
+
+    // two-col-right (01, 10) + fallbacks (06, 09)
+    return '<div style="' + base + 'padding:40px">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid ' + s.accent + '">' +
+      '<div>' + (d.photoHtml ? d.photoHtml : '') +
+      '<div style="font-size:22px;font-weight:800;letter-spacing:-0.02em">' + d.name + '</div>' +
+      '<div style="font-size:11px;color:' + s.accent + ';letter-spacing:0.08em;text-transform:uppercase;margin-top:4px">' + d.poste + '</div>' +
+      '</div>' +
+      '<div style="text-align:right;font-size:10px;color:#666;line-height:1.8">' +
+      (d.email ? d.email + '<br>' : '') + (d.tel ? d.tel + '<br>' : '') + (d.ville || '') +
+      '</div></div>' +
+      (d.accroche ? '<p style="font-size:12px;color:#555;margin-bottom:20px">' + d.accroche + '</p>' : '') +
+      (d.expHtml ? sectionHead('Expériences') + d.expHtml : '') +
+      (d.forHtml ? '<div style="margin-top:16px">' + sectionHead('Formation') + d.forHtml + '</div>' : '') +
+      (d.compHtml ? '<div style="margin-top:16px">' + sectionHead('Compétences') + '<div>' + d.compHtml + '</div></div>' : '') +
+      (d.langHtml ? '<div style="margin-top:16px">' + sectionHead('Langues') + d.langHtml + '</div>' : '') +
+      '</div>';
+  }
+
+  function renderTemplate(data) {
+    var tpl = data.template || '01';
+    var s   = getTemplateStyles(tpl);
+    var name = ((data.identite.prenom || '') + ' ' + (data.identite.nom || '').toUpperCase()).trim() || 'Prénom NOM';
+    var poste   = data.profil.poste    || '';
+    var accroche = data.profil.accroche || '';
+    var exps  = (data.experiences || []).filter(Boolean);
+    var fors  = (data.formations  || []).filter(Boolean);
+    var comps = (data.competences || []).filter(Boolean);
+    var langs = (data.langues     || []).filter(Boolean);
+
+    var expHtml = exps.map(function (e) {
+      return '<div style="margin-bottom:12px">' +
+        '<div style="font-weight:700;font-size:13px">' + (e.poste || '') + '</div>' +
+        '<div style="font-size:11px;color:' + s.accent + '">' + (e.entreprise || '') + (e.debut ? ' · ' + e.debut + ' – ' + (e.fin || '…') : '') + '</div>' +
+        (e.missions ? '<div style="font-size:11px;margin-top:4px;white-space:pre-line;color:#555">' + e.missions + '</div>' : '') +
+        '</div>';
+    }).join('');
+
+    var forHtml = fors.map(function (f) {
+      return '<div style="margin-bottom:10px">' +
+        '<div style="font-weight:600;font-size:12px">' + (f.diplome || '') + '</div>' +
+        '<div style="font-size:11px;color:#666">' + (f.etablissement || '') + (f.annee ? ' · ' + f.annee : '') + '</div>' +
+        '</div>';
+    }).join('');
+
+    var compHtml = comps.map(function (c) {
+      return '<span style="display:inline-block;margin:2px 4px 2px 0;padding:3px 10px;background:' + s.chipBg + ';color:' + s.chipText + ';border-radius:999px;font-size:10px">' + c + '</span>';
+    }).join('');
+
+    var langHtml = langs.map(function (l) {
+      return '<div style="font-size:11px;margin-bottom:4px"><span style="font-weight:600">' + (l.langue || '') + '</span>' + (l.niveau ? ' — ' + l.niveau : '') + '</div>';
+    }).join('');
+
+    var photoHtml = '';
+    if (data.withPhoto && data.photo) {
+      photoHtml = '<img src="' + data.photo + '" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid ' + s.accent + '">';
+    }
+
+    return buildLayout(tpl, s, {
+      name: name, poste: poste, accroche: accroche,
+      email: data.identite.email || '', tel: data.identite.tel || '',
+      ville: data.identite.ville || '', linkedin: data.identite.linkedin || '',
+      expHtml: expHtml, forHtml: forHtml,
+      compHtml: compHtml, langHtml: langHtml, photoHtml: photoHtml
+    });
+  }
+
   function updatePreview() {
     var preview = document.getElementById('preview-cv');
     if (!preview) return;
-    var name  = (cvData.identite.prenom || 'Prénom') + ' ' + (cvData.identite.nom || 'NOM');
-    var poste = cvData.profil.poste || 'Poste visé';
-    preview.innerHTML =
-      '<div style="padding:40px;font-family:system-ui;color:#333;background:#fff;min-height:297mm">' +
-        '<h1 style="margin:0;font-size:24px">' + name + '</h1>' +
-        '<p style="color:#666;margin:4px 0 20px">' + poste + '</p>' +
-        '<p style="color:#999;font-size:13px">Aperçu complet disponible après remplissage</p>' +
-      '</div>';
+    try {
+      preview.innerHTML = renderTemplate(cvData);
+      var panel = document.getElementById('preview-panel');
+      if (panel) {
+        var panelW = panel.offsetWidth - 40;
+        var scale  = Math.min(panelW / 794, 1);
+        preview.style.transform       = 'scale(' + scale + ')';
+        preview.style.transformOrigin = 'top center';
+      }
+    } catch (e) {
+      console.error('[preview] render error:', e);
+    }
     updateRecap();
   }
 
