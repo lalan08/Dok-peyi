@@ -52,39 +52,49 @@ export default async function handler(req) {
     });
 
   const apiKey = process.env.CLAUD_API_KEY;
-  console.log('[suggest] env keys available:', Object.keys(process.env).filter(function(k) { return k.includes('CLAUD') || k.includes('API'); }));
-  console.log('[suggest] CLAUD_API_KEY present:', !!process.env.CLAUD_API_KEY);
-  console.log('[suggest] field received:', field);
-  console.log('[suggest] poste received:', poste);
-  if (!apiKey)
-    return new Response(JSON.stringify({ error: 'Service IA indisponible.' }), { status: 503, headers: jsonH });
+  if (!apiKey) {
+    return new Response(
+      JSON.stringify({ suggestions: [], error: 'No API key' }),
+      { status: 503, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
 
+  const p = poste || 'ce poste';
+  const prompt = field === 'accroche'
+    ? 'Génère 4 accroches professionnelles courtes (2-3 phrases) pour un(e) ' + p + ' en Guyane française. Réponds UNIQUEMENT avec un tableau JSON : ["accroche1","accroche2","accroche3","accroche4"]'
+    : field === 'missions'
+    ? 'Génère 5 missions professionnelles courtes pour un(e) ' + p + '. Commence chaque mission par un verbe d\'action. Réponds UNIQUEMENT avec un tableau JSON : ["mission1","mission2",...]'
+    : field === 'competences'
+    ? 'Génère 8 compétences clés pour un(e) ' + p + ' en Guyane. Réponds UNIQUEMENT avec un tableau JSON : ["comp1","comp2",...]'
+    : 'Génère 6 centres d\'intérêt valorisants pour un(e) ' + p + '. Réponds UNIQUEMENT avec un tableau JSON : ["interet1","interet2",...]';
+
+  var suggestions = [];
   try {
-    const upstream = await fetch('https://api.anthropic.com/v1/messages', {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
-        'x-api-key':           apiKey,
-        'anthropic-version':   '2023-06-01',
-        'content-type':        'application/json'
+        'x-api-key':         apiKey,
+        'anthropic-version': '2023-06-01',
+        'content-type':      'application/json'
       },
       body: JSON.stringify({
         model:      'claude-haiku-4-5-20251001',
         max_tokens: 300,
-        system:     SYSTEM,
-        messages:   [{ role: 'user', content: buildPrompt(field, poste, context) }]
+        messages:   [{ role: 'user', content: prompt }]
       })
     });
-    console.log('[suggest] anthropic status:', upstream.status);
-    const rawText = await upstream.text();
-    console.log('[suggest] raw response:', rawText.substring(0, 200));
-    if (!upstream.ok) throw new Error('Anthropic ' + upstream.status);
-    const anthropicData = JSON.parse(rawText);
-    const text   = anthropicData.content?.[0]?.text || '{}';
-    const parsed = JSON.parse(text);
-    return new Response(JSON.stringify({ suggestions: parsed.suggestions || [] }), { status: 200, headers: jsonH });
+
+    const data  = await resp.json();
+    const text  = data.content?.[0]?.text || '[]';
+    const clean = text.replace(/```json|```/g, '').trim();
+    suggestions = JSON.parse(clean);
+    if (!Array.isArray(suggestions)) suggestions = [];
   } catch (e) {
-    return new Response(JSON.stringify({ error: 'Erreur génération suggestions.', suggestions: [] }), {
-      status: 500, headers: jsonH
-    });
+    suggestions = [];
   }
+
+  return new Response(
+    JSON.stringify({ suggestions }),
+    { status: 200, headers: { 'Content-Type': 'application/json' } }
+  );
 }

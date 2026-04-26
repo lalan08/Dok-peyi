@@ -103,7 +103,7 @@ workspace-* (projets, tâches, chat, IA, QC, agents, notes, dashboard)
 | `api/send-email.js` | Envoi emails transactionnels via Resend |
 | `api/extract-doc.js` | OCR/extraction JSON depuis PDF ou image (pré-remplissage wizard) |
 | `api/admin-auth.js` | Authentification admin serveur + rate-limit anti-brute-force |
-| `api/suggest.js` | Suggestions IA temps réel pour champs CV — POST `{ field, poste, context? }`, fields acceptés : `accroche / missions / competences / interets`, rate-limit 10/min/IP, modèle Haiku, max_tokens 300, retourne `{ suggestions: string[] }` |
+| `api/suggest.js` | Suggestions IA temps réel pour champs CV — POST `{ field, poste, context? }`, fields acceptés : `accroche / missions / competences / interets`, rate-limit 10/min/IP, modèle Haiku, max_tokens 300, retourne `{ suggestions: string[] }`. Prompts retournent un tableau JSON direct (sans clé wrapper). Nettoyage markdown (` ```json ``` `) avant `JSON.parse`. |
 
 ### Modules `lib/`
 | Fichier | Rôle |

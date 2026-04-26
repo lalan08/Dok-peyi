@@ -38,7 +38,7 @@ describe('api/suggest.js — structure', () => {
 
   test('returns 503 when CLAUD_API_KEY is absent', () => {
     assert.match(src, /503/);
-    assert.match(src, /Service IA indisponible/);
+    assert.match(src, /No API key/);
   });
 
   test('returns 429 on rate limit exceeded', () => {
@@ -62,7 +62,7 @@ describe('api/suggest.js — structure', () => {
   });
 
   test('returns suggestions array in success response', () => {
-    assert.match(src, /suggestions.*parsed\.suggestions/);
+    assert.match(src, /Array\.isArray\(suggestions\)/);
   });
 });
 
@@ -104,7 +104,7 @@ describe('api/suggest.js — handler logic (mock)', () => {
     const res = await handler(req);
     assert.equal(res.status, 503);
     const data = await res.json();
-    assert.match(data.error, /indisponible/);
+    assert.match(data.error, /No API key/);
     if (savedKey) process.env.CLAUD_API_KEY = savedKey;
   });
 });
