@@ -16,11 +16,26 @@ describe('service.js dynamic i18n', () => {
     assert.match(source, /dokpeyi:langchange/);
   });
 
-  test('defines dedicated translation keys for dynamic wizard services and choices', async () => {
+  test('localizes dynamic question labels and placeholders through dedicated keys', async () => {
+    const source = await fs.readFile(serviceJsPath, 'utf8');
+
+    assert.match(source, /wiz_q_\$\{SSW\.svc\}_\$\{SSW\.choice\}_\$\{q\.id\}_label/);
+    assert.match(source, /wiz_q_\$\{SSW\.svc\}_\$\{SSW\.choice\}_\$\{q\.id\}_placeholder/);
+  });
+
+  test('defines dedicated translation keys for dynamic wizard services, fields and feedback', async () => {
     const source = await fs.readFile(langJsPath, 'utf8');
 
     assert.match(source, /wiz_service_cv_name/);
     assert.match(source, /wiz_choice_cv_scratch_label/);
     assert.match(source, /wiz_form_title_cv/);
+    assert.match(source, /wiz_modify_section_default/);
+    assert.match(source, /wiz_modify_counter_remaining/);
+    assert.match(source, /wiz_loading_interrupted/);
+    assert.match(source, /wiz_pay_retry/);
+    assert.match(source, /wiz_confirm_home/);
+    assert.match(source, /wiz_service_sejour_review_msg/);
+    assert.match(source, /wiz_q_cv_scratch_poste_label/);
+    assert.match(source, /wiz_q_cv_scratch_poste_placeholder/);
   });
 });
