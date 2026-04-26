@@ -52,6 +52,10 @@ export default async function handler(req) {
     });
 
   const apiKey = process.env.CLAUD_API_KEY;
+  console.log('[suggest] env keys available:', Object.keys(process.env).filter(function(k) { return k.includes('CLAUD') || k.includes('API'); }));
+  console.log('[suggest] CLAUD_API_KEY present:', !!process.env.CLAUD_API_KEY);
+  console.log('[suggest] field received:', field);
+  console.log('[suggest] poste received:', poste);
   if (!apiKey)
     return new Response(JSON.stringify({ error: 'Service IA indisponible.' }), { status: 503, headers: jsonH });
 
@@ -70,9 +74,12 @@ export default async function handler(req) {
         messages:   [{ role: 'user', content: buildPrompt(field, poste, context) }]
       })
     });
+    console.log('[suggest] anthropic status:', upstream.status);
+    const rawText = await upstream.text();
+    console.log('[suggest] raw response:', rawText.substring(0, 200));
     if (!upstream.ok) throw new Error('Anthropic ' + upstream.status);
-    const data   = await upstream.json();
-    const text   = data.content?.[0]?.text || '{}';
+    const anthropicData = JSON.parse(rawText);
+    const text   = anthropicData.content?.[0]?.text || '{}';
     const parsed = JSON.parse(text);
     return new Response(JSON.stringify({ suggestions: parsed.suggestions || [] }), { status: 200, headers: jsonH });
   } catch (e) {
