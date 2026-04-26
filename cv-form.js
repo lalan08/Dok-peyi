@@ -415,20 +415,20 @@
 
   function updatePreview() {
     var preview = document.getElementById('preview-cv');
-    console.log('[preview] el:', preview);
     if (!preview) return;
     try {
       var html = renderTemplate(cvData);
-      console.log('[preview] html length:', html.length, html.substring(0, 100));
       preview.innerHTML = html;
-      var panel = document.getElementById('preview-panel');
-      if (panel) {
+      requestAnimationFrame(function () {
+        var panel = document.getElementById('preview-panel');
+        if (!panel) return;
         var panelW = panel.offsetWidth - 40;
-        var scale  = Math.min(panelW / 794, 1);
-        console.log('[preview] scale:', scale, 'panelW:', panelW);
-        preview.style.transform       = 'scale(' + scale + ')';
+        if (panelW <= 0) panelW = 600;
+        var scale = Math.min(panelW / 794, 1);
+        preview.style.transform      = 'scale(' + scale + ')';
         preview.style.transformOrigin = 'top center';
-      }
+        preview.style.marginBottom   = '-' + (794 * (1 - scale)) + 'px';
+      });
     } catch (e) {
       console.error('[preview] render error:', e);
     }
@@ -502,7 +502,6 @@
   /* ── Init ── */
   document.addEventListener('DOMContentLoaded', function () {
     showStep(1);
-    updatePreview();
 
     // Masquer la zone photo si sans photo
     if (!cvData.withPhoto) {
@@ -523,7 +522,6 @@
       if (pdfSection) pdfSection.style.display = 'block';
       if (expSection) expSection.style.display = 'none';
     } else {
-      // Créer la première expérience vide
       addExperience();
     }
 
@@ -534,6 +532,9 @@
     // Première formation et langue vides
     addFormation();
     addLangue();
+
+    // Preview en dernier — après que tous les containers soient prêts
+    updatePreview();
   });
 
   /* ── Expose globals for inline onclick ── */
