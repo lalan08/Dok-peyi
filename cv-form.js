@@ -166,7 +166,7 @@
       '</div>' +
       '<div class="field-group"><label class="field-label" data-cvf-label-html="cvf_exp_poste_html">' + cvfT('cvf_exp_poste_html', 'Intitulé du poste <span class="field-required">*</span>') + '</label>' +
         '<input class="field-input" type="text" data-cvf-ph="cvf_exp_poste_ph" placeholder="' + cvfT('cvf_exp_poste_ph', 'Ex : Assistant Administratif') + '"' +
-        ' oninput="updateExp(' + n + ',\'poste\',this.value);updatePreview();triggerSuggestions(\'missions_' + n + '\',this.value,\'\')">' +
+        ' oninput="updateExp(' + n + ',\'poste\',this.value);updatePreview();var _mc=document.getElementById(\'suggestions-missions_' + n + '\');if(_mc)_mc.innerHTML=\'\';triggerSuggestions(\'missions_' + n + '\',this.value,\'\')">' +
       '</div>' +
       '<div class="field-group"><label class="field-label" data-cvf-label-html="cvf_exp_entreprise_html">' + cvfT('cvf_exp_entreprise_html', 'Entreprise / Organisation <span class="field-required">*</span>') + '</label>' +
         '<input class="field-input" type="text" data-cvf-ph="cvf_exp_entreprise_ph" placeholder="' + cvfT('cvf_exp_entreprise_ph', 'Ex : Préfecture de Guyane') + '"' +
@@ -406,10 +406,11 @@
       lastPoste = poste;
     }
 
-    // Chips déjà affichées → geler (pas de re-déclenchement)
-    if (container.querySelector('.suggestion-chip')) return;
-    // Loading en cours → ne pas relancer
-    if (container.querySelector('.suggestions-loading')) return;
+    // Chips déjà affichées → geler (pas de re-déclenchement) — sauf missions qui rechargent toujours
+    if (!field.startsWith('missions')) {
+      if (container.querySelector('.suggestion-chip')) return;
+      if (container.querySelector('.suggestions-loading')) return;
+    }
 
     if (!poste || poste.length < 3) return;
     if (suggestDebounceTimer[field]) clearTimeout(suggestDebounceTimer[field]);
@@ -550,6 +551,11 @@
     var name = ((data.identite.prenom || '') + ' ' + (data.identite.nom || '').toUpperCase()).trim() || 'Prénom NOM';
     var poste   = data.profil.poste    || '';
     var accroche = data.profil.accroche || '';
+    var accrocheHtml = accroche
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/\n/g, '<br>');
     var exps  = (data.experiences || []).filter(Boolean);
     var fors  = (data.formations  || []).filter(Boolean);
     var comps = (data.competences || []).filter(Boolean);
@@ -584,7 +590,7 @@
     }
 
     return buildLayout(tpl, s, {
-      name: name, poste: poste, accroche: accroche,
+      name: name, poste: poste, accroche: accrocheHtml,
       email: data.identite.email || '', tel: data.identite.tel || '',
       ville: data.identite.ville || '', linkedin: data.identite.linkedin || '',
       expHtml: expHtml, forHtml: forHtml,
