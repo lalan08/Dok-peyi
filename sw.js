@@ -40,8 +40,8 @@ self.addEventListener('fetch', e => {
   // Never intercept API calls or Firebase
   if (url.pathname.startsWith('/api/') || url.hostname.includes('firebase')) return;
 
-  // Network-first for the language system to avoid stale translations after deploys
-  if (url.pathname === '/lang.js' || url.pathname === '/lang.css') {
+  // Network-first for language and wizard runtime bundles to avoid stale UI after deploys
+  if (url.pathname === '/lang.js' || url.pathname === '/lang.css' || url.pathname === '/service.js') {
     e.respondWith(
       fetch(request)
         .then(res => {

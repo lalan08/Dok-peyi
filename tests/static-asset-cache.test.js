@@ -51,6 +51,12 @@ describe('service static asset caching', () => {
     assert.match(html, /href="\/service\.css\?v=/);
   });
 
+  test('service.html cache-busts service.js to avoid stale wizard logic', async () => {
+    const html = await fs.readFile(serviceHtmlPath, 'utf8');
+
+    assert.match(html, /src="\/service\.js\?v=/);
+  });
+
   test('vercel.json does not mark non-hashed CSS bundles as immutable', async () => {
     const raw = await fs.readFile(vercelConfigPath, 'utf8');
     const config = JSON.parse(raw);
@@ -65,10 +71,10 @@ describe('service static asset caching', () => {
     assert.doesNotMatch(cacheControl.value, /immutable/);
   });
 
-  test('service worker uses network-first for lang assets', async () => {
+  test('service worker uses network-first for lang assets and service.js', async () => {
     const sw = await fs.readFile(serviceWorkerPath, 'utf8');
 
-    assert.match(sw, /url\.pathname === '\/lang\.js' \|\| url\.pathname === '\/lang\.css'/);
-    assert.match(sw, /Network-first for the language system to avoid stale translations after deploys/);
+    assert.match(sw, /url\.pathname === '\/lang\.js' \|\| url\.pathname === '\/lang\.css' \|\| url\.pathname === '\/service\.js'/);
+    assert.match(sw, /Network-first for language and wizard runtime bundles to avoid stale UI after deploys/);
   });
 });

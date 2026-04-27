@@ -28,7 +28,7 @@ Si CLAUDE.md n'est pas à jour → ne pas committer.
 - DB : Firebase Realtime Database EU-west1
 - Email : Resend API
 - Paiement : Stripe Checkout + webhook HMAC-SHA256 + Mobile Money (Momo) + PayPal manuel
-- Tests : `node --test` natif (pas de framework externe), 229 tests / 73 suites
+- Tests : `node --test` natif (pas de framework externe), 230 tests / 73 suites
 - CI : GitHub Actions (`ci.yml`, `tests.yml`, `secret-scan.yml`)
 - Zéro dépendance npm (`package.json` ne contient que `"type": "module"` et le script test)
 
@@ -124,7 +124,7 @@ workspace-* (projets, tâches, chat, IA, QC, agents, notes, dashboard)
 | Fichier | Rôle |
 |---|---|
 | `service.js` | Wizard client — logique complète, constantes `CV_TEMPLATES`, `MODIFY_SECTIONS`, `CV_POSTES_GROUPS`, `CV_DIPLOMES_GROUPS`, `CV_COMPETENCES_GROUPS`, `LETTRE_ENTREPRISES_GROUPS`, `LETTRE_SECTEUR_TAGS`, `COURRIER_DESTINATAIRES_GROUPS`, `COURRIER_OBJET_TYPES`, `DOSSIER_CAF_PRESTATIONS`, `DOSSIER_CAF_SITUATION_PRO`, `DOSSIER_CAF_FOYER`, `DOSSIER_LOGEMENT_TYPES`, `DOSSIER_LOGEMENT_SITUATIONS`, `DOSSIER_AIDE_TYPES`, `DOSSIER_AIDE_ORGANISMES`, `SEJOUR_NATIONALITES`, `SEJOUR_SITUATION_FAMILIALE`, `SEJOUR_ENFANTS_CHARGE`, `SEJOUR_MOTIFS`, `SEJOUR_DUREES_SOUHAITEES`, `SEJOUR_CHANGEMENT_SITUATION`, `SEJOUR_DUREE_PRESENCE`, `SEJOUR_MOTIFS_REGULARISATION`, `SEJOUR_SUJETS_INFO`, `SSW` state, `swBuildPrompt`, `swGenerate`, panneau modif universel (`swModifyDoc`) — supporte `hybrid-select` et `tags` (avec variante `single: true` = radio-tags). Le noyau dynamique du wizard principal est maintenant branché sur `window.DokPeyiI18n` pour : noms de services, cartes de choix, titres dynamiques de l'étape 2, messages d'import, placeholders de sélection, cartes templates CV inline, panneau de modification (select, compteur, historique), états de chargement, récap paiement, erreurs paiement et écran de confirmation. `service.js` écoute `dokpeyi:langchange` pour rerendre les étapes 1 et 2 sans rechargement. Les refs i18n partagées `wiz_ref_*` couvrent désormais le poste mutualisé CV/lettre, les groupes entreprises/atouts de `lettre` et les groupes destinataires/types de `courrier`, avec labels/placeholders dynamiques dédiés. Reste à traduire les catalogues profonds et questions détaillées des services `dossier`, `sejour`, `impot` et `naturalisation`, ainsi que la parité fine des locales moins avancées du wizard principal. |
-| `service.html` | Wizard client — structure HTML 3 étapes + prévisualisation iframe + panneau modif. Navbar premium alignée sur la landing (`.navbar`, `.nav-links`, CTA retour accueil, menu mobile). Le shell statique visible (nav, progression, chargement, paiement, cookies, notification SW) est branché sur `lang.js` via `data-i18n`. `service.css` est appelé avec suffixe de version (`?v=...`) pour casser les caches navigateurs lors des changements de header. `lang.css` et `lang.js` sont chargés pour permettre la traduction du shell et des premiers rerenders dynamiques de `service.js`. |
+| `service.html` | Wizard client — structure HTML 3 étapes + prévisualisation iframe + panneau modif. Navbar premium alignée sur la landing (`.navbar`, `.nav-links`, CTA retour accueil, menu mobile). Le shell statique visible (nav, progression, chargement, paiement, cookies, notification SW) est branché sur `lang.js` via `data-i18n`. `service.css` **et** `service.js` sont appelés avec suffixe de version (`?v=...`) pour casser les caches navigateurs lors des changements de header ou de logique dynamique du wizard. `lang.css` et `lang.js` sont chargés pour permettre la traduction du shell et des premiers rerenders dynamiques de `service.js`. |
 | `service.css` | Styles wizard + cartes templates + modif panel. Reprend aussi la grammaire du header premium de la landing pour les pages service. |
 | `index.html` | Landing premium — hero, cartes services, témoignages, footer, bannière cookies et toast de mise à jour Service Worker. Tous les textes visibles de la page sont branchés sur `lang.js` via `data-i18n`, sauf le toast SW qui appelle `window.DokPeyiI18n.t()` au moment de l'affichage. `lang.js` est appelé avec suffixe de version (`?v=20260425-i18n-cachefix`) pour casser les caches navigateurs. |
 | `a-propos.html` | Page institutionnelle — hero sombre, mission, 7 services + prix, ancrage Guyane (7 langues + organismes réels), engagements RGPD/qualité. Tous les textes visibles de la page sont branchés sur `lang.js`, hors email de contact et valeurs numériques. Nav/footer alignés sur index.html (liens `#services`, sans `#tarifs` ni `#demande`). CTAs → `/#services`. `lang.js` est appelé avec suffixe de version (`?v=20260425-i18n-cachefix`) pour casser les caches navigateurs. |
@@ -141,7 +141,7 @@ workspace-* (projets, tâches, chat, IA, QC, agents, notes, dashboard)
 | `tests/cv-catalogue-i18n.test.js` | Test de régression i18n catalogue CV — vérifie que `cv-catalogue.html` charge `lang.css` + `lang.js`, expose les hooks de traduction de la nav publique, que les cartes templates sont branchées sur `DokPeyiI18n` / `dokpeyi:langchange`, et que `lang.js` expose les clés `cvcat_*` de la page catalogue. |
 | `tests/cv-wizard-i18n.test.js` | Test de régression i18n tunnel CV — vérifie que `cv-wizard.html` charge `lang.css` + `lang.js`, expose les hooks de traduction de la nav publique, que `cv-wizard.js` est branché sur `DokPeyiI18n` / `dokpeyi:langchange`, et que `lang.js` expose les clés `cvw_*` du tunnel CV. |
 | `tests/cv-form-i18n.test.js` | Test de régression i18n formulaire CV actif — vérifie que `cv-form.html` charge `lang.css` + `lang.js`, expose les hooks de traduction du shell visible, que `cv-form.js` est branché sur `DokPeyiI18n` / `dokpeyi:langchange`, et que `lang.js` expose les clés `cvf_*` dédiées à la page. |
-| `tests/static-asset-cache.test.js` | Test de régression cache statique — vérifie que `404.html`, `index.html`, `a-propos.html`, `mentions-legales.html`, `cgv.html`, `confidentialite.html`, `cookies.html`, `legales.html`, `cv-catalogue.html` et `service.html` versionnent `lang.js`, que `service.html` versionne `service.css` et que `vercel.json` n'applique plus `immutable` aux CSS non hashés. |
+| `tests/static-asset-cache.test.js` | Test de régression cache statique — vérifie que `404.html`, `index.html`, `a-propos.html`, `mentions-legales.html`, `cgv.html`, `confidentialite.html`, `cookies.html`, `legales.html`, `cv-catalogue.html` et `service.html` versionnent `lang.js`, que `service.html` versionne `service.css` **et** `service.js`, que `vercel.json` n'applique plus `immutable` aux CSS non hashés, et que `sw.js` force un mode network-first pour `lang.js` / `lang.css` / `service.js`. |
 | `tests/404-i18n.test.js` | Test de régression i18n page 404 — vérifie que `404.html` charge `lang.css` + `lang.js`, expose les hooks de traduction des textes visibles et conserve les liens vers les 5 services principaux. |
 | `tests/mentions-legales-i18n.test.js` | Test de régression i18n mentions légales — vérifie que `mentions-legales.html` charge `lang.css` + `lang.js`, expose les hooks de traduction des textes visibles et que `lang.js` contient les clés `ml_*` dédiées. |
 | `tests/cgv-i18n.test.js` | Test de régression i18n CGV — vérifie que `cgv.html` charge `lang.css` + `lang.js`, expose les hooks de traduction des textes visibles et que `lang.js` contient les clés `cgv_*` dédiées. |
@@ -157,7 +157,7 @@ workspace-* (projets, tâches, chat, IA, QC, agents, notes, dashboard)
 | `admin/index.html` | Dashboard admin |
 | `admin/admin.js` | Logique dashboard admin |
 | `admin/workspace-*.js` | Modules du workspace admin (chat, IA, projets, tâches, QC, agents…) |
-| `lang.js` + `lang.css` | Système multilingue — 7 langues (fr/pt/ht/nl/ar/en/gcr). Base i18n centralisée pour le front public : fallback automatique vers `fr`, support DOM `data-i18n` / `data-i18n-html` / `data-i18n-ph` / `data-i18n-title` / `data-i18n-aria-label` / `data-i18n-value`, injection du bouton langue dans `.nav-links` et `.mobile-menu`. `lang.js` expose aussi `window.DokPeyiI18n` (`t`, `setLanguage`, `getDictionary`, `apply`, `onChange`, `offChange`) et émet l'événement `dokpeyi:langchange` pour les modules JS dynamiques (wizard, tunnel CV). `sw.js` applique désormais une stratégie network-first sur `/lang.js` et `/lang.css` pour éviter les traductions périmées après déploiement. |
+| `lang.js` + `lang.css` | Système multilingue — 7 langues (fr/pt/ht/nl/ar/en/gcr). Base i18n centralisée pour le front public : fallback automatique vers `fr`, support DOM `data-i18n` / `data-i18n-html` / `data-i18n-ph` / `data-i18n-title` / `data-i18n-aria-label` / `data-i18n-value`, injection du bouton langue dans `.nav-links` et `.mobile-menu`. `lang.js` expose aussi `window.DokPeyiI18n` (`t`, `setLanguage`, `getDictionary`, `apply`, `onChange`, `offChange`) et émet l'événement `dokpeyi:langchange` pour les modules JS dynamiques (wizard, tunnel CV). `sw.js` applique désormais une stratégie network-first sur `/lang.js`, `/lang.css` et `/service.js` pour éviter les traductions périmées et la logique wizard obsolète après déploiement. |
 
 Note : les templates CV sont définis dans `service.js` (constante `CV_TEMPLATES`, exposée via `window.CV_TEMPLATES`). Il n'existe pas de fichier `lib/cv-templates.js` séparé.
 
@@ -243,7 +243,7 @@ Pour les services utilisant `lib/pipeline.js` (via `/api/pipeline` action `gener
 ## Branches Git
 - **Branche principale** : `claude/create-website-AhMOy`
 - **Convention commits** : `<type>(<scope>): <message>` — types `feat`, `fix`, `chore`, `refactor`, `test`, `merge`, scopes courants : `cv`, `lettre`, `courrier`, `dossier`, `sejour`, `impot`, `naturalisation`, `prompt`, `impot`
-- **Tests obligatoires avant push** : `node --test tests/*.test.js` (229 / 229 OK)
+- **Tests obligatoires avant push** : `node --test tests/*.test.js` (230 / 230 OK)
 
 ## Déploiement Vercel
 - **Production Branch** : `claude/create-website-AhMOy` (auto-deploy sur chaque push)
@@ -260,7 +260,7 @@ Pour les services utilisant `lib/pipeline.js` (via `/api/pipeline` action `gener
 
 ## Tests
 - **Commande** : `npm test` (équivalent à `node --test tests/*.test.js`)
-- **Résultat actuel** : 229 tests / 73 suites / 229 pass / 0 fail
+- **Résultat actuel** : 230 tests / 73 suites / 230 pass / 0 fail
 - **Couverture** :
   - `api/admin-auth.js` — 11 tests
   - `api/ai-chat.js` — couvert
@@ -285,7 +285,7 @@ Pour les services utilisant `lib/pipeline.js` (via `/api/pipeline` action `gener
   - `cv-wizard.html` + `cv-wizard.js` + `lang.js` — 3 tests de régression i18n sur le tunnel CV
   - `cv-form.html` + `cv-form.js` + `lang.js` — 3 tests de régression i18n sur le formulaire CV actif
   - `service.css` — 2 tests d'intégrité (UTF-8 valide + absence d'octets NUL)
-  - `404.html` + `index.html` + `a-propos.html` + `mentions-legales.html` + `cgv.html` + `confidentialite.html` + `cookies.html` + `legales.html` + `cv-catalogue.html` + `service.html` + `vercel.json` — 4 tests de régression sur le cache des assets statiques i18n/CSS
+  - `404.html` + `index.html` + `a-propos.html` + `mentions-legales.html` + `cgv.html` + `confidentialite.html` + `cookies.html` + `legales.html` + `cv-catalogue.html` + `service.html` + `vercel.json` + `sw.js` — 5 tests de régression sur le cache des assets statiques i18n/CSS/JS
 - **Non couvert** :
   - Wizard client (`service.js`) — pas encore de tests unitaires couvrant toute la logique interactive métier ; seule la couche i18n dynamique critique est verrouillée par régression statique
   - Flows E2E (navigation complète service → paiement → livraison)
