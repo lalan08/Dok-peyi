@@ -28,7 +28,7 @@ Si CLAUDE.md n'est pas à jour → ne pas committer.
 - DB : Firebase Realtime Database EU-west1
 - Email : Resend API
 - Paiement : Stripe Checkout + webhook HMAC-SHA256 + Mobile Money (Momo) + PayPal manuel
-- Tests : `node --test` natif (pas de framework externe), 227 tests / 72 suites
+- Tests : `node --test` natif (pas de framework externe), 229 tests / 73 suites
 - CI : GitHub Actions (`ci.yml`, `tests.yml`, `secret-scan.yml`)
 - Zéro dépendance npm (`package.json` ne contient que `"type": "module"` et le script test)
 
@@ -243,7 +243,7 @@ Pour les services utilisant `lib/pipeline.js` (via `/api/pipeline` action `gener
 ## Branches Git
 - **Branche principale** : `claude/create-website-AhMOy`
 - **Convention commits** : `<type>(<scope>): <message>` — types `feat`, `fix`, `chore`, `refactor`, `test`, `merge`, scopes courants : `cv`, `lettre`, `courrier`, `dossier`, `sejour`, `impot`, `naturalisation`, `prompt`, `impot`
-- **Tests obligatoires avant push** : `node --test tests/*.test.js` (227 / 227 OK)
+- **Tests obligatoires avant push** : `node --test tests/*.test.js` (229 / 229 OK)
 
 ## Déploiement Vercel
 - **Production Branch** : `claude/create-website-AhMOy` (auto-deploy sur chaque push)
@@ -260,7 +260,7 @@ Pour les services utilisant `lib/pipeline.js` (via `/api/pipeline` action `gener
 
 ## Tests
 - **Commande** : `npm test` (équivalent à `node --test tests/*.test.js`)
-- **Résultat actuel** : 227 tests / 72 suites / 227 pass / 0 fail
+- **Résultat actuel** : 229 tests / 73 suites / 229 pass / 0 fail
 - **Couverture** :
   - `api/admin-auth.js` — 11 tests
   - `api/ai-chat.js` — couvert
@@ -284,6 +284,7 @@ Pour les services utilisant `lib/pipeline.js` (via `/api/pipeline` action `gener
   - `cv-catalogue.html` + `lang.js` — 3 tests de régression i18n sur le catalogue des 6 templates CV
   - `cv-wizard.html` + `cv-wizard.js` + `lang.js` — 3 tests de régression i18n sur le tunnel CV
   - `cv-form.html` + `cv-form.js` + `lang.js` — 3 tests de régression i18n sur le formulaire CV actif
+  - `service.css` — 2 tests d'intégrité (UTF-8 valide + absence d'octets NUL)
   - `404.html` + `index.html` + `a-propos.html` + `mentions-legales.html` + `cgv.html` + `confidentialite.html` + `cookies.html` + `legales.html` + `cv-catalogue.html` + `service.html` + `vercel.json` — 4 tests de régression sur le cache des assets statiques i18n/CSS
 - **Non couvert** :
   - Wizard client (`service.js`) — pas encore de tests unitaires couvrant toute la logique interactive métier ; seule la couche i18n dynamique critique est verrouillée par régression statique
