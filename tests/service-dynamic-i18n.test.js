@@ -54,4 +54,15 @@ describe('service.js dynamic i18n', () => {
     assert.match(langSource, /wiz_q_lettre_create_experience_label/);
     assert.match(langSource, /wiz_q_courrier_objet_placeholder/);
   });
+
+  test('covers active lettre and courrier deep translations for ht, nl and ar locales', async () => {
+    const langSource = await fs.readFile(langJsPath, 'utf8');
+
+    assert.match(langSource, /wiz_q_lettre_create_poste_label: 'Pòs vize a \*'/);
+    assert.match(langSource, /wiz_q_courrier_objet_label: 'Sijè lèt la \*'/);
+    assert.match(langSource, /wiz_q_lettre_create_poste_label: 'Doelfunctie \*'/);
+    assert.match(langSource, /wiz_ref_courrier_objet_type_group_0_option_0: 'Aanvraag van documenten'/);
+    assert.match(langSource, /wiz_q_lettre_create_poste_label: 'المنصب المستهدف \*'/);
+    assert.match(langSource, /wiz_q_courrier_objet_label: 'موضوع الرسالة \*'/);
+  });
 });
