@@ -166,7 +166,7 @@
       '</div>' +
       '<div class="field-group"><label class="field-label" data-cvf-label-html="cvf_exp_poste_html">' + cvfT('cvf_exp_poste_html', 'Intitulé du poste <span class="field-required">*</span>') + '</label>' +
         '<input class="field-input" type="text" data-cvf-ph="cvf_exp_poste_ph" placeholder="' + cvfT('cvf_exp_poste_ph', 'Ex : Assistant Administratif') + '"' +
-        ' oninput="updateExp(' + n + ',\'poste\',this.value);updatePreview();var _mc=document.getElementById(\'suggestions-missions_' + n + '\');if(_mc)_mc.innerHTML=\'\';triggerSuggestions(\'missions_' + n + '\',this.value,\'\')">' +
+        ' oninput="updateExp(' + n + ',\'poste\',this.value);updatePreview();var _mc=document.getElementById(\'suggestions-missions_' + n + '\');if(_mc){_mc.innerHTML=\'\';_mc.removeAttribute(\'data-frozen\');}triggerSuggestions(\'missions_' + n + '\',this.value,\'\')">' +
       '</div>' +
       '<div class="field-group"><label class="field-label" data-cvf-label-html="cvf_exp_entreprise_html">' + cvfT('cvf_exp_entreprise_html', 'Entreprise / Organisation <span class="field-required">*</span>') + '</label>' +
         '<input class="field-input" type="text" data-cvf-ph="cvf_exp_entreprise_ph" placeholder="' + cvfT('cvf_exp_entreprise_ph', 'Ex : Préfecture de Guyane') + '"' +
@@ -216,7 +216,8 @@
       '</div>' +
       '<div class="field-group"><label class="field-label" data-cvf-label-html="cvf_form_diplome_html">' + cvfT('cvf_form_diplome_html', 'Diplôme / Certification <span class="field-required">*</span>') + '</label>' +
         '<input class="field-input" type="text" data-cvf-ph="cvf_form_diplome_ph" placeholder="' + cvfT('cvf_form_diplome_ph', 'Ex : BTS Gestion de la PME') + '"' +
-        ' oninput="updateFormation(' + n + ',\'diplome\',this.value);updatePreview()">' +
+        ' oninput="updateFormation(' + n + ',\'diplome\',this.value);updatePreview();triggerSuggestions(\'formation_' + n + '\',cvData.profil.poste||\'\',\'\')">' +
+        '<div class="suggestions-wrap" id="suggestions-formation_' + n + '"></div>' +
       '</div>' +
       '<div class="field-group"><label class="field-label" data-cvf-label-html="cvf_form_etablissement_html">' + cvfT('cvf_form_etablissement_html', 'Établissement <span class="field-required">*</span>') + '</label>' +
         '<input class="field-input" type="text" data-cvf-ph="cvf_form_etablissement_ph" placeholder="' + cvfT('cvf_form_etablissement_ph', 'Ex : Lycée Melkior-Garré, Cayenne') + '"' +
@@ -406,8 +407,10 @@
       lastPoste = poste;
     }
 
-    // Chips déjà affichées → geler (pas de re-déclenchement) — sauf missions qui rechargent toujours
-    if (!field.startsWith('missions')) {
+    // missions/formation : gel manuel via data-frozen — les autres : freeze classique
+    if (field.startsWith('missions') || field.startsWith('formation')) {
+      if (container.getAttribute('data-frozen') === 'true') return;
+    } else {
       if (container.querySelector('.suggestion-chip')) return;
       if (container.querySelector('.suggestions-loading')) return;
     }
@@ -425,9 +428,11 @@
         .then(function (data) {
           var suggestions = data.suggestions || [];
           if (!suggestions.length) { container.innerHTML = ''; return; }
+          var isMutable = field.startsWith('missions') || field.startsWith('formation');
           container.innerHTML = suggestions.map(function (s) {
-            return '<span class="suggestion-chip" onclick="applySuggestion(\'' +
-              field + '\',this.textContent.trim());this.remove()">' + s + '</span>';
+            return '<span class="suggestion-chip" onclick="' +
+              (isMutable ? 'this.parentNode.setAttribute(\'data-frozen\',\'true\');' : '') +
+              'applySuggestion(\'' + field + '\',this.textContent.trim());this.remove()">' + s + '</span>';
           }).join('');
         })
         .catch(function () {
@@ -451,6 +456,10 @@
       var sel = idx ? '#exp-card-' + idx + ' textarea' : '.dynamic-card textarea';
       var ta = document.querySelector(sel);
       if (ta) { ta.value += (ta.value ? '\n' : '') + '• ' + value; ta.dispatchEvent(new Event('input')); }
+    } else if (field.startsWith('formation')) {
+      var fidx = field.split('_')[1];
+      var finput = document.querySelector('#form-card-' + fidx + ' input.field-input');
+      if (finput) { finput.value = value; finput.dispatchEvent(new Event('input')); }
     } else if (field === 'competences') {
       if (cvData.competences.indexOf(value) === -1) {
         cvData.competences.push(value);
@@ -479,6 +488,11 @@
         elInfo.dispatchEvent(new Event('input'));
       }
     }
+  }
+
+  function buildExpContext() {
+    return (cvData.experiences || []).filter(Boolean)
+      .map(function(e) { return e.poste || ''; }).filter(Boolean).join(', ');
   }
 
   /* ── Preview ── */
@@ -645,7 +659,13 @@
 
     currentStep = n;
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (n === 4) triggerSuggestions('formation_1', cvData.profil.poste || '', '');
     if (n === 5) triggerSuggestions('competences', cvData.profil.poste || '', '');
+    if (n === 6) {
+      var ctx6 = buildExpContext();
+      triggerSuggestions('certifications', cvData.profil.poste || '', ctx6);
+      triggerSuggestions('interets', cvData.profil.poste || '', ctx6);
+    }
   }
 
   function nextStep() {
@@ -753,5 +773,6 @@
   window.addTag              = addTag;
   window.removeTag           = removeTag;
   window.cvData              = cvData;
+  window.buildExpContext     = buildExpContext;
 
 })();

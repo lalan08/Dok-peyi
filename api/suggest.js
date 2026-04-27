@@ -9,7 +9,7 @@ export const config = { runtime: 'edge' };
 import { rateLimit } from '../lib/rate-limit.js';
 import { CORS }      from '../lib/edge-response.js';
 
-const VALID_FIELDS = ['accroche', 'missions', 'competences', 'interets', 'certifications', 'infos_complementaires'];
+const VALID_FIELDS = ['accroche', 'missions', 'formation', 'competences', 'interets', 'certifications', 'infos_complementaires'];
 
 const SYSTEM = 'Tu es un expert en rédaction de CV professionnels en France et en Guyane française. Tu génères des suggestions courtes, précises et professionnelles adaptées au contexte guyanais. Réponds UNIQUEMENT en JSON valide sans markdown.';
 
@@ -50,7 +50,9 @@ export default async function handler(req) {
   }
 
   const { field: rawField, poste, context } = body || {};
-  const field = rawField && rawField.startsWith('missions') ? 'missions' : rawField;
+  const field = rawField && rawField.startsWith('missions') ? 'missions'
+    : rawField && rawField.startsWith('formation') ? 'formation'
+    : rawField;
   if (!field || !VALID_FIELDS.includes(field))
     return new Response(JSON.stringify({ error: 'Champ invalide. Valeurs acceptées : ' + VALID_FIELDS.join(', ') }), {
       status: 400, headers: jsonH
@@ -69,13 +71,15 @@ export default async function handler(req) {
     ? 'Génère 6 accroches professionnelles courtes (2-3 phrases) pour un(e) ' + p + ' en Guyane française. Réponds UNIQUEMENT avec un tableau JSON : ["accroche1",...]'
     : field === 'missions'
     ? 'Génère 8 missions professionnelles courtes pour un(e) ' + p + '. Commence chaque mission par un verbe d\'action. Réponds UNIQUEMENT avec un tableau JSON : ["mission1",...]'
+    : field === 'formation'
+    ? 'Génère 6 diplômes ou formations pertinents pour devenir un(e) ' + p + ' en Guyane française. Inclure BTS, Licence, Master, DUT, Bac Pro selon le niveau requis. Réponds UNIQUEMENT avec un tableau JSON : ["diplome1","diplome2",...]'
     : field === 'competences'
     ? 'Génère 12 compétences clés pour un(e) ' + p + ' en Guyane. Réponds UNIQUEMENT avec un tableau JSON : ["comp1",...]'
     : field === 'certifications'
-    ? 'Génère 6 certifications et permis utiles pour un(e) ' + p + ' en Guyane française. Réponds UNIQUEMENT avec un tableau JSON : ["cert1",...]'
+    ? 'Génère 8 certifications, permis et formations courtes pertinents pour un(e) ' + p + ' en Guyane française.' + (context ? ' Expériences : ' + context + '.' : '') + ' Réponds UNIQUEMENT avec un tableau JSON : ["cert1","cert2",...]'
     : field === 'infos_complementaires'
     ? 'Génère 5 informations complémentaires professionnelles courtes pour un(e) ' + p + ' (mobilité, disponibilité, situation, atouts). Réponds UNIQUEMENT avec un tableau JSON : ["info1",...]'
-    : 'Génère 8 centres d\'intérêt valorisants pour un(e) ' + p + '. Réponds UNIQUEMENT avec un tableau JSON : ["interet1",...]';
+    : 'Génère 8 centres d\'intérêt valorisants et cohérents avec le profil d\'un(e) ' + p + ' en Guyane française.' + (context ? ' Profil : ' + context + '.' : '') + ' Réponds UNIQUEMENT avec un tableau JSON : ["interet1",...]';
 
   var suggestions = [];
   try {

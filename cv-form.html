@@ -190,7 +190,7 @@
           <label class="field-label" data-i18n="cvf_label_certifications">Certifications / Permis</label>
           <input class="field-input" type="text" data-field="certifications"
             placeholder="Ex : Permis B, PSC1, TOEIC 850" data-i18n-ph="cvf_ph_certifications"
-            oninput="updateCvData('extras','certifications',this.value);updatePreview();triggerSuggestions('certifications',cvData.profil.poste||'','')">
+            oninput="updateCvData('extras','certifications',this.value);updatePreview();triggerSuggestions('certifications',cvData.profil.poste||'',buildExpContext())">
           <div class="suggestions-wrap" id="suggestions-certifications"></div>
         </div>
 
@@ -198,7 +198,7 @@
           <label class="field-label" data-i18n="cvf_label_interets">Centres d'intérêt</label>
           <input class="field-input" type="text" data-field="interets"
             placeholder="Ex : Football, Musique, Bénévolat" data-i18n-ph="cvf_ph_interets"
-            oninput="updateCvData('extras','interets',this.value);updatePreview();triggerSuggestions('interets',cvData.profil.poste||'','')">
+            oninput="updateCvData('extras','interets',this.value);updatePreview();triggerSuggestions('interets',cvData.profil.poste||'',buildExpContext())">
           <div class="suggestions-wrap" id="suggestions-interets"></div>
         </div>
 
@@ -239,6 +239,6 @@
   <button id="btn-close-preview" onclick="toggleMobilePreview()" data-i18n="cvf_preview_close">✕ Fermer l'aperçu</button>
 
   <script defer src="/lang.js?v=20260426-cvf-i18n2"></script>
-  <script defer src="/cv-form.js?v=20260426-ux5"></script>
+  <script defer src="/cv-form.js?v=20260427-suggestions"></script>
 </body>
 </html>
