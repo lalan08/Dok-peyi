@@ -28,7 +28,7 @@ Si CLAUDE.md n'est pas à jour → ne pas committer.
 - DB : Firebase Realtime Database EU-west1
 - Email : Resend API
 - Paiement : Stripe Checkout + webhook HMAC-SHA256 + Mobile Money (Momo) + PayPal manuel
-- Tests : `node --test` natif (pas de framework externe), 231 tests / 73 suites
+- Tests : `node --test` natif (pas de framework externe), 235 tests / 74 suites
 - CI : GitHub Actions (`ci.yml`, `tests.yml`, `secret-scan.yml`)
 - Zéro dépendance npm (`package.json` ne contient que `"type": "module"` et le script test)
 
@@ -141,6 +141,7 @@ workspace-* (projets, tâches, chat, IA, QC, agents, notes, dashboard)
 | `tests/cv-catalogue-i18n.test.js` | Test de régression i18n catalogue CV — vérifie que `cv-catalogue.html` charge `lang.css` + `lang.js`, expose les hooks de traduction de la nav publique, que les cartes templates sont branchées sur `DokPeyiI18n` / `dokpeyi:langchange`, et que `lang.js` expose les clés `cvcat_*` de la page catalogue. |
 | `tests/cv-wizard-i18n.test.js` | Test de régression i18n tunnel CV — vérifie que `cv-wizard.html` charge `lang.css` + `lang.js`, expose les hooks de traduction de la nav publique, que `cv-wizard.js` est branché sur `DokPeyiI18n` / `dokpeyi:langchange`, et que `lang.js` expose les clés `cvw_*` du tunnel CV. |
 | `tests/cv-form-i18n.test.js` | Test de régression i18n formulaire CV actif — vérifie que `cv-form.html` charge `lang.css` + `lang.js`, expose les hooks de traduction du shell visible, que `cv-form.js` est branché sur `DokPeyiI18n` / `dokpeyi:langchange`, et que `lang.js` expose les clés `cvf_*` dédiées à la page. |
+| `tests/e2e-cv-flow.test.js` | Tests E2E fonctionnels `cv-form.js` — 4 scénarios exécutés dans un sandbox `node:vm` avec mock DOM manuel léger (zéro dépendance) : `removeCard` expériences/formations/langues (nulls filtrés, renumérotation titres, `expCount`/`formCount`/`langueCount` synchronisés), `triggerSuggestions` reset `innerHTML` + suppression `data-frozen` sur tous les `suggestions-formation_N` au changement de poste. |
 | `tests/static-asset-cache.test.js` | Test de régression cache statique — vérifie que `404.html`, `index.html`, `a-propos.html`, `mentions-legales.html`, `cgv.html`, `confidentialite.html`, `cookies.html`, `legales.html`, `cv-catalogue.html` et `service.html` versionnent `lang.js`, que `service.html` versionne `service.css` **et** `service.js`, que `vercel.json` n'applique plus `immutable` aux CSS non hashés, et que `sw.js` force un mode network-first pour `lang.js` / `lang.css` / `service.js`. |
 | `tests/404-i18n.test.js` | Test de régression i18n page 404 — vérifie que `404.html` charge `lang.css` + `lang.js`, expose les hooks de traduction des textes visibles et conserve les liens vers les 5 services principaux. |
 | `tests/mentions-legales-i18n.test.js` | Test de régression i18n mentions légales — vérifie que `mentions-legales.html` charge `lang.css` + `lang.js`, expose les hooks de traduction des textes visibles et que `lang.js` contient les clés `ml_*` dédiées. |
@@ -260,7 +261,7 @@ Pour les services utilisant `lib/pipeline.js` (via `/api/pipeline` action `gener
 
 ## Tests
 - **Commande** : `npm test` (équivalent à `node --test tests/*.test.js`)
-- **Résultat actuel** : 231 tests / 73 suites / 231 pass / 0 fail
+- **Résultat actuel** : 235 tests / 74 suites / 235 pass / 0 fail
 - **Couverture** :
   - `api/admin-auth.js` — 11 tests
   - `api/ai-chat.js` — couvert
@@ -286,6 +287,7 @@ Pour les services utilisant `lib/pipeline.js` (via `/api/pipeline` action `gener
   - `cv-form.html` + `cv-form.js` + `lang.js` — 3 tests de régression i18n sur le formulaire CV actif
   - `service.css` — 2 tests d'intégrité (UTF-8 valide + absence d'octets NUL)
   - `404.html` + `index.html` + `a-propos.html` + `mentions-legales.html` + `cgv.html` + `confidentialite.html` + `cookies.html` + `legales.html` + `cv-catalogue.html` + `service.html` + `vercel.json` + `sw.js` — 5 tests de régression sur le cache des assets statiques i18n/CSS/JS
+  - `cv-form.js` (E2E fonctionnels) — 4 tests comportementaux dans un sandbox `node:vm` avec mock DOM manuel : `removeCard` expériences (renumérotation + état cvData), `removeCard` formations, `removeCard` langues, `triggerSuggestions` reset `suggestions-formation_N` au changement de poste
 - **Non couvert** :
   - Wizard client (`service.js`) — pas encore de tests unitaires couvrant toute la logique interactive métier ; seule la couche i18n dynamique critique est verrouillée par régression statique
   - Flows E2E (navigation complète service → paiement → livraison)
