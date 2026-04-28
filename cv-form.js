@@ -200,7 +200,30 @@
   function removeCard(cardId, section, n) {
     var card = document.getElementById(cardId);
     if (card) card.remove();
-    if (Array.isArray(cvData[section])) cvData[section][n - 1] = null;
+    if (Array.isArray(cvData[section])) {
+      cvData[section][n - 1] = null;
+      cvData[section] = cvData[section].filter(Boolean);
+    }
+    // Renumber remaining cards
+    var prefix = section === 'experiences' ? 'exp-card-' : section === 'formations' ? 'form-card-' : 'lang-card-';
+    var titleKey = section === 'experiences' ? 'cvf_exp_title' : section === 'formations' ? 'cvf_form_title' : 'cvf_lang_title';
+    var titleDefault = section === 'experiences' ? 'Expérience' : section === 'formations' ? 'Formation' : 'Langue';
+    var container = document.getElementById(section + '-container');
+    if (container) {
+      var cards = container.querySelectorAll('.dynamic-card');
+      cards.forEach(function (c, i) {
+        var idx = i + 1;
+        var titleSpan = c.querySelector('[data-cvf-card-title]');
+        if (titleSpan) {
+          titleSpan.textContent = cvfT(titleKey, titleDefault) + ' ' + idx;
+          titleSpan.dataset.cvfIndex = idx;
+        }
+      });
+    }
+    if (section === 'experiences') expCount = cvData.experiences.length;
+    else if (section === 'formations') formCount = cvData.formations.length;
+    else if (section === 'langues') langueCount = cvData.langues.length;
+    updatePreview();
   }
 
   /* ── Formations dynamiques ── */
@@ -322,11 +345,13 @@
     var container = document.getElementById('langues-container');
     if (container) container.appendChild(card);
     if (!cvData.langues[n - 1]) cvData.langues[n - 1] = {};
+    updatePreview();
   }
 
   function updateLangue(n, field, value) {
     if (!cvData.langues[n - 1]) cvData.langues[n - 1] = {};
     cvData.langues[n - 1][field] = value;
+    updatePreview();
   }
 
   /* ── Récapitulatif (step 6) ── */
@@ -349,6 +374,10 @@
         return l.langue + (l.niveau ? ' (' + l.niveau + ')' : '');
       }).join(', ')
     }, 'Langues : {value}'));
+    var extras = cvData.extras || {};
+    if (extras.certifications && extras.certifications.trim()) lines.push(cvfFormat('cvf_recap_certifications', { value: extras.certifications }, 'Certifications : {value}'));
+    if (extras.interets && extras.interets.trim()) lines.push(cvfFormat('cvf_recap_interets', { value: extras.interets }, 'Intérêts : {value}'));
+    if (extras.infos && extras.infos.trim()) lines.push(cvfFormat('cvf_recap_infos', { value: extras.infos }, 'Infos : {value}'));
     box.innerHTML = lines.length ? lines.join('<br>') : cvfT('cvf_recap_empty', 'Complétez les étapes précédentes pour voir le récapitulatif.');
   }
 
@@ -405,6 +434,10 @@
       fieldsToReset.forEach(function (f) {
         var c = document.getElementById('suggestions-' + f);
         if (c) c.innerHTML = '';
+      });
+      document.querySelectorAll('[id^="suggestions-formation_"]').forEach(function (c) {
+        c.innerHTML = '';
+        c.removeAttribute('data-frozen');
       });
       lastPoste = poste;
     }
@@ -671,7 +704,7 @@
     currentStep = n;
     window.scrollTo({ top: 0, behavior: 'smooth' });
     if (n === 4) triggerSuggestions('formation_1', cvData.profil.poste || '', '');
-    if (n === 5) triggerSuggestions('competences', cvData.profil.poste || '', '');
+    if (n === 5) triggerSuggestions('competences', cvData.profil.poste || '', buildExpContext());
     if (n === 6) {
       var ctx6 = buildExpContext();
       triggerSuggestions('certifications', cvData.profil.poste || '', ctx6);
