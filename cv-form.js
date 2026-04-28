@@ -15,6 +15,51 @@
       .replace(/'/g, '&#39;');
   }
 
+  /* ── Persistance localStorage TTL 24h ── */
+  var STORAGE_KEY = 'dokpeyi_cv_state';
+  var STORAGE_TTL = 24 * 60 * 60 * 1000;
+
+  function saveState() {
+    try {
+      var stateToSave = {
+        identite:    cvData.identite,
+        profil:      cvData.profil,
+        experiences: cvData.experiences,
+        formations:  cvData.formations,
+        competences: cvData.competences,
+        langues:     cvData.langues,
+        extras:      cvData.extras,
+        template:    cvData.template,
+        withPhoto:   cvData.withPhoto,
+        mode:        cvData.mode,
+        ts:          Date.now()
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave));
+    } catch (e) {
+      /* ignorer : localStorage indisponible / quota / mode privé */
+    }
+  }
+
+  function loadState() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      var data = JSON.parse(raw);
+      if (!data.ts || Date.now() - data.ts > STORAGE_TTL) {
+        localStorage.removeItem(STORAGE_KEY);
+        return null;
+      }
+      return data;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function resetState() {
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    location.reload();
+  }
+
   var currentStep = 1;
   var totalSteps  = 6;
 
@@ -160,6 +205,7 @@
   function updateCvData(section, field, value) {
     if (!cvData[section]) cvData[section] = {};
     cvData[section][field] = value;
+    saveState();
   }
 
   /* ── Expériences dynamiques ── */
@@ -205,6 +251,7 @@
     if (!cvData.experiences[n - 1]) cvData.experiences[n - 1] = {};
     cvData.experiences[n - 1][field] = value;
     updatePreview();
+    saveState();
   }
 
   function removeCard(cardId, section, n) {
@@ -234,6 +281,7 @@
     else if (section === 'formations') formCount = cvData.formations.length;
     else if (section === 'langues') langueCount = cvData.langues.length;
     updatePreview();
+    saveState();
   }
 
   /* ── Formations dynamiques ── */
@@ -275,6 +323,7 @@
     if (!cvData.formations[n - 1]) cvData.formations[n - 1] = {};
     cvData.formations[n - 1][field] = value;
     updatePreview();
+    saveState();
   }
 
   /* ── Compétences (tags) ── */
@@ -303,6 +352,7 @@
     arr.push(value);
     renderTags(section);
     updatePreview();
+    saveState();
   }
 
   function removeTag(section, value) {
@@ -310,6 +360,7 @@
     cvData[section] = cvData[section].filter(function (t) { return t !== value; });
     renderTags(section);
     updatePreview();
+    saveState();
   }
 
   function renderTags(section) {
@@ -365,6 +416,7 @@
     if (!cvData.langues[n - 1]) cvData.langues[n - 1] = {};
     cvData.langues[n - 1][field] = value;
     updatePreview();
+    saveState();
   }
 
   /* ── Récapitulatif (step 6) ── */
@@ -394,26 +446,129 @@
     box.innerHTML = lines.length ? lines.join('<br>') : cvfT('cvf_recap_empty', 'Complétez les étapes précédentes pour voir le récapitulatif.');
   }
 
-  /* ── Upload PDF ── */
+  /* ── Upload PDF — passe par /api/extract-doc en JSON base64 ── */
+  function fileToBase64(file) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload  = function () {
+        var result = reader.result || '';
+        var base64 = String(result).split(',')[1] || '';
+        resolve(base64);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function rebuildAllCardsFromData() {
+    /* Vider toutes les cards dynamiques existantes */
+    ['exp-card-', 'form-card-', 'lang-card-'].forEach(function (prefix) {
+      document.querySelectorAll('[id^="' + prefix + '"]').forEach(function (c) { c.remove(); });
+    });
+    expCount = 0;
+    formCount = 0;
+    langueCount = 0;
+
+    /* Reconstruire expériences */
+    (cvData.experiences || []).filter(Boolean).forEach(function (e) {
+      addExperience();
+      var card = document.getElementById('exp-card-' + expCount);
+      if (!card) return;
+      var inputs = card.querySelectorAll('input.field-input');
+      if (inputs[0]) inputs[0].value = e.poste      || '';
+      if (inputs[1]) inputs[1].value = e.entreprise || '';
+      if (inputs[2]) inputs[2].value = e.debut      || '';
+      if (inputs[3]) inputs[3].value = e.fin        || '';
+      var ta = card.querySelector('textarea.field-textarea');
+      if (ta) ta.value = e.missions || '';
+    });
+
+    /* Reconstruire formations */
+    (cvData.formations || []).filter(Boolean).forEach(function (f) {
+      addFormation();
+      var card = document.getElementById('form-card-' + formCount);
+      if (!card) return;
+      var inputs = card.querySelectorAll('input.field-input');
+      if (inputs[0]) inputs[0].value = f.diplome       || '';
+      if (inputs[1]) inputs[1].value = f.etablissement || '';
+      if (inputs[2]) inputs[2].value = f.annee         || '';
+      var sel = card.querySelector('select.field-select');
+      if (sel) sel.value = f.mention || '';
+    });
+
+    /* Reconstruire langues */
+    (cvData.langues || []).filter(Boolean).forEach(function (l) {
+      addLangue();
+      var card = document.getElementById('lang-card-' + langueCount);
+      if (!card) return;
+      var input = card.querySelector('input.field-input');
+      if (input) input.value = l.langue || '';
+      var sel = card.querySelector('select.field-select');
+      if (sel) sel.value = l.niveau || '';
+    });
+
+    /* Identité — tous les data-field */
+    Object.keys(cvData.identite || {}).forEach(function (k) {
+      var input = document.querySelector('[data-field="' + k + '"]');
+      if (input) input.value = cvData.identite[k] || '';
+    });
+
+    /* Profil */
+    Object.keys(cvData.profil || {}).forEach(function (k) {
+      var el = document.querySelector('[data-field="' + k + '"]');
+      if (el) el.value = cvData.profil[k] || '';
+    });
+
+    /* Extras (mapping spécifique : infos → data-field="complement") */
+    if (cvData.extras) {
+      var elCert = document.querySelector('[data-field="certifications"]');
+      if (elCert) elCert.value = cvData.extras.certifications || '';
+      var elInt = document.querySelector('[data-field="interets"]');
+      if (elInt) elInt.value = cvData.extras.interets || '';
+      var elComp = document.querySelector('[data-field="complement"]');
+      if (elComp) elComp.value = cvData.extras.infos || '';
+    }
+
+    /* Tags compétences */
+    if (Array.isArray(cvData.competences) && cvData.competences.length) renderTags('competences');
+  }
+
   function handlePdfUpload(file) {
     if (!file) return;
     setPdfUploadState('loading');
-    var formData = new FormData();
-    formData.append('file', file);
-    fetch('/api/extract-doc', { method: 'POST', body: formData })
-      .then(function (r) { return r.json(); })
-      .then(function (data) {
-        if (data.prenom)      cvData.identite.prenom   = data.prenom;
-        if (data.nom)         cvData.identite.nom      = data.nom;
-        if (data.email)       cvData.identite.email    = data.email;
-        if (data.tel)         cvData.identite.tel      = data.tel;
-        if (data.poste)       cvData.profil.poste      = data.poste;
-        if (data.accroche)    cvData.profil.accroche   = data.accroche;
-        if (data.experiences) cvData.experiences       = data.experiences;
+    fileToBase64(file)
+      .then(function (base64) {
+        return fetch('/api/extract-doc', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ file: { data: base64, type: file.type } })
+        });
+      })
+      .then(function (r) {
+        if (!r.ok) throw new Error('API error: ' + r.status);
+        return r.json();
+      })
+      .then(function (resp) {
+        var data = (resp && resp.extracted) ? resp.extracted : (resp || {});
+        if (data.prenom)      cvData.identite.prenom = data.prenom;
+        if (data.nom)         cvData.identite.nom    = data.nom;
+        if (data.email)       cvData.identite.email  = data.email;
+        if (data.phone)       cvData.identite.tel    = data.phone;
+        if (data.tel)         cvData.identite.tel    = data.tel;
+        if (data.poste)       cvData.profil.poste    = data.poste;
+        if (data.accroche)    cvData.profil.accroche = data.accroche;
+        if (data.experiences) cvData.experiences     = data.experiences;
+        if (data.formations)  cvData.formations      = data.formations;
+        if (data.competences) cvData.competences     = data.competences;
+        if (data.langues)     cvData.langues         = data.langues;
+        lastPoste = cvData.profil.poste || '';
+        rebuildAllCardsFromData();
         updatePreview();
+        saveState();
         setPdfUploadState('success');
       })
-      .catch(function () {
+      .catch(function (err) {
+        if (typeof console !== 'undefined') console.error('[handlePdfUpload]', err);
         setPdfUploadState('error');
       });
   }
@@ -783,10 +938,135 @@
     if (closeBtn) closeBtn.style.display = isOpen ? 'block' : 'none';
   }
 
-  /* ── Submit ── */
+  /* ── Submit : pipeline IA complet ── */
+  function buildOrchestratePrompt(d) {
+    var lines = [];
+    lines.push('Génère un CV professionnel premium.');
+    lines.push('Template : ' + (d.template || ''));
+    lines.push('Mode : ' + (d.mode || ''));
+    if (d.mode === 'target' && d.profil && d.profil.offre_cible) {
+      lines.push('Offre ciblée : ' + d.profil.offre_cible);
+    }
+    lines.push('Identité : ' + ((d.identite && d.identite.prenom) || '') + ' ' + ((d.identite && d.identite.nom) || ''));
+    lines.push('Poste visé : ' + ((d.profil && d.profil.poste) || ''));
+    lines.push('Accroche actuelle : ' + ((d.profil && d.profil.accroche) || ''));
+    lines.push('Expériences : ' + JSON.stringify(d.experiences || []));
+    lines.push('Formations : '  + JSON.stringify(d.formations  || []));
+    lines.push('Compétences : ' + (d.competences || []).join(', '));
+    lines.push('Langues : '     + JSON.stringify(d.langues     || []));
+    lines.push('Extras : '      + JSON.stringify(d.extras      || {}));
+    lines.push('Reformule l\'accroche pour la rendre plus percutante. ' +
+               'Reformule chaque mission avec verbes d\'action et impact mesurable.');
+    return lines.join('\n');
+  }
+
+  function showLoadingScreen() {
+    var overlay = document.createElement('div');
+    overlay.id = 'cv-loading-overlay';
+    overlay.innerHTML =
+      '<div class="cv-loading-content">' +
+        '<div class="cv-loading-spinner"></div>' +
+        '<h2>Génération de ton CV en cours…</h2>' +
+        '<p>Notre IA optimise chaque section.</p>' +
+        '<p class="cv-loading-step">Étape 1/4 : Analyse du profil</p>' +
+      '</div>';
+    document.body.appendChild(overlay);
+
+    var steps = [
+      'Étape 1/4 : Analyse du profil',
+      'Étape 2/4 : Optimisation accroche',
+      'Étape 3/4 : Reformulation expériences',
+      'Étape 4/4 : Mise en page finale'
+    ];
+    var i = 0;
+    window.cvLoadingInterval = setInterval(function () {
+      i = (i + 1) % steps.length;
+      var el = document.querySelector('.cv-loading-step');
+      if (el) el.textContent = steps[i];
+    }, 2500);
+  }
+
+  function hideLoadingScreen() {
+    if (window.cvLoadingInterval) {
+      clearInterval(window.cvLoadingInterval);
+      window.cvLoadingInterval = null;
+    }
+    var overlay = document.getElementById('cv-loading-overlay');
+    if (overlay) overlay.remove();
+  }
+
+  function showFinalPreview(result) {
+    if (result && result.optimized) {
+      var opt = result.optimized;
+      if (opt.accroche)     cvData.profil.accroche = opt.accroche;
+      if (opt.experiences)  cvData.experiences     = opt.experiences;
+      if (opt.competences)  cvData.competences     = opt.competences;
+      rebuildAllCardsFromData();
+    }
+    updatePreview();
+
+    var preview = document.getElementById('preview-panel');
+    if (preview) preview.classList.add('cv-watermarked');
+
+    var finalScreen = document.createElement('div');
+    finalScreen.id = 'cv-final-screen';
+    finalScreen.innerHTML =
+      '<div class="cv-final-content">' +
+        '<h2>✦ Ton CV est prêt !</h2>' +
+        '<p>Aperçu disponible avec filigrane.</p>' +
+        '<p>Pour télécharger la version finale sans filigrane, finalise ta commande.</p>' +
+        '<button onclick="goToCheckout()" class="btn-luxe btn-luxe-primary">Finaliser ma commande →</button>' +
+        '<button onclick="closeFinalScreen()" class="btn-luxe btn-luxe-secondary">Modifier mon CV</button>' +
+      '</div>';
+    document.body.appendChild(finalScreen);
+  }
+
+  function goToCheckout() {
+    alert('Paiement Stripe : à intégrer en V2.\nPour le moment, contacte-nous via WhatsApp.');
+  }
+
+  function closeFinalScreen() {
+    var screen = document.getElementById('cv-final-screen');
+    if (screen) screen.remove();
+    var preview = document.getElementById('preview-panel');
+    if (preview) preview.classList.remove('cv-watermarked');
+  }
+
   function submitForm() {
-    console.log('[cv-form] submitForm — cvData:', cvData);
-    // S3-D : génération IA — à implémenter
+    var errors = validateStep(6);
+    if (errors.length > 0) {
+      alert('Champs manquants :\n• ' + errors.join('\n• '));
+      return;
+    }
+
+    showLoadingScreen();
+
+    var prompt = buildOrchestratePrompt(cvData);
+    fetch('/api/orchestrate', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({
+        type:      'cv',
+        data:      cvData,
+        prompt:    prompt,
+        template:  cvData.template,
+        withPhoto: cvData.withPhoto,
+        mode:      cvData.mode
+      })
+    })
+      .then(function (r) {
+        if (!r.ok) throw new Error('API error: ' + r.status);
+        return r.json();
+      })
+      .then(function (result) {
+        hideLoadingScreen();
+        showFinalPreview(result);
+      })
+      .catch(function (err) {
+        hideLoadingScreen();
+        if (typeof console !== 'undefined') console.error('[submitForm]', err);
+        alert('Erreur génération : ' + err.message + '\nRéessaie ou contacte-nous.');
+      });
   }
 
   /* ── Navbar scroll ── */
@@ -809,6 +1089,14 @@
   /* ── Init ── */
   document.addEventListener('DOMContentLoaded', function () {
     showStep(1);
+
+    /* Restaurer un état précédent (TTL 24h) si disponible */
+    var saved = loadState();
+    if (saved) {
+      Object.assign(cvData, saved);
+      delete cvData.ts;
+    }
+
     lastPoste = cvData.profil.poste || '';
 
     // Re-lire withPhoto depuis sessionStorage (source de vérité unique, jamais réécrite ici)
@@ -831,7 +1119,7 @@
       var expSection = document.getElementById('experiences-section');
       if (pdfSection) pdfSection.style.display = 'block';
       if (expSection) expSection.style.display = 'none';
-    } else {
+    } else if (!saved) {
       addExperience();
     }
 
@@ -839,9 +1127,14 @@
     triggerSuggestions('poste', '');
     initCompSuggestions();
 
-    // Première formation et langue vides
-    addFormation();
-    addLangue();
+    if (saved) {
+      /* Reconstruire formulaire complet depuis l'état persisté */
+      rebuildAllCardsFromData();
+    } else {
+      /* Première formation et langue vides */
+      addFormation();
+      addLangue();
+    }
 
     // Preview en dernier — après que tous les containers soient prêts
     updatePreview();
@@ -876,5 +1169,8 @@
   window.removeTag           = removeTag;
   window.cvData              = cvData;
   window.buildExpContext     = buildExpContext;
+  window.resetState          = resetState;
+  window.goToCheckout        = goToCheckout;
+  window.closeFinalScreen    = closeFinalScreen;
 
 })();

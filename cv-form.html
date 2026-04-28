@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/lang.css">
-  <link rel="stylesheet" href="/cv-form.css?v=20260426-ux2">
+  <link rel="stylesheet" href="/cv-form.css?v=20260428-C">
 </head>
 <body>
 
@@ -40,6 +40,9 @@
   <main id="cv-form-layout">
 
     <section id="form-panel">
+      <div class="form-panel-header">
+        <button type="button" class="btn-reset-cv" onclick="if(confirm('Tout effacer et recommencer ?'))resetState()" title="Effacer tout et recommencer">↻ Recommencer</button>
+      </div>
       <div id="progress-bar"><div id="progress-fill"></div></div>
       <div id="progress-label">
         <span data-i18n="cvf_progress_step">Étape</span> <span id="step-current">1</span> <span data-i18n="cvf_progress_of">sur</span> <span id="step-total">6</span>
@@ -242,6 +245,6 @@
   <button id="btn-close-preview" onclick="toggleMobilePreview()" data-i18n="cvf_preview_close">✕ Fermer l'aperçu</button>
 
   <script defer src="/lang.js?v=20260426-cvf-i18n2"></script>
-  <script defer src="/cv-form.js?v=20260428-B"></script>
+  <script defer src="/cv-form.js?v=20260428-C"></script>
 </body>
 </html>
