@@ -79,7 +79,7 @@ export default async function handler(req) {
     ? 'Génère 8 certifications, permis et formations courtes pertinents pour un(e) ' + p + ' en Guyane française.' + (context ? ' Expériences : ' + context + '.' : '') + ' Réponds UNIQUEMENT avec un tableau JSON : ["cert1","cert2",...]'
     : field === 'infos_complementaires'
     ? 'Génère 5 informations complémentaires professionnelles courtes pour un(e) ' + p + ' (mobilité, disponibilité, situation, atouts). Réponds UNIQUEMENT avec un tableau JSON : ["info1",...]'
-    : 'Génère 8 centres d\'intérêt valorisants et cohérents avec le profil d\'un(e) ' + p + ' en Guyane française.' + (context ? ' Profil : ' + context + '.' : '') + ' Réponds UNIQUEMENT avec un tableau JSON : ["interet1",...]';
+    : 'Génère 8 centres d\'intérêt variés, humains et naturels pour une personne travaillant comme ' + p + ' en Guyane française. Mélange : sports, culture locale, bénévolat, nature amazonienne, musique, lecture, famille, voyages, cuisine créole.' + (context ? ' Profil : ' + context + '.' : '') + ' Évite les termes trop techniques ou professionnels. Réponds UNIQUEMENT avec un tableau JSON : ["interet1","interet2",...]';
 
   var suggestions = [];
   try {

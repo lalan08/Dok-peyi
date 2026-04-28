@@ -194,6 +194,7 @@
   function updateExp(n, field, value) {
     if (!cvData.experiences[n - 1]) cvData.experiences[n - 1] = {};
     cvData.experiences[n - 1][field] = value;
+    updatePreview();
   }
 
   function removeCard(cardId, section, n) {
@@ -240,6 +241,7 @@
   function updateFormation(n, field, value) {
     if (!cvData.formations[n - 1]) cvData.formations[n - 1] = {};
     cvData.formations[n - 1][field] = value;
+    updatePreview();
   }
 
   /* ── Compétences (tags) ── */
@@ -459,7 +461,16 @@
     } else if (field.startsWith('formation')) {
       var fidx = field.split('_')[1];
       var finput = document.querySelector('#form-card-' + fidx + ' input.field-input');
-      if (finput) { finput.value = value; finput.dispatchEvent(new Event('input')); }
+      if (finput) {
+        if (!finput.value.trim()) {
+          finput.value = value;
+          finput.dispatchEvent(new Event('input'));
+        } else {
+          addFormation();
+          var newForInput = document.querySelector('#form-card-' + formCount + ' input.field-input');
+          if (newForInput) { newForInput.value = value; newForInput.dispatchEvent(new Event('input')); }
+        }
+      }
     } else if (field === 'competences') {
       if (cvData.competences.indexOf(value) === -1) {
         cvData.competences.push(value);
@@ -712,11 +723,13 @@
     showStep(1);
     lastPoste = cvData.profil.poste || '';
 
+    // Re-lire withPhoto depuis sessionStorage (source de vérité unique, jamais réécrite ici)
+    var storedPhoto = sessionStorage.getItem('cv_with_photo');
+    cvData.withPhoto = storedPhoto !== 'false';
+
     // Masquer la zone photo si sans photo
-    if (!cvData.withPhoto) {
-      var photoZone = document.getElementById('photo-upload-zone');
-      if (photoZone) photoZone.style.display = 'none';
-    }
+    var photoZone = document.getElementById('photo-upload-zone');
+    if (photoZone) photoZone.style.display = cvData.withPhoto ? '' : 'none';
 
     // Afficher l'offre ciblée uniquement en mode target
     if (cvData.mode === 'target') {
