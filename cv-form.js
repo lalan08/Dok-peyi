@@ -5,6 +5,16 @@
 (function () {
   'use strict';
 
+  function escapeHtml(s) {
+    if (s === null || s === undefined) return '';
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   var currentStep = 1;
   var totalSteps  = 6;
 
@@ -305,10 +315,12 @@
   function renderTags(section) {
     var list = document.getElementById(section + '-tags');
     if (!list) return;
+    var safeSection = escapeHtml(section);
     var arr = cvData[section] || [];
     list.innerHTML = arr.map(function (t) {
-      return '<span class="tag-chip">' + t +
-        '<button class="tag-remove" onclick="removeTag(\'' + section + '\',\'' + t.replace(/'/g, "\\'") + '\')" aria-label="' + cvfT('cvf_btn_remove_aria', 'Supprimer') + '" title="' + cvfT('cvf_btn_remove_aria', 'Supprimer') + '">×</button>' +
+      var safeT = escapeHtml(t);
+      return '<span class="tag-chip">' + safeT +
+        '<button class="tag-remove" data-section="' + safeSection + '" data-value="' + safeT + '" onclick="removeTag(this.dataset.section,this.dataset.value)" aria-label="' + cvfT('cvf_btn_remove_aria', 'Supprimer') + '" title="' + cvfT('cvf_btn_remove_aria', 'Supprimer') + '">×</button>' +
         '</span>';
     }).join('');
   }
@@ -317,7 +329,8 @@
     var container = document.getElementById('suggestions-competences');
     if (!container) return;
     container.innerHTML = COMP_SUGGESTIONS.map(function (s) {
-      return '<span class="suggestion-chip" onclick="addTag(\'competences\',\'' + s.replace(/'/g, "\\'") + '\')">' + s + '</span>';
+      var safeS = escapeHtml(s);
+      return '<span class="suggestion-chip" data-value="' + safeS + '" onclick="addTag(\'competences\',this.dataset.value)">' + safeS + '</span>';
     }).join('');
   }
 
@@ -465,9 +478,10 @@
           if (!suggestions.length) { container.innerHTML = ''; return; }
           var isMutable = field.startsWith('missions') || field.startsWith('formation');
           container.innerHTML = suggestions.map(function (s) {
-            return '<span class="suggestion-chip" onclick="' +
+            var safeS = escapeHtml(s);
+            return '<span class="suggestion-chip" data-value="' + safeS + '" onclick="' +
               (isMutable ? 'this.parentNode.setAttribute(\'data-frozen\',\'true\');' : '') +
-              'applySuggestion(\'' + field + '\',this.textContent.trim());this.remove()">' + s + '</span>';
+              'applySuggestion(\'' + field + '\',this.dataset.value);this.remove()">' + safeS + '</span>';
           }).join('');
         })
         .catch(function () {
@@ -606,51 +620,58 @@
   function renderTemplate(data) {
     var tpl = data.template || '01';
     var s   = getTemplateStyles(tpl);
-    var name = ((data.identite.prenom || '') + ' ' + (data.identite.nom || '').toUpperCase()).trim() || 'Prénom NOM';
-    var poste   = data.profil.poste    || '';
-    var accroche = data.profil.accroche || '';
-    var accrocheHtml = accroche
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/\n/g, '<br>');
+    var prenom = escapeHtml(data.identite.prenom || '');
+    var nom    = escapeHtml((data.identite.nom   || '').toUpperCase());
+    var name   = (prenom + ' ' + nom).trim() || 'Prénom NOM';
+    var poste        = escapeHtml(data.profil.poste    || '');
+    var accrocheHtml = escapeHtml(data.profil.accroche || '').replace(/\n/g, '<br>');
+    var email        = escapeHtml(data.identite.email    || '');
+    var tel          = escapeHtml(data.identite.tel      || '');
+    var ville        = escapeHtml(data.identite.ville    || '');
+    var linkedin     = escapeHtml(data.identite.linkedin || '');
     var exps  = (data.experiences || []).filter(Boolean);
     var fors  = (data.formations  || []).filter(Boolean);
     var comps = (data.competences || []).filter(Boolean);
     var langs = (data.langues     || []).filter(Boolean);
 
     var expHtml = exps.map(function (e) {
+      var missionsHtml = '';
+      if (e.missions) {
+        missionsHtml = '<ul style="font-size:11px;margin-top:4px;color:#555;padding-left:16px;list-style:disc">' +
+          e.missions.split('\n').map(function (m) {
+            return '<li>' + escapeHtml(m.replace(/^•\s*/, '')) + '</li>';
+          }).join('') + '</ul>';
+      }
       return '<div style="margin-bottom:12px">' +
-        '<div style="font-weight:700;font-size:13px">' + (e.poste || '') + '</div>' +
-        '<div style="font-size:11px;color:' + s.accent + '">' + (e.entreprise || '') + (e.debut ? ' · ' + e.debut + ' – ' + (e.fin || '…') : '') + '</div>' +
-        (e.missions ? '<div style="font-size:11px;margin-top:4px;white-space:pre-line;color:#555">' + e.missions + '</div>' : '') +
+        '<div style="font-weight:700;font-size:13px">' + escapeHtml(e.poste || '') + '</div>' +
+        '<div style="font-size:11px;color:' + s.accent + '">' + escapeHtml(e.entreprise || '') + (e.debut ? ' · ' + escapeHtml(e.debut) + ' – ' + escapeHtml(e.fin || '…') : '') + '</div>' +
+        missionsHtml +
         '</div>';
     }).join('');
 
     var forHtml = fors.map(function (f) {
       return '<div style="margin-bottom:10px">' +
-        '<div style="font-weight:600;font-size:12px">' + (f.diplome || '') + '</div>' +
-        '<div style="font-size:11px;color:#666">' + (f.etablissement || '') + (f.annee ? ' · ' + f.annee : '') + '</div>' +
+        '<div style="font-weight:600;font-size:12px">' + escapeHtml(f.diplome || '') + '</div>' +
+        '<div style="font-size:11px;color:#666">' + escapeHtml(f.etablissement || '') + (f.annee ? ' · ' + escapeHtml(f.annee) : '') + '</div>' +
         '</div>';
     }).join('');
 
     var compHtml = comps.map(function (c) {
-      return '<span style="display:inline-block;margin:2px 4px 2px 0;padding:3px 10px;background:' + s.chipBg + ';color:' + s.chipText + ';border-radius:999px;font-size:10px">' + c + '</span>';
+      return '<span style="display:inline-block;margin:2px 4px 2px 0;padding:3px 10px;background:' + s.chipBg + ';color:' + s.chipText + ';border-radius:999px;font-size:10px">' + escapeHtml(c) + '</span>';
     }).join('');
 
     var langHtml = langs.map(function (l) {
-      return '<div style="font-size:11px;margin-bottom:4px"><span style="font-weight:600">' + (l.langue || '') + '</span>' + (l.niveau ? ' — ' + l.niveau : '') + '</div>';
+      return '<div style="font-size:11px;margin-bottom:4px"><span style="font-weight:600">' + escapeHtml(l.langue || '') + '</span>' + (l.niveau ? ' — ' + escapeHtml(l.niveau) : '') + '</div>';
     }).join('');
 
     var photoHtml = '';
     if (data.withPhoto && data.photo) {
-      photoHtml = '<img src="' + data.photo + '" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid ' + s.accent + '">';
+      photoHtml = '<img src="' + escapeHtml(data.photo) + '" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid ' + s.accent + '">';
     }
 
     return buildLayout(tpl, s, {
       name: name, poste: poste, accroche: accrocheHtml,
-      email: data.identite.email || '', tel: data.identite.tel || '',
-      ville: data.identite.ville || '', linkedin: data.identite.linkedin || '',
+      email: email, tel: tel, ville: ville, linkedin: linkedin,
       expHtml: expHtml, forHtml: forHtml,
       compHtml: compHtml, langHtml: langHtml, photoHtml: photoHtml
     });
@@ -712,7 +733,41 @@
     }
   }
 
+  function validateStep(step) {
+    var errors = [];
+    if (step === 1) {
+      if (!cvData.identite.prenom) errors.push('Prénom');
+      if (!cvData.identite.nom)    errors.push('Nom');
+      if (!cvData.identite.email)  errors.push('Email');
+      if (!cvData.identite.tel)    errors.push('Téléphone');
+      if (cvData.identite.email && !/^[^@]+@[^@]+\.[^@]+$/.test(cvData.identite.email))
+        errors.push('Email invalide');
+    }
+    if (step === 2) {
+      if (!cvData.profil.poste)    errors.push('Poste visé');
+      if (!cvData.profil.accroche) errors.push('Accroche');
+    }
+    if (step === 3) {
+      if (!cvData.experiences || cvData.experiences.filter(Boolean).length === 0)
+        errors.push('Au moins une expérience');
+    }
+    if (step === 4) {
+      if (!cvData.formations || cvData.formations.filter(Boolean).length === 0)
+        errors.push('Au moins une formation');
+    }
+    if (step === 5) {
+      if (!cvData.competences || cvData.competences.filter(Boolean).length < 3)
+        errors.push('Au moins 3 compétences');
+    }
+    return errors;
+  }
+
   function nextStep() {
+    var errors = validateStep(currentStep);
+    if (errors.length > 0) {
+      alert('Champs manquants :\n• ' + errors.join('\n• '));
+      return;
+    }
     if (currentStep < totalSteps) showStep(currentStep + 1);
   }
 
@@ -800,6 +855,7 @@
   /* ── Expose globals for inline onclick ── */
   window.nextStep            = nextStep;
   window.prevStep            = prevStep;
+  window.validateStep        = validateStep;
   window.submitForm          = submitForm;
   window.toggleMobilePreview = toggleMobilePreview;
   window.updateCvData        = updateCvData;

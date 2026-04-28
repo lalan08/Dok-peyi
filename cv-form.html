@@ -59,24 +59,26 @@
           <div class="field-group">
             <label class="field-label" data-i18n-html="cvf_label_prenom_html">Prénom <span class="field-required">*</span></label>
             <input class="field-input" type="text" data-field="prenom" placeholder="Ex : Yonel" data-i18n-ph="cvf_ph_prenom"
-              oninput="updateCvData('identite','prenom',this.value);updatePreview()">
+              oninput="this.value=this.value.charAt(0).toUpperCase()+this.value.slice(1).toLowerCase();updateCvData('identite','prenom',this.value);updatePreview()">
           </div>
           <div class="field-group">
             <label class="field-label" data-i18n-html="cvf_label_nom_html">Nom <span class="field-required">*</span></label>
             <input class="field-input" type="text" data-field="nom" placeholder="Ex : GOVINDIN" data-i18n-ph="cvf_ph_nom"
-              oninput="updateCvData('identite','nom',this.value);updatePreview()">
+              oninput="this.value=this.value.toUpperCase();updateCvData('identite','nom',this.value);updatePreview()">
           </div>
         </div>
 
         <div class="field-group">
           <label class="field-label" data-i18n-html="cvf_label_email_html">Email <span class="field-required">*</span></label>
           <input class="field-input" type="email" data-field="email" placeholder="votre@email.com" data-i18n-ph="cvf_ph_email"
+            pattern="^[^@]+@[^@]+\.[^@]+$" title="Format email valide"
             oninput="updateCvData('identite','email',this.value);updatePreview()">
         </div>
 
         <div class="field-group">
           <label class="field-label" data-i18n-html="cvf_label_tel_html">Téléphone <span class="field-required">*</span></label>
-          <input class="field-input" type="tel" data-field="tel" placeholder="06 XX XX XX XX" data-i18n-ph="cvf_ph_tel"
+          <input class="field-input" type="tel" data-field="tel" placeholder="0694 12 34 56" data-i18n-ph="cvf_ph_tel"
+            pattern="^(\+594|0)\s?[1-9](\s?\d{2}){4}$" title="Format Guyane : +594 ou 0694..."
             oninput="updateCvData('identite','tel',this.value);updatePreview()">
         </div>
 
@@ -89,6 +91,7 @@
           <div class="field-group">
             <label class="field-label" data-i18n="cvf_label_codepostal">Code postal</label>
             <input class="field-input" type="text" data-field="codepostal" placeholder="97300" data-i18n-ph="cvf_ph_codepostal"
+              pattern="^973[0-9]{2}$" title="CP Guyane (973XX)" maxlength="5"
               oninput="updateCvData('identite','codepostal',this.value);updatePreview()">
           </div>
         </div>
@@ -239,6 +242,6 @@
   <button id="btn-close-preview" onclick="toggleMobilePreview()" data-i18n="cvf_preview_close">✕ Fermer l'aperçu</button>
 
   <script defer src="/lang.js?v=20260426-cvf-i18n2"></script>
-  <script defer src="/cv-form.js?v=20260428-A"></script>
+  <script defer src="/cv-form.js?v=20260428-B"></script>
 </body>
 </html>
