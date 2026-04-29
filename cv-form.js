@@ -77,6 +77,13 @@
     extras:       {}
   };
 
+  var CV_TUNNEL_PRICES = {
+    '01': 0, '02': 2, '03': 2, '04': 2, '05': 4,
+    '06': 4, '07': 2, '08': 0, '09': 4, '10': 2,
+    '11': 2, '12': 7
+  };
+  var CV_BASE_PRICE = 8;
+
   var expCount = 0;
   var formCount = 0;
   var langueCount = 0;
@@ -992,6 +999,25 @@
     return lines.join('\n');
   }
 
+  function showSuccessScreen(order) {
+    var successScreen = document.createElement('div');
+    successScreen.id = 'cv-success-screen';
+    var emailHtml = order.email
+      ? '<p class="cv-success-email">' + cvfT('cvf_success_email_label', 'Ton document sera envoyé à') +
+        ' <strong>' + escapeHtml(order.email) + '</strong></p>'
+      : '';
+    successScreen.innerHTML =
+      '<div class="cv-success-content">' +
+        '<div class="cv-success-icon">✓</div>' +
+        '<h2>' + cvfT('cvf_success_title', 'Paiement confirmé !') + '</h2>' +
+        '<p>' + cvfT('cvf_success_body', 'Notre équipe prépare ton CV définitif sans filigrane.') + '</p>' +
+        emailHtml +
+        '<p class="cv-success-ref">' + cvfT('cvf_success_ref', 'Référence') + ' : #' + escapeHtml(String(order.id || '')) + '</p>' +
+        '<a href="/" class="btn-luxe btn-luxe-primary">' + cvfT('cvf_success_home_cta', '← Retour à l\'accueil') + '</a>' +
+      '</div>';
+    document.body.appendChild(successScreen);
+  }
+
   function showLoadingScreen() {
     var overlay = document.createElement('div');
     overlay.id = 'cv-loading-overlay';
@@ -1054,7 +1080,53 @@
   }
 
   function goToCheckout() {
-    alert('Paiement Stripe : à intégrer en V2.\nPour le moment, contacte-nous via WhatsApp.');
+    var btn = document.querySelector('#cv-final-screen .btn-luxe-primary');
+    if (btn) { btn.disabled = true; btn.textContent = cvfT('cvf_checkout_redirecting', 'Redirection en cours…'); }
+
+    var tplSupplement = CV_TUNNEL_PRICES[cvData.template] || 0;
+    var amount  = CV_BASE_PRICE + tplSupplement;
+    var orderId = 'cv_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+
+    var cvHtml = renderTemplate(cvData);
+    try {
+      sessionStorage.setItem('dokpeyi_cv_pending_' + orderId, JSON.stringify({
+        id:      orderId,
+        service: 'cv',
+        montant: amount,
+        cvHtml:  cvHtml,
+        prenom:  (cvData.identite && cvData.identite.prenom) || '',
+        nom:     (cvData.identite && cvData.identite.nom)    || '',
+        email:   (cvData.identite && cvData.identite.email)  || '',
+        poste:   (cvData.profil   && cvData.profil.poste)    || ''
+      }));
+    } catch (e) { /* sessionStorage full or unavailable — proceed anyway */ }
+
+    fetch('/api/create-checkout', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({
+        service:    'cv',
+        amount:     amount,
+        orderId:    orderId,
+        email:      (cvData.identite && cvData.identite.email)  || '',
+        nom:        (cvData.identite && cvData.identite.nom)    || '',
+        prenom:     (cvData.identite && cvData.identite.prenom) || '',
+        returnPath: '/cv-form'
+      })
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (data.ok && data.url) {
+          window.location.href = data.url;
+        } else {
+          if (btn) { btn.disabled = false; btn.textContent = cvfT('cvf_checkout_cta', 'Finaliser ma commande →'); }
+          alert(cvfT('cvf_checkout_error', 'Erreur paiement') + ' : ' + (data.error || 'Réessaie ou contacte-nous.'));
+        }
+      })
+      .catch(function (err) {
+        if (btn) { btn.disabled = false; btn.textContent = cvfT('cvf_checkout_cta', 'Finaliser ma commande →'); }
+        alert(cvfT('cvf_checkout_error', 'Erreur réseau') + ' : ' + err.message);
+      });
   }
 
   function closeFinalScreen() {
@@ -1120,6 +1192,37 @@
 
   /* ── Init ── */
   document.addEventListener('DOMContentLoaded', function () {
+    /* ── Retour Stripe ── */
+    var urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('success') === '1') {
+      var pOrderId = urlParams.get('order_id');
+      var pendingOrder = null;
+      if (pOrderId) {
+        try {
+          var raw = sessionStorage.getItem('dokpeyi_cv_pending_' + pOrderId);
+          if (raw) {
+            pendingOrder = JSON.parse(raw);
+            sessionStorage.removeItem('dokpeyi_cv_pending_' + pOrderId);
+          }
+        } catch (e) {}
+      }
+      var orderData = pendingOrder || { id: pOrderId || 'N/A', service: 'cv' };
+      showSuccessScreen(orderData);
+      if (pendingOrder && pendingOrder.email) {
+        fetch('/api/send-email', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ type: 'order_confirmation', order: pendingOrder })
+        }).catch(function () {});
+        fetch('/api/send-email', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ type: 'new_order_admin', order: pendingOrder })
+        }).catch(function () {});
+      }
+      return; /* skip form initialization — success screen is standalone */
+    }
+
     showStep(1);
 
     /* Restaurer un état précédent (TTL 24h) si disponible */

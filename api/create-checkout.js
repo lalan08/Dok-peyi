@@ -34,13 +34,15 @@ export default async function handler(req) {
   let body;
   try { body = await req.json(); } catch (_) { return resp({ ok: false, error: 'JSON invalide' }, 400); }
 
-  const { service, amount, orderId, email, nom, prenom } = body || {};
+  const ALLOWED_RETURN_PATHS = ['/service', '/cv-form'];
+  const { service, amount, orderId, email, nom, prenom, returnPath: rawReturnPath } = body || {};
   if (!service || !amount || !orderId) {
     return resp({ ok: false, error: 'service, amount et orderId requis' }, 400);
   }
 
-  const baseUrl    = (process.env.NEXT_PUBLIC_BASE_URL || '').replace(/\/$/, '') || 'https://dok-peyi.vercel.app';
-  const svcLabel   = SERVICE_LABELS[service] || service;
+  const returnPath  = ALLOWED_RETURN_PATHS.includes(rawReturnPath) ? rawReturnPath : '/service';
+  const baseUrl     = (process.env.NEXT_PUBLIC_BASE_URL || '').replace(/\/$/, '') || 'https://dok-peyi.vercel.app';
+  const svcLabel    = SERVICE_LABELS[service] || service;
   const amountCents = Math.round(parseFloat(amount) * 100);
 
   /* ── Créer la session Stripe Checkout ── */
@@ -57,8 +59,8 @@ export default async function handler(req) {
         }
       }
     }],
-    success_url: baseUrl + '/service?success=1&order_id=' + encodeURIComponent(orderId),
-    cancel_url:  baseUrl + '/service?s=' + encodeURIComponent(service) + '&cancelled=1',
+    success_url: baseUrl + returnPath + '?success=1&order_id=' + encodeURIComponent(orderId),
+    cancel_url:  baseUrl + returnPath + '?cancelled=1',
     metadata: { order_id: String(orderId), service }
   };
 
