@@ -60,6 +60,92 @@
   <link rel="stylesheet" href="/tokens.css">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="lang.css">
+  <style>
+    /* ── Dark Theme global ─────────────────────── */
+    body{background:#080d1a;color:#e2e8f0}
+    /* Navbar */
+    .navbar{background:rgba(8,13,26,.88)!important;border-bottom:1px solid rgba(255,255,255,.06)!important}
+    .navbar.scrolled{background:rgba(8,13,26,.97)!important;box-shadow:0 1px 24px rgba(0,0,0,.3)!important}
+    .nav-logo{color:#fff!important}.nav-logo span{color:#6b8fff!important}
+    .nav-links li a{color:#94a3b8!important}
+    .nav-links li a:hover{color:#fff!important;background:rgba(255,255,255,.06)!important}
+    .hamburger span{background:#fff!important}
+    .mobile-menu{background:#0d1526!important;border-top:1px solid rgba(255,255,255,.07)!important}
+    .mobile-link{color:#cbd5e1!important;border-bottom-color:rgba(255,255,255,.06)!important}
+    /* Hero v2 */
+    .hero-v2{padding:120px 0 56px;background:#080d1a;position:relative;overflow:hidden;min-height:100svh;display:flex;align-items:center}
+    .hero-v2::before{content:'';position:absolute;top:-150px;right:-80px;width:480px;height:480px;background:radial-gradient(circle,rgba(59,111,255,.14) 0%,transparent 68%);border-radius:50%;pointer-events:none}
+    .hero-v2-inner{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+    .hero-v2-text h1{font-size:clamp(1.9rem,4vw,3rem);font-weight:800;color:#fff;line-height:1.2;margin-bottom:14px;letter-spacing:-.03em}
+    .hero-accent{background:linear-gradient(90deg,#3b6fff,#7c5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero-v2-sub{color:#7d8ea3;font-size:.97rem;line-height:1.65;margin-bottom:24px;max-width:440px}
+    .hero-badges{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:28px}
+    .hero-badge-item{display:flex;align-items:center;gap:6px;font-size:.82rem;color:#7d8ea3;font-weight:500}
+    .hero-search-box{position:relative}
+    .hero-search-box input{width:100%;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.1);border-radius:14px;padding:15px 18px 15px 46px;color:#fff;font-size:.95rem;outline:none;transition:border-color .2s;font-family:inherit}
+    .hero-search-box input::placeholder{color:#3d4f65}
+    .hero-search-box input:focus{border-color:rgba(59,111,255,.45)}
+    .hero-search-ico{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:#3d4f65;pointer-events:none;display:flex}
+    /* Illustration CSS */
+    .hero-illus{display:flex;justify-content:center;align-items:center;position:relative;height:360px}
+    .hero-illus-glow{position:absolute;width:260px;height:260px;background:radial-gradient(circle,rgba(59,111,255,.2) 0%,transparent 68%);border-radius:50%}
+    .hero-doc-card{position:relative;background:linear-gradient(150deg,#19274a 0%,#1d3068 100%);border-radius:22px;width:196px;height:252px;padding:22px 18px;display:flex;flex-direction:column;gap:10px;box-shadow:0 40px 80px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.09),inset 0 1px 0 rgba(255,255,255,.07);animation:docfloat 4s ease-in-out infinite}
+    @keyframes docfloat{0%,100%{transform:rotate(-4deg) translateY(0)}50%{transform:rotate(-4deg) translateY(-12px)}}
+    .hero-doc-line{border-radius:4px;background:rgba(255,255,255,.14)}
+    .dlt{height:13px;width:68%;background:rgba(255,255,255,.26)!important;margin-bottom:4px}
+    .dlf{height:7px;width:100%}.dlm{height:7px;width:75%}.dls{height:7px;width:55%}
+    .hero-doc-check{position:absolute;bottom:-16px;right:-16px;width:52px;height:52px;background:#3b6fff;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 28px rgba(59,111,255,.55);color:#fff;font-size:1.4rem;font-weight:700}
+    /* Services v2 */
+    .svc-v2{padding:48px 0;background:#080d1a}
+    .svc-v2-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+    .svc-v2-hd h2{color:#fff;font-size:1.15rem;font-weight:700;display:flex;align-items:center;gap:10px;letter-spacing:-.02em}
+    .svc-grid-dots{display:inline-grid;grid-template-columns:1fr 1fr;gap:3px}
+    .svc-grid-dots i{width:7px;height:7px;background:#3b6fff;border-radius:2px;display:block}
+    .svc-voir{color:#3b6fff;font-size:.82rem;font-weight:600;text-decoration:none}
+    .svc-v2-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .svc-v2-card{background:#0d1526;border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:16px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:10px;position:relative;transition:border-color .2s,transform .2s,box-shadow .2s}
+    .svc-v2-card:hover{border-color:rgba(255,255,255,.16);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.3)}
+    .svc-v2-top{display:flex;justify-content:space-between;align-items:flex-start}
+    .svc-ico{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0}
+    .svc-price-col{text-align:right}
+    .svc-from{font-size:.62rem;color:#3d4f65;display:block;margin-bottom:2px}
+    .svc-price{font-size:1.1rem;font-weight:800;line-height:1}
+    .svc-name{font-size:.9rem;font-weight:700;color:#f1f5f9}
+    .svc-desc{font-size:.76rem;color:#3d4f65;line-height:1.5;flex:1}
+    .svc-foot{display:flex;justify-content:flex-end}
+    .svc-arr{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.9rem;font-weight:700;transition:transform .15s;flex-shrink:0}
+    .svc-v2-card:hover .svc-arr{transform:translateX(3px)}
+    .svc-pop{position:absolute;top:-8px;left:60px;background:#3b6fff;color:#fff;font-size:.58rem;font-weight:700;padding:3px 9px;border-radius:99px;letter-spacing:.04em;text-transform:uppercase}
+    /* Stats bar */
+    .stats-bar-v2{display:grid;grid-template-columns:repeat(4,1fr);background:#0d1526;border:1px solid rgba(255,255,255,.06);border-radius:16px;overflow:hidden;margin-bottom:16px}
+    .stat-v2{padding:20px 12px;text-align:center;border-right:1px solid rgba(255,255,255,.06)}
+    .stat-v2:last-child{border-right:none}
+    .stat-v2 strong{display:block;color:#fff;font-size:1.05rem;font-weight:800;margin-bottom:5px;line-height:1}
+    .stat-v2 span{font-size:.64rem;color:#3d4f65;line-height:1.35;display:block}
+    /* CTA Banner */
+    .cta-banner-v2{background:linear-gradient(135deg,#1b348a 0%,#3d30c0 100%);border-radius:16px;padding:20px 24px;display:flex;align-items:center;gap:16px;text-decoration:none;margin-bottom:56px;transition:opacity .2s}
+    .cta-banner-v2:hover{opacity:.9}
+    .cta-ico-wrap{font-size:1.6rem;background:rgba(255,255,255,.14);width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .cta-txt-wrap{flex:1}
+    .cta-txt-wrap h3{color:#fff;font-size:.97rem;font-weight:700;margin-bottom:4px}
+    .cta-txt-wrap p{color:rgba(255,255,255,.6);font-size:.76rem;line-height:1.45}
+    .cta-arr-wrap{width:44px;height:44px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#1b348a;font-size:1.1rem;font-weight:700;flex-shrink:0;transition:transform .15s}
+    .cta-banner-v2:hover .cta-arr-wrap{transform:scale(1.08)}
+    /* Responsive */
+    @media(max-width:768px){
+      .hero-v2-inner{grid-template-columns:1fr;gap:28px}
+      .hero-illus{height:200px;order:-1}
+      .hero-doc-card{width:148px;height:192px;padding:16px 14px;gap:8px}
+      .hero-doc-check{width:42px;height:42px;font-size:1.1rem;bottom:-12px;right:-12px}
+      .stats-bar-v2{grid-template-columns:repeat(2,1fr)}
+      .stat-v2:nth-child(2){border-right:none}
+      .stat-v2:nth-child(3){border-top:1px solid rgba(255,255,255,.06);border-right:1px solid rgba(255,255,255,.06)}
+      .stat-v2:nth-child(4){border-top:1px solid rgba(255,255,255,.06)}
+    }
+    @media(min-width:769px){
+      .svc-v2-grid{grid-template-columns:repeat(3,1fr)}
+    }
+  </style>
 </head>
 <body>
 
@@ -68,243 +154,204 @@
     <div class="container nav-inner">
       <a href="#" class="nav-logo">Dok'<span>péyi</span></a>
       <ul class="nav-links">
-        <li><a href="#comment" data-i18n="nav_comment">Comment ça marche</a></li>
         <li><a href="#services" data-i18n="nav_services">Services</a></li>
         <li><a href="/a-propos">À propos</a></li>
         <li><a href="#services" class="nav-cta" data-i18n="nav_cta">Faire ma demande</a></li>
       </ul>
-      <button class="hamburger" id="hamburger" aria-label="Menu">
+      <button class="hamburger" id="hamburger" aria-label="Menu" onclick="document.getElementById('mobileMenu').classList.toggle('open')">
         <span></span><span></span><span></span>
       </button>
     </div>
     <div class="mobile-menu" id="mobileMenu">
-      <a href="#comment" class="mobile-link" data-i18n="nav_comment">Comment ça marche</a>
       <a href="#services" class="mobile-link" data-i18n="nav_services">Services</a>
       <a href="/a-propos" class="mobile-link">À propos</a>
       <a href="#services" class="mobile-link mobile-cta" data-i18n="nav_cta">Faire ma demande</a>
     </div>
   </nav>
 
-  <!-- ===== HERO ===== -->
-  <section class="hero" id="hero">
-    <div class="container hero-inner">
-      <div class="hero-text">
-        <span class="hero-badge" data-i18n="hero_badge">✅ Simple · Rapide · Fiable</span>
-        <h1>
-          <span data-i18n="hero_t1">Besoin d'aide</span><br>
-          <span data-i18n="hero_t2">pour tes papiers ?</span><br>
-          <span class="gradient-text" data-i18n="hero_t3">On s'occupe de tout.</span>
-        </h1>
-        <p class="hero-sub" data-i18n="hero_sub">CV, lettres, dossiers administratifs… fais ta demande en quelques minutes.</p>
-        <div class="hero-btns">
-          <a href="#services" class="btn btn-primary btn-pulse" data-i18n="hero_btn1">Faire ma demande</a>
-          <a href="#comment" class="btn btn-ghost" data-i18n="hero_btn2">Comment ça marche ?</a>
-        </div>
-        <div class="hero-stats">
-          <div class="hero-stat"><strong>500+</strong><span data-i18n="stat1">Demandes traitées</span></div>
-          <div class="divider-v"></div>
-          <div class="hero-stat"><strong>24h</strong><span data-i18n="stat2">Délai moyen</span></div>
-          <div class="divider-v"></div>
-          <div class="hero-stat"><strong>98%</strong><span data-i18n="stat3">Satisfaits</span></div>
-        </div>
-      </div>
-      <div class="hero-visual">
-        <div class="hero-blob"></div>
-        <div class="doc-float doc-a">
-          <span class="doc-float-icon">📄</span>
-          <div>
-            <p class="doc-float-name">CV Professionnel</p>
-            <span class="badge-ready">✓ Prêt</span>
+  <!-- ===== HERO v2 ===== -->
+  <section class="hero-v2" id="hero">
+    <div class="container">
+      <div class="hero-v2-inner">
+        <div class="hero-v2-text">
+          <h1>Des documents professionnels,<br><span class="hero-accent">sans stress.</span></h1>
+          <p class="hero-v2-sub">L'intelligence au service de toutes vos démarches administratives et professionnelles.</p>
+          <div class="hero-badges">
+            <span class="hero-badge-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3b6fff" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Sécurisé
+            </span>
+            <span class="hero-badge-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              Rapide
+            </span>
+            <span class="hero-badge-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Qualité pro
+            </span>
+          </div>
+          <div class="hero-search-box">
+            <span class="hero-search-ico">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            </span>
+            <input type="text" placeholder="Que souhaitez-vous créer aujourd'hui ?" aria-label="Rechercher un service"
+              onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('services').scrollIntoView({behavior:'smooth'})}">
           </div>
         </div>
-        <div class="doc-float doc-b">
-          <span class="doc-float-icon">✉️</span>
-          <div>
-            <p class="doc-float-name">Lettre de motivation</p>
-            <span class="badge-ready">✓ Prêt</span>
-          </div>
-        </div>
-        <div class="doc-float doc-c">
-          <span class="doc-float-icon">📁</span>
-          <div>
-            <p class="doc-float-name">Dossier CAF</p>
-            <span class="badge-processing">⏳ En cours</span>
+        <div class="hero-illus">
+          <div class="hero-illus-glow"></div>
+          <div class="hero-doc-card">
+            <div class="hero-doc-line dlt"></div>
+            <div class="hero-doc-line dlf"></div>
+            <div class="hero-doc-line dlm"></div>
+            <div class="hero-doc-line dlf"></div>
+            <div class="hero-doc-line dls"></div>
+            <div class="hero-doc-line dlm"></div>
+            <div class="hero-doc-line dlf"></div>
+            <div class="hero-doc-line dls"></div>
+            <div class="hero-doc-check">✓</div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ===== COMMENT ÇA MARCHE ===== -->
-  <section class="section section-light" id="comment">
+  <!-- ===== SERVICES v2 ===== -->
+  <section class="svc-v2" id="services">
     <div class="container">
-      <div class="section-head reveal">
-        <h2 data-i18n="how_title">Comment ça marche ?</h2>
-        <p data-i18n="how_sub">Trois étapes simples, zéro stress</p>
+      <div class="svc-v2-hd">
+        <h2>
+          <span class="svc-grid-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          Nos services
+        </h2>
+        <a href="/a-propos" class="svc-voir">Voir tous →</a>
       </div>
-      <div class="steps">
-        <div class="step reveal">
-          <div class="step-num">1</div>
-          <div class="step-icon">💬</div>
-          <h3 data-i18n="s1_title">Tu expliques ton besoin</h3>
-          <p data-i18n="s1_desc">Remplis le formulaire en quelques minutes avec les informations dont tu as besoin</p>
-        </div>
-        <div class="step-arrow">→</div>
-        <div class="step reveal">
-          <div class="step-num">2</div>
-          <div class="step-icon">⚡</div>
-          <h3 data-i18n="s2_title">On traite ta demande rapidement</h3>
-          <p data-i18n="s2_desc">Ton document est préparé avec soin et professionnalisme selon tes informations</p>
-        </div>
-        <div class="step-arrow">→</div>
-        <div class="step reveal">
-          <div class="step-num">3</div>
-          <div class="step-icon">📥</div>
-          <h3 data-i18n="s3_title">Tu reçois ton document</h3>
-          <p data-i18n="s3_desc">Télécharge ou reçois par email ton document finalisé, prêt à être utilisé</p>
-        </div>
+      <div class="svc-v2-grid">
+
+        <!-- CV Professionnel -->
+        <a href="/cv-wizard" class="svc-v2-card">
+          <span class="svc-pop">Populaire</span>
+          <div class="svc-v2-top">
+            <div class="svc-ico" style="background:rgba(59,111,255,.18);color:#3b6fff">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="13" x2="14" y2="13"/><line x1="8" y1="17" x2="12" y2="17"/></svg>
+            </div>
+            <div class="svc-price-col">
+              <span class="svc-from">à partir de</span>
+              <span class="svc-price" style="color:#3b6fff">8€</span>
+            </div>
+          </div>
+          <div class="svc-name">CV Professionnel</div>
+          <div class="svc-desc">Un CV percutant et adapté à ton secteur — créé, amélioré ou professionnalisé.</div>
+          <div class="svc-foot"><span class="svc-arr" style="background:#3b6fff">→</span></div>
+        </a>
+
+        <!-- Lettre de motivation -->
+        <a href="/service?s=lettre" class="svc-v2-card">
+          <div class="svc-v2-top">
+            <div class="svc-ico" style="background:rgba(155,92,246,.18);color:#9b5cf6">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+            </div>
+            <div class="svc-price-col">
+              <span class="svc-from">à partir de</span>
+              <span class="svc-price" style="color:#9b5cf6">5€</span>
+            </div>
+          </div>
+          <div class="svc-name">Lettre de motivation</div>
+          <div class="svc-desc">Une lettre personnalisée et convaincante, adaptée à ton offre d'emploi.</div>
+          <div class="svc-foot"><span class="svc-arr" style="background:#9b5cf6">→</span></div>
+        </a>
+
+        <!-- Dossier administratif -->
+        <a href="/service?s=dossier" class="svc-v2-card">
+          <div class="svc-v2-top">
+            <div class="svc-ico" style="background:rgba(34,197,94,.18);color:#22c55e">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div class="svc-price-col">
+              <span class="svc-from">à partir de</span>
+              <span class="svc-price" style="color:#22c55e">12€</span>
+            </div>
+          </div>
+          <div class="svc-name">Dossier administratif</div>
+          <div class="svc-desc">Constitution et rédaction de dossiers pour vos démarches officielles.</div>
+          <div class="svc-foot"><span class="svc-arr" style="background:#22c55e">→</span></div>
+        </a>
+
+        <!-- Courrier & documents -->
+        <a href="/service?s=courrier" class="svc-v2-card">
+          <div class="svc-v2-top">
+            <div class="svc-ico" style="background:rgba(249,115,22,.18);color:#f97316">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="12" y2="17"/></svg>
+            </div>
+            <div class="svc-price-col">
+              <span class="svc-from">à partir de</span>
+              <span class="svc-price" style="color:#f97316">7€</span>
+            </div>
+          </div>
+          <div class="svc-name">Courrier & documents</div>
+          <div class="svc-desc">Courriers administratifs, attestations et requêtes personnalisés.</div>
+          <div class="svc-foot"><span class="svc-arr" style="background:#f97316">→</span></div>
+        </a>
+
+        <!-- Naturalisation -->
+        <a href="/service?s=naturalisation" class="svc-v2-card">
+          <div class="svc-v2-top">
+            <div class="svc-ico" style="background:rgba(20,184,166,.18);color:#14b8a6">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
+            </div>
+            <div class="svc-price-col">
+              <span class="svc-from">à partir de</span>
+              <span class="svc-price" style="color:#14b8a6">20€</span>
+            </div>
+          </div>
+          <div class="svc-name">Naturalisation</div>
+          <div class="svc-desc">Dossiers de naturalisation, regroupement familial et autres démarches.</div>
+          <div class="svc-foot"><span class="svc-arr" style="background:#14b8a6">→</span></div>
+        </a>
+
+        <!-- Avis d'impôt -->
+        <a href="/service?s=impot" class="svc-v2-card">
+          <div class="svc-v2-top">
+            <div class="svc-ico" style="background:rgba(239,68,68,.18);color:#ef4444">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </div>
+            <div class="svc-price-col">
+              <span class="svc-from">à partir de</span>
+              <span class="svc-price" style="color:#ef4444">10€</span>
+            </div>
+          </div>
+          <div class="svc-name">Avis d'impôt</div>
+          <div class="svc-desc">Compréhension, contestation et courriers liés à vos avis d'impôt.</div>
+          <div class="svc-foot"><span class="svc-arr" style="background:#ef4444">→</span></div>
+        </a>
+
       </div>
     </div>
   </section>
 
-  <!-- ===== SERVICES ===== -->
-  <section class="section" id="services" style="background:#0a0f1e;padding:80px 0">
-    <style>
-      .svc-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:20px}
-      .svc-dark-card{position:relative;background:#111827;border:1px solid #1e293b;border-radius:16px;padding:32px 24px 24px;display:flex;flex-direction:column;gap:12px;grid-column:span 2;transition:border-color .25s,transform .25s,box-shadow .25s}
-      .svc-dark-card.svc-wide{grid-column:span 3}
-      .svc-dark-card:hover{border-color:#2563eb;transform:translateY(-4px);box-shadow:0 20px 40px rgba(37,99,235,0.15)}
-      .svc-price-badge{position:absolute;top:16px;right:16px;background:#2563eb;color:#fff;font-size:.75rem;font-weight:700;padding:4px 10px;border-radius:99px}
-      .svc-popular-badge{position:absolute;top:16px;left:16px;background:#f59e0b;color:#fff;font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:99px}
-      .svc-dark-card .svc-icon{font-size:2rem;line-height:1;margin-top:4px}
-      .svc-dark-card h3{color:#f1f5f9;font-size:1.05rem;font-weight:700;margin:0}
-      .svc-dark-card p{color:#94a3b8;font-size:.87rem;line-height:1.55;margin:0;flex:1}
-      .svc-btn{display:inline-block;border:1px solid #2563eb;color:#2563eb;background:transparent;border-radius:10px;padding:10px 20px;font-size:.85rem;font-weight:600;text-decoration:none;text-align:center;transition:background .2s,color .2s;margin-top:4px}
-      .svc-btn:hover{background:#2563eb;color:#fff}
-      @media(max-width:1024px){
-        .svc-grid{grid-template-columns:repeat(2,1fr)}
-        .svc-dark-card,.svc-dark-card.svc-wide{grid-column:span 1}
-      }
-      @media(max-width:640px){
-        .svc-grid{grid-template-columns:1fr}
-        .svc-dark-card,.svc-dark-card.svc-wide{grid-column:span 1}
-      }
-    </style>
+  <!-- ===== STATS ===== -->
+  <section style="padding:0 0 16px;background:#080d1a">
     <div class="container">
-      <div class="section-head reveal">
-        <h2 style="color:#f1f5f9">Nos services</h2>
-        <p style="color:#94a3b8">Tout ce dont tu as besoin pour tes démarches administratives en Guyane</p>
-      </div>
-      <div class="svc-grid">
-        <!-- Ligne 1 : 3 cartes (span 2) -->
-        <div class="svc-dark-card reveal">
-          <span class="svc-popular-badge">Populaire</span>
-          <span class="svc-price-badge">à partir de 8€</span>
-          <div class="svc-icon">📄</div>
-          <h3>CV Professionnel</h3>
-          <p>Un CV percutant, moderne et adapté à ton secteur — créé, amélioré ou professionnalisé selon ton profil.</p>
-          <a href="/cv-wizard" class="svc-btn">Commencer</a>
-        </div>
-        <div class="svc-dark-card reveal">
-          <span class="svc-price-badge">à partir de 5€</span>
-          <div class="svc-icon">✉️</div>
-          <h3>Lettre de motivation</h3>
-          <p>Une lettre personnalisée et convaincante — créée, améliorée ou adaptée à ton offre d'emploi.</p>
-          <a href="/service?s=lettre" class="svc-btn">Commencer</a>
-        </div>
-        <div class="svc-dark-card reveal">
-          <span class="svc-price-badge">à partir de 7€</span>
-          <div class="svc-icon">📮</div>
-          <h3>Courrier officiel</h3>
-          <p>Rédaction pour mairies, préfectures et administrations — demande, réclamation ou contestation.</p>
-          <a href="/service?s=courrier" class="svc-btn">Commencer</a>
-        </div>
-        <!-- Ligne 2 : 2 cartes larges (span 3) -->
-        <div class="svc-dark-card svc-wide reveal">
-          <span class="svc-price-badge">à partir de 12€</span>
-          <div class="svc-icon">📁</div>
-          <h3>Dossier administratif</h3>
-          <p>Accompagnement complet pour monter ton dossier CAF, logement social ou aide sociale — checklist, étapes et pièces justificatives prêtes.</p>
-          <a href="/service?s=dossier" class="svc-btn">Commencer</a>
-        </div>
-        <div class="svc-dark-card svc-wide reveal">
-          <span class="svc-price-badge">à partir de 15€</span>
-          <div class="svc-icon">🛂</div>
-          <h3>Titre de séjour</h3>
-          <p>Première demande, renouvellement ou régularisation — dossier guidé, relu manuellement par notre équipe avant envoi.</p>
-          <a href="/service?s=sejour" class="svc-btn">Commencer</a>
-        </div>
-        <!-- Ligne 3 : 2 cartes larges (span 3) -->
-        <div class="svc-dark-card svc-wide reveal">
-          <span class="svc-price-badge">à partir de 10€</span>
-          <div class="svc-icon">🧾</div>
-          <h3>Avis d'impôt</h3>
-          <p>Comprends ton avis, trouve des aides et rédige un courrier aux services fiscaux — accompagnement clair et sans jargon.</p>
-          <a href="/service?s=impot" class="svc-btn">Commencer</a>
-        </div>
-        <div class="svc-dark-card svc-wide reveal">
-          <span class="svc-price-badge">à partir de 20€</span>
-          <div class="svc-icon">🇫🇷</div>
-          <h3>Naturalisation</h3>
-          <p>Vérification d'éligibilité, préparation du dossier complet et lettre d'intégration — suivi personnalisé par l'équipe.</p>
-          <a href="/service?s=naturalisation" class="svc-btn">Commencer</a>
-        </div>
+      <div class="stats-bar-v2">
+        <div class="stat-v2"><strong>+10 000</strong><span>Utilisateurs<br>satisfaits</span></div>
+        <div class="stat-v2"><strong>100%</strong><span>Sécurisé &<br>confidentiel</span></div>
+        <div class="stat-v2"><strong>24h</strong><span>Livraison<br>moyenne</span></div>
+        <div class="stat-v2"><strong>7j/7</strong><span>Support<br>disponible</span></div>
       </div>
     </div>
   </section>
 
-  <!-- ===== AVANTAGES ===== -->
-  <section class="advantages-section">
+  <!-- ===== CTA BANNER ===== -->
+  <section style="padding:0 0 0;background:#080d1a">
     <div class="container">
-      <div class="grid-4 advantages">
-        <div class="advantage reveal">
-          <div class="adv-icon">⚡</div>
-          <h3 data-i18n="adv1_t">Rapide</h3>
-          <p data-i18n="adv1_d">Résultat en moins de 24h</p>
+      <a href="/service?s=cv" class="cta-banner-v2">
+        <div class="cta-ico-wrap">✦</div>
+        <div class="cta-txt-wrap">
+          <h3>Besoin d'aide pour choisir ?</h3>
+          <p>Répondez à quelques questions et on vous guide vers le service idéal.</p>
         </div>
-        <div class="advantage reveal">
-          <div class="adv-icon">✅</div>
-          <h3 data-i18n="adv2_t">Simple</h3>
-          <p data-i18n="adv2_d">Pas de jargon, pas de complexité</p>
-        </div>
-        <div class="advantage reveal">
-          <div class="adv-icon">😌</div>
-          <h3 data-i18n="adv3_t">Sans prise de tête</h3>
-          <p data-i18n="adv3_d">On s'occupe de tout pour toi</p>
-        </div>
-        <div class="advantage reveal">
-          <div class="adv-icon">🌍</div>
-          <h3 data-i18n="adv4_t">Accessible à tous</h3>
-          <p data-i18n="adv4_d">Adapté à chaque situation</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ===== TÉMOIGNAGES ===== -->
-  <section class="section section-light">
-    <div class="container">
-      <div class="section-head reveal">
-        <h2 data-i18n="testi_title">Ils nous font confiance</h2>
-      </div>
-      <div class="grid-3">
-        <div class="card testimonial reveal">
-          <div class="stars">⭐⭐⭐⭐⭐</div>
-          <p>"Mon CV était prêt en quelques heures. Simple, rapide, professionnel. J'ai décroché un entretien la semaine suivante !"</p>
-          <div class="testimonial-author">— Marlène T., Cayenne</div>
-        </div>
-        <div class="card testimonial reveal">
-          <div class="stars">⭐⭐⭐⭐⭐</div>
-          <p>"Je ne savais pas comment rédiger ma lettre de motivation. Dok'péyi l'a fait pour moi et c'était parfait !"</p>
-          <div class="testimonial-author">— Kevin R., Saint-Laurent</div>
-        </div>
-        <div class="card testimonial reveal">
-          <div class="stars">⭐⭐⭐⭐⭐</div>
-          <p>"Service top ! Mon dossier de logement était complet et bien présenté. Je recommande à tout le monde."</p>
-          <div class="testimonial-author">— Fatima O., Kourou</div>
-        </div>
-      </div>
+        <span class="cta-arr-wrap">→</span>
+      </a>
     </div>
   </section>
 
@@ -318,7 +365,6 @@
         </div>
         <div class="footer-nav">
           <h4 data-i18n="footer_nav">Navigation</h4>
-          <a href="#comment" data-i18n="nav_comment">Comment ça marche</a>
           <a href="#services" data-i18n="nav_services">Services</a>
           <a href="/a-propos">À propos</a>
           <a href="#services" data-i18n="nav_cta">Faire ma demande</a>
@@ -351,7 +397,7 @@
   <script defer src="lang.js"></script>
   <script>
     (function(){
-      var targets = document.querySelectorAll('.card,.step,.advantage,.testimonial,.svc-dark-card');
+      var targets = document.querySelectorAll('.svc-v2-card');
       targets.forEach(function(el){ el.classList.add('reveal'); });
       var obs = new IntersectionObserver(function(entries){
         entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); } });
