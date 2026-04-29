@@ -252,6 +252,23 @@
       s2.style.display = 'flex';
       s2.removeAttribute('aria-hidden');
       refreshStep2Screen();
+
+      /* ── Strict step 2 validation ── */
+      // Clear stale cv_mode so it can't bypass the mode selection
+      sessionStorage.removeItem('cv_mode');
+
+      var continueBtn = document.getElementById('btn-step2-continue');
+      if (continueBtn) {
+        // Override the inline onclick with a guarded version
+        continueBtn.onclick = function () {
+          var mode = sessionStorage.getItem('cv_mode');
+          if (!mode) {
+            alert('Choisis comment procéder avant de continuer.');
+            return;
+          }
+          window.location.href = '/cv-form';
+        };
+      }
     }
   });
 

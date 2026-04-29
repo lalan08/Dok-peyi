@@ -301,8 +301,7 @@
       '</div>' +
       '<div class="field-group"><label class="field-label" data-cvf-label-html="cvf_form_diplome_html">' + cvfT('cvf_form_diplome_html', 'Diplôme / Certification <span class="field-required">*</span>') + '</label>' +
         '<input class="field-input" type="text" data-cvf-ph="cvf_form_diplome_ph" placeholder="' + cvfT('cvf_form_diplome_ph', 'Ex : BTS Gestion de la PME') + '"' +
-        ' oninput="updateFormation(' + n + ',\'diplome\',this.value);updatePreview();triggerSuggestions(\'formation_' + n + '\',cvData.profil.poste||\'\',\'\')">' +
-        '<div class="suggestions-wrap" id="suggestions-formation_' + n + '"></div>' +
+        ' oninput="updateFormation(' + n + ',\'diplome\',this.value);updatePreview()">' +
       '</div>' +
       '<div class="field-group"><label class="field-label" data-cvf-label-html="cvf_form_etablissement_html">' + cvfT('cvf_form_etablissement_html', 'Établissement <span class="field-required">*</span>') + '</label>' +
         '<input class="field-input" type="text" data-cvf-ph="cvf_form_etablissement_ph" placeholder="' + cvfT('cvf_form_etablissement_ph', 'Ex : Lycée Melkior-Garré, Cayenne') + '"' +

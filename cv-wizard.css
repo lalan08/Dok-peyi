@@ -752,11 +752,18 @@ a { text-decoration: none; color: inherit; }
   font-size: 15px;
   border: none;
   border-radius: 14px;
-  cursor: pointer;
+  cursor: not-allowed;
+  pointer-events: none;
   transition: all 0.2s ease;
   opacity: 0.4;
 }
-#btn-step2-continue.enabled { opacity: 1; }
+#btn-step2-continue.enabled {
+  opacity: 1;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.mode-card-active,
+.mode-card.active { background: rgba(214,189,122,0.08); border-color: #d4a853; box-shadow: 0 0 0 2px rgba(214,168,83,0.3); }
 #btn-step2-back {
   background: transparent;
   border: 1px solid rgba(214,189,122,0.2);
