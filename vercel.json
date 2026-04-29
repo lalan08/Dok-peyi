@@ -1,5 +1,4 @@
 {
-  "trailingSlash": true,
   "cleanUrls": true,
   "headers": [
     {
@@ -52,6 +51,10 @@
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
+    },
+    {
+      "source": "/api/suggest",
+      "headers": [{ "key": "Cache-Control", "value": "no-store" }]
     },
     {
       "source": "/api/(.*)",

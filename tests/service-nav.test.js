@@ -14,7 +14,10 @@ describe('service.html navigation', () => {
     assert.match(html, /href="\/#comment"/);
     assert.match(html, /href="\/#services"/);
     assert.match(html, /href="\/a-propos"/);
-    assert.match(html, /Retour à l'accueil/);
+    assert.match(html, /data-i18n="nav_comment"/);
+    assert.match(html, /data-i18n="nav_services"/);
+    assert.match(html, /data-i18n="nav_about"/);
+    assert.match(html, /data-i18n="wiz_nav_home"/);
   });
 
   test('reuses the premium landing navigation structure on service pages', async () => {
@@ -24,5 +27,7 @@ describe('service.html navigation', () => {
     assert.match(html, /class="container nav-inner"/);
     assert.match(html, /class="nav-links"/);
     assert.match(html, /class="nav-cta"/);
+    assert.match(html, /href="\/lang\.css"/);
+    assert.match(html, /src="\/lang\.js\?v=/);
   });
 });

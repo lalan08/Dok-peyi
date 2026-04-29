@@ -224,7 +224,7 @@ const SVC = {
       ];
       return [
         { id: 'cv_template', label: 'Modèle de CV', type: 'template-picker', required: false },
-        { id: 'poste',       label: 'Poste recherché *',            type: 'hybrid-select', placeholder: 'Ou saisir un poste non listé…', required: true,  groups: CV_POSTES_GROUPS },
+        { id: 'poste',       label: 'Poste recherché *',            type: 'hybrid-select', placeholder: 'Ou saisir un poste non listé…', required: true,  groups: CV_POSTES_GROUPS, i18nRef: 'cv_poste' },
         { id: 'experience',  label: 'Expériences professionnelles', type: 'textarea',      placeholder: 'Postes occupés, entreprises, durées… (laissez vide si débutant)', required: false },
         { id: 'formation',   label: 'Formation / Diplômes',         type: 'hybrid-select', placeholder: 'Ou saisir un diplôme non listé…', required: false, groups: CV_DIPLOMES_GROUPS },
         { id: 'competences', label: 'Compétences',                  type: 'tags',          placeholder: 'Ajouter vos propres compétences (séparées par des virgules)…', required: false, groups: CV_COMPETENCES_GROUPS },
@@ -247,15 +247,15 @@ const SVC = {
         { id: 'note',  label: 'Ta lettre actuelle + ce que tu veux améliorer', type: 'textarea', placeholder: 'Colle ta lettre ici et décris les améliorations souhaitées…', required: true }
       ];
       if (choice === 'adapt') return [
-        { id: 'poste',          label: 'Nouveau poste visé *',  type: 'hybrid-select', placeholder: 'Ou saisir un poste non listé…', required: true, groups: CV_POSTES_GROUPS },
-        { id: 'entreprise',     label: 'Entreprise cible *',    type: 'hybrid-select', placeholder: 'Ou saisir une entreprise non listée…', required: true, groups: LETTRE_ENTREPRISES_GROUPS },
-        { id: 'secteur_lettre', label: 'Mettez en avant',       type: 'tags',          placeholder: 'Ajouter d\'autres atouts (séparés par des virgules)…', required: false, groups: LETTRE_SECTEUR_TAGS },
+        { id: 'poste',          label: 'Nouveau poste visé *',  type: 'hybrid-select', placeholder: 'Ou saisir un poste non listé…', required: true, groups: CV_POSTES_GROUPS, i18nRef: 'cv_poste' },
+        { id: 'entreprise',     label: 'Entreprise cible *',    type: 'hybrid-select', placeholder: 'Ou saisir une entreprise non listée…', required: true, groups: LETTRE_ENTREPRISES_GROUPS, i18nRef: 'lettre_entreprise' },
+        { id: 'secteur_lettre', label: 'Mettez en avant',       type: 'tags',          placeholder: 'Ajouter d\'autres atouts (séparés par des virgules)…', required: false, groups: LETTRE_SECTEUR_TAGS, i18nRef: 'lettre_atouts' },
         { id: 'note',           label: 'Ta lettre existante',   type: 'textarea',      placeholder: 'Colle ta lettre actuelle ici…', required: true }
       ];
       return [
-        { id: 'poste',          label: 'Poste visé *',                     type: 'hybrid-select', placeholder: 'Ou saisir un poste non listé…', required: true, groups: CV_POSTES_GROUPS },
-        { id: 'entreprise',     label: 'Entreprise / Organisme *',         type: 'hybrid-select', placeholder: 'Ou saisir une entreprise non listée…', required: true, groups: LETTRE_ENTREPRISES_GROUPS },
-        { id: 'secteur_lettre', label: 'Mettez en avant',                  type: 'tags',          placeholder: 'Ajouter d\'autres atouts (séparés par des virgules)…', required: false, groups: LETTRE_SECTEUR_TAGS },
+        { id: 'poste',          label: 'Poste visé *',                     type: 'hybrid-select', placeholder: 'Ou saisir un poste non listé…', required: true, groups: CV_POSTES_GROUPS, i18nRef: 'cv_poste' },
+        { id: 'entreprise',     label: 'Entreprise / Organisme *',         type: 'hybrid-select', placeholder: 'Ou saisir une entreprise non listée…', required: true, groups: LETTRE_ENTREPRISES_GROUPS, i18nRef: 'lettre_entreprise' },
+        { id: 'secteur_lettre', label: 'Mettez en avant',                  type: 'tags',          placeholder: 'Ajouter d\'autres atouts (séparés par des virgules)…', required: false, groups: LETTRE_SECTEUR_TAGS, i18nRef: 'lettre_atouts' },
         { id: 'experience',     label: 'Expérience en lien avec ce poste', type: 'textarea',      placeholder: 'Ce qui te qualifie pour ce poste…', required: false },
         { id: 'motivation',     label: 'Pourquoi ce poste t\'intéresse ?', type: 'textarea',      placeholder: 'Ce qui t\'attire dans ce poste ou cette entreprise…', required: false }
       ];
@@ -272,8 +272,8 @@ const SVC = {
     ],
     questions: function() {
       return [
-        { id: 'destinataire', label: 'Destinataire *',      type: 'hybrid-select', placeholder: 'Ou saisir un destinataire non listé…', required: true, groups: COURRIER_DESTINATAIRES_GROUPS },
-        { id: 'objet_type',   label: 'Type de courrier *',  type: 'tags',          placeholder: '', required: true, single: true, groups: COURRIER_OBJET_TYPES },
+        { id: 'destinataire', label: 'Destinataire *',      type: 'hybrid-select', placeholder: 'Ou saisir un destinataire non listé…', required: true, groups: COURRIER_DESTINATAIRES_GROUPS, i18nRef: 'courrier_destinataire' },
+        { id: 'objet_type',   label: 'Type de courrier *',  type: 'tags',          placeholder: '', required: true, single: true, groups: COURRIER_OBJET_TYPES, i18nRef: 'courrier_objet_type' },
         { id: 'objet',        label: 'Objet du courrier *', type: 'text',          placeholder: 'Résumé en une ligne', required: true },
         { id: 'description',  label: 'Votre situation *',   type: 'textarea',      placeholder: 'Décrivez votre situation et ce que vous demandez…', required: true }
       ];
@@ -503,6 +503,124 @@ const SSW = {
   htmlVersions:    []      // historique des versions HTML avant chaque modification
 };
 
+function swT(key, fallback) {
+  try {
+    return window.DokPeyiI18n?.t
+      ? window.DokPeyiI18n.t(key, window.DokPeyiI18n.getLanguage?.(), fallback)
+      : fallback;
+  } catch (_) {
+    return fallback;
+  }
+}
+
+function swFormatI18n(template, vars) {
+  return String(template || '').replace(/\{(\w+)\}/g, function(_, key) {
+    return vars[key] == null ? '' : String(vars[key]);
+  });
+}
+
+function swTPick(keys, fallback) {
+  for (const key of keys) {
+    if (!key) continue;
+    const translated = swT(key, '__DOK_I18N_MISS__');
+    if (translated !== '__DOK_I18N_MISS__') return translated;
+  }
+  return fallback;
+}
+
+function swTQuestion(q, suffix, fallback) {
+  return swTPick([
+    `wiz_q_${SSW.svc}_${SSW.choice}_${q.id}_${suffix}`,
+    `wiz_q_${SSW.svc}_${q.id}_${suffix}`,
+    q?.i18nRef ? `wiz_ref_${q.i18nRef}_${suffix}` : ''
+  ], fallback);
+}
+
+function swTQuestionLabel(q, fallback) {
+  return swTQuestion(q, 'label', fallback);
+}
+
+function swTQuestionPlaceholder(q, fallback) {
+  return swTQuestion(q, 'placeholder', fallback);
+}
+
+function swLocalizeQuestion(q) {
+  return {
+    ...q,
+    label: swTQuestionLabel(q, q.label || ''),
+    placeholder: swTQuestionPlaceholder(q, q.placeholder || ''),
+    options: (q.options || []).map(function(option, index) {
+      return swTQuestion(q, `option_${index}`, option);
+    }),
+    groups: (q.groups || []).map(function(group, groupIndex) {
+      return {
+        ...group,
+        label: swTQuestion(q, `group_${groupIndex}_label`, group.label || ''),
+        options: (group.options || []).map(function(option, optionIndex) {
+          return swTQuestion(q, `group_${groupIndex}_option_${optionIndex}`, option);
+        })
+      };
+    })
+  };
+}
+
+function swGetModifySections() {
+  return (MODIFY_SECTIONS[SSW.svc] || []).map(function(value, index) {
+    return {
+      value: value,
+      label: swT(`wiz_modify_section_${SSW.svc}_${index}`, value)
+    };
+  });
+}
+
+function swGetModifySectionLabel(sectionValue) {
+  var match = swGetModifySections().find(function(section) {
+    return section.value === sectionValue;
+  });
+  return match ? match.label : sectionValue;
+}
+
+function swGetCfg(serviceId) {
+  const base = SVC[serviceId];
+  if (!base) return null;
+
+  return {
+    ...base,
+    name: swT(`wiz_service_${serviceId}_name`, base.name),
+    reviewMsg: base.reviewMsg
+      ? swT(`wiz_service_${serviceId}_review_msg`, base.reviewMsg)
+      : base.reviewMsg,
+    choices: base.choices.map(choice => ({
+      ...choice,
+      label: swT(`wiz_choice_${serviceId}_${choice.id}_label`, choice.label),
+      desc: swT(`wiz_choice_${serviceId}_${choice.id}_desc`, choice.desc)
+    }))
+  };
+}
+
+function swSyncStep2Draft() {
+  document.querySelectorAll('#sw-fields [data-fid]').forEach(el => {
+    SSW.details[el.dataset.fid] = el.value.trim();
+  });
+}
+
+function swHandleLangChange() {
+  if (!SSW.svc) return;
+  _swApplyTheme(SSW.svc);
+
+  if (SSW.step === 1) {
+    swRenderChoices();
+    return;
+  }
+
+  if (SSW.step === 2) {
+    swSyncStep2Draft();
+    swBuildForm();
+  }
+}
+
+document.addEventListener('dokpeyi:langchange', swHandleLangChange);
+
 /* ── INIT ─────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', swInit);
 
@@ -553,7 +671,7 @@ function swInit() {
 
 function _swApplyTheme(s) {
   SSW.svc = s;
-  const cfg  = SVC[s];
+  const cfg  = swGetCfg(s) || SVC[s];
   const root = document.documentElement;
   root.style.setProperty('--sw-color', cfg.color);
   root.style.setProperty('--sw-light', cfg.light);
@@ -632,7 +750,9 @@ function swGoStep(n) {
 function swRenderChoices() {
   const grid = document.getElementById('sw-choices');
   if (!grid) return;
-  grid.innerHTML = SVC[SSW.svc].choices.map(c => `
+  const cfg = swGetCfg(SSW.svc);
+  if (!cfg) return;
+  grid.innerHTML = cfg.choices.map(c => `
     <div class="sw-choice" data-id="${c.id}" onclick="swPick('${c.id}',this)">
       <div class="sw-choice-icon">${c.icon}</div>
       <div class="sw-choice-body">
@@ -733,11 +853,11 @@ function swHandleImport(input) {
 
   if (!canAnalyze) {
     SSW.importFile = { name: file.name, type: file.type };
-    _swImportStatus('neutral', 'Document joint · remplissez les champs ci-dessous');
+    _swImportStatus('neutral', swT('wiz_import_manual', 'Document joint · remplissez les champs ci-dessous'));
     return;
   }
 
-  _swImportStatus('loading', 'Analyse du document en cours…');
+  _swImportStatus('loading', swT('wiz_import_loading', 'Analyse du document en cours…'));
 
   const reader = new FileReader();
   reader.onload = async e => {
@@ -756,14 +876,14 @@ function swHandleImport(input) {
         _swImportStatus(
           filled > 0 ? 'success' : 'neutral',
           filled > 0
-            ? 'Informations détectées — vérifiez et modifiez si nécessaire'
-            : 'Document joint · remplissez les champs ci-dessous'
+            ? swT('wiz_import_detected', 'Informations détectées — vérifiez et modifiez si nécessaire')
+            : swT('wiz_import_manual', 'Document joint · remplissez les champs ci-dessous')
         );
       } else {
-        _swImportStatus('neutral', 'Document joint · remplissez les champs ci-dessous');
+        _swImportStatus('neutral', swT('wiz_import_manual', 'Document joint · remplissez les champs ci-dessous'));
       }
     } catch(_) {
-      _swImportStatus('neutral', 'Document joint · remplissez les champs ci-dessous');
+      _swImportStatus('neutral', swT('wiz_import_manual', 'Document joint · remplissez les champs ci-dessous'));
     }
   };
   reader.readAsDataURL(file);
@@ -779,7 +899,7 @@ function swRemoveImport() {
 
 /* ── BUILD FORM (step 2) ──────────────────────────────────── */
 function swBuildForm() {
-  const questions = SVC[SSW.svc].questions(SSW.choice);
+  const questions = SVC[SSW.svc].questions(SSW.choice).map(swLocalizeQuestion);
   const titles = {
     cv:             'Vos informations professionnelles',
     lettre:         'Votre candidature',
@@ -789,7 +909,7 @@ function swBuildForm() {
     impot:          'Votre demande',
     naturalisation: 'Votre dossier de naturalisation'
   };
-  document.getElementById('sw-q-title').textContent = titles[SSW.svc] || 'Informations';
+  document.getElementById('sw-q-title').textContent = swT(`wiz_form_title_${SSW.svc}`, titles[SSW.svc] || swT('wiz_info_title', 'Informations'));
 
   /* Bouton import — uniquement si le choix implique un document existant */
   const showImport = (IMPORT_CHOICES[SSW.svc] || []).includes(SSW.choice);
@@ -802,8 +922,8 @@ function swBuildForm() {
               onclick="document.getElementById('sw-import-input').click()">
         <span class="sw-import-icon">⬆️</span>
         <span>
-          <span class="sw-import-title">Gagnez du temps — importer votre document</span>
-          <span class="sw-import-hint">PDF ou image · max 3 Mo · facultatif</span>
+          <span class="sw-import-title">${escSw(swT('wiz_import_title', 'Gagnez du temps — importer votre document'))}</span>
+          <span class="sw-import-hint">${escSw(swT('wiz_import_hint', 'PDF ou image · max 3 Mo · facultatif'))}</span>
         </span>
       </button>
       <div class="sw-import-chosen" id="sw-import-chosen" style="display:none">
@@ -822,7 +942,7 @@ function swBuildForm() {
     } else if (q.type === 'select') {
       const opts = (q.options || []).map(o => `<option value="${escSw(o)}">${escSw(o)}</option>`).join('');
       field = `<select id="sw-f-${q.id}" data-fid="${q.id}" ${req}>
-                 <option value="">— Choisir —</option>${opts}
+                 <option value="">${escSw(swT('wiz_select_default', '— Choisir —'))}</option>${opts}
                </select>`;
     } else if (q.type === 'date') {
       field = `<input type="date" id="sw-f-${q.id}" data-fid="${q.id}" ${req}>`;
@@ -841,9 +961,9 @@ function swBuildForm() {
       ).join('');
       field = `<div class="sw-hybrid">
                  <select class="sw-hybrid-select" onchange="swHybridPick('${q.id}', this.value); this.selectedIndex=0;">
-                   <option value="">— Choisir dans la liste —</option>
+                   <option value="">${escSw(swT('wiz_select_list_default', '— Choisir dans la liste —'))}</option>
                    ${groups}
-                   <option value="__autre__">Autre (préciser ci-dessous)</option>
+                   <option value="__autre__">${escSw(swT('wiz_other_option', 'Autre (préciser ci-dessous)'))}</option>
                  </select>
                  <input type="text" class="sw-hybrid-input" id="sw-f-${q.id}" data-fid="${q.id}" ${req}
                         placeholder="${escSw(q.placeholder || '')}">
@@ -870,20 +990,22 @@ function swBuildForm() {
     } else if (q.type === 'template-picker') {
       const cards = Object.values(CV_TEMPLATES).map(t => {
         const priceHtml = t.prix === 0
-          ? '<span class="sw-tpl-price sw-tpl-price--free">Inclus</span>'
+          ? `<span class="sw-tpl-price sw-tpl-price--free">${escSw(swT('cvcat_price_included', 'Inclus'))}</span>`
           : `<span class="sw-tpl-price sw-tpl-price--paid">+${t.prix}€</span>`;
+        const tplName = swT(`cvcat_tpl_${t.id}_name`, t.nom);
+        const tplDesc = swT(`cvcat_tpl_${t.id}_desc`, t.description);
         return `<div class="sw-tpl-card" data-tpl="${escSw(t.id)}" onclick="swTplSelect('${escSw(t.id)}')">
                   <div class="sw-tpl-swatch sw-tpl-swatch--${escSw(t.id)}"></div>
                   <div class="sw-tpl-info">
-                    <span class="sw-tpl-name">${escSw(t.nom)}</span>${priceHtml}
-                    <span class="sw-tpl-desc">${escSw(t.description)}</span>
+                    <span class="sw-tpl-name">${escSw(tplName)}</span>${priceHtml}
+                    <span class="sw-tpl-desc">${escSw(tplDesc)}</span>
                   </div>
                 </div>`;
       }).join('');
       field = `<div class="sw-tpl-wrap" id="sw-tpl-wrap">
                  <div class="sw-tpl-grid">${cards}</div>
                  <a href="/cv-catalogue" target="_blank" class="sw-tpl-catalogue-link">
-                   Voir le catalogue complet →
+                   ${escSw(swT('wiz_tpl_catalogue', 'Voir le catalogue complet →'))}
                  </a>
                  <input type="hidden" id="sw-f-${q.id}" data-fid="${q.id}" value="classique">
                </div>`;
@@ -917,8 +1039,8 @@ function swBuildForm() {
       const filled = Object.values(SSW.importExtracted).filter(v => v?.trim()).length;
       _swImportStatus(
         filled > 0 ? 'success' : 'neutral',
-        filled > 0 ? 'Informations détectées — vérifiez et modifiez si nécessaire'
-                   : 'Document joint · remplissez les champs ci-dessous'
+        filled > 0 ? swT('wiz_import_detected', 'Informations détectées — vérifiez et modifiez si nécessaire')
+                   : swT('wiz_import_manual', 'Document joint · remplissez les champs ci-dessous')
       );
     }
   }
@@ -1033,7 +1155,7 @@ function _swRenderChips(id) {
   let selected;
   try { selected = JSON.parse(chips.dataset.selected || '[]'); } catch(_) { selected = []; }
   chips.innerHTML = selected.map(t =>
-    `<span class="sw-tag-chip" data-tag="${escSw(t)}">${escSw(t)}<button type="button" aria-label="Retirer">✕</button></span>`
+    `<span class="sw-tag-chip" data-tag="${escSw(t)}">${escSw(t)}<button type="button" aria-label="${escSw(swT('wiz_tag_remove_aria', 'Retirer'))}">✕</button></span>`
   ).join('');
   chips.querySelectorAll('.sw-tag-chip button').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -1080,7 +1202,7 @@ function _swModifyPanelInit() {
   if (!panel) return;
   /* Panneau visible pour tous les services avec sections configurées,
      sauf sous-type 'improve' qui part déjà d'un document existant amélioré. */
-  var sections  = MODIFY_SECTIONS[SSW.svc] || null;
+  var sections  = swGetModifySections();
   var showPanel = !!sections && SSW.choice !== 'improve';
   panel.style.display = showPanel ? 'block' : 'none';
   if (!showPanel) return;
@@ -1088,15 +1210,15 @@ function _swModifyPanelInit() {
   /* Peupler dynamiquement le select avec les sections du service actif */
   var select = document.getElementById('sw-modify-section');
   if (select) {
-    select.innerHTML = '<option value="">— Choisir une section —</option>'
-      + sections.map(function(s) {
-          return '<option value="' + escSw(s) + '">' + escSw(s) + '</option>';
+    select.innerHTML = '<option value="">' + escSw(swT('wiz_modify_section_default', '— Choisir une section —')) + '</option>'
+      + sections.map(function(section) {
+          return '<option value="' + escSw(section.value) + '">' + escSw(section.label) + '</option>';
         }).join('');
     select.value = '';
   }
 
   _swModifyUpdateCounter();
-  document.getElementById('sw-modify-history').innerHTML = '<p class="sw-modify-history-empty">Version originale disponible</p>';
+  document.getElementById('sw-modify-history').innerHTML = '<p class="sw-modify-history-empty">' + escSw(swT('wiz_modify_original_available', 'Version originale disponible')) + '</p>';
 }
 
 /** Met à jour le badge compteur et l'état du bouton. */
@@ -1107,17 +1229,29 @@ function _swModifyUpdateCounter() {
   var exhausted = document.getElementById('sw-modify-exhausted');
   if (!counter) return;
   if (remaining > 0) {
-    counter.textContent  = remaining + ' modification' + (remaining > 1 ? 's' : '') + ' gratuite' + (remaining > 1 ? 's' : '') + ' restante' + (remaining > 1 ? 's' : '');
+    counter.textContent  = swFormatI18n(
+      swT(
+        remaining > 1 ? 'wiz_modify_counter_remaining_many' : 'wiz_modify_counter_remaining_one',
+        remaining > 1 ? '{count} modifications gratuites restantes' : '{count} modification gratuite restante'
+      ),
+      { count: remaining }
+    );
     counter.className    = 'sw-modify-counter sw-modify-counter--ok';
     if (btn) btn.disabled = false;
     if (exhausted) exhausted.style.display = 'none';
   } else {
-    counter.textContent  = 'Modifications gratuites épuisées';
+    counter.textContent  = swT('wiz_modify_counter_exhausted', 'Modifications gratuites épuisées');
     counter.className    = 'sw-modify-counter sw-modify-counter--exhausted';
     if (btn) btn.disabled = true;
     if (exhausted) {
       exhausted.style.display = 'block';
-      exhausted.innerHTML = '⚠️ Vous avez utilisé vos ' + FREE_MODIFICATIONS + ' modifications gratuites. Une option +2€ sera bientôt disponible pour continuer à affiner votre document.';
+      exhausted.innerHTML = escSw(swFormatI18n(
+        swT(
+          'wiz_modify_counter_exhausted_help',
+          '⚠️ Vous avez utilisé vos {count} modifications gratuites. Une option +2€ sera bientôt disponible pour continuer à affiner votre document.'
+        ),
+        { count: FREE_MODIFICATIONS }
+      ));
     }
   }
 }
@@ -1143,7 +1277,7 @@ async function swModifyDoc() {
   SSW.htmlVersions.push({ n: SSW.modifyCount + 1, section: section, html: SSW.html });
 
   /* UI : loader */
-  if (btn) { btn.disabled = true; btn.textContent = 'Modification en cours…'; }
+  if (btn) { btn.disabled = true; btn.textContent = swT('wiz_modify_loading', 'Modification en cours…'); }
 
   var prompt =
     'Tu es un expert en CV professionnels.\n'
@@ -1174,7 +1308,7 @@ async function swModifyDoc() {
 
     /* Réactiver le bouton si modifications restantes */
     if (btn) {
-      btn.textContent = 'Appliquer la modification';
+      btn.textContent = swT('wiz_apply_modification', 'Appliquer la modification');
       btn.disabled    = SSW.modifyCount >= FREE_MODIFICATIONS;
     }
     /* Réinitialiser les champs */
@@ -1185,11 +1319,11 @@ async function swModifyDoc() {
   } catch(err) {
     /* Restaurer la version sauvegardée en cas d'erreur */
     SSW.htmlVersions.pop();
-    if (btn) { btn.textContent = 'Appliquer la modification'; btn.disabled = false; }
+    if (btn) { btn.textContent = swT('wiz_apply_modification', 'Appliquer la modification'); btn.disabled = false; }
     var errDiv = document.getElementById('sw-modify-exhausted');
     if (errDiv) {
       errDiv.style.display = 'block';
-      errDiv.innerHTML = '⚠️ Erreur lors de la modification. Réessayez.';
+      errDiv.innerHTML = escSw(swT('wiz_modify_error', '⚠️ Erreur lors de la modification. Réessayez.'));
     }
   }
 }
@@ -1205,8 +1339,11 @@ function _swModifyAddHistory(versionIdx, section) {
   var item = document.createElement('div');
   item.className = 'sw-modify-history-item';
   item.innerHTML =
-    '<span class="sw-modify-history-label">Version ' + n + ' — ' + escSw(section) + ' modifiée</span>'
-    + '<button type="button" class="sw-modify-restore-btn">Restaurer</button>';
+    '<span class="sw-modify-history-label">' + escSw(swFormatI18n(
+      swT('wiz_modify_history_label', 'Version {version} — {section} modifiée'),
+      { version: n, section: swGetModifySectionLabel(section) }
+    )) + '</span>'
+    + '<button type="button" class="sw-modify-restore-btn">' + escSw(swT('wiz_modify_restore', 'Restaurer')) + '</button>';
   item.querySelector('.sw-modify-restore-btn').addEventListener('click', function() {
     swRestoreVersion(versionIdx);
   });
@@ -1334,12 +1471,12 @@ async function swGenerate() {
     swCreatePendingOrder();
 
     /* ── LUCAS — accueil (instant, pas d'appel IA) ── */
-    updateMsg('Demande reçue');
-    swPipelineUpdate('submitted', 'accueil', 'lucas', 'Demande reçue et collectée');
+    updateMsg(swT('wiz_loading_received', 'Demande reçue'));
+    swPipelineUpdate('submitted', 'accueil', 'lucas', swT('wiz_loading_submitted_event', 'Demande reçue et collectée'));
     await new Promise(function(r) { setTimeout(r, 600); });
 
     /* ── ORCHESTRATE — pipeline Emma → Viktor → Sofia → Léa côté serveur ── */
-    updateMsg('En préparation…');
+    updateMsg(swT('wiz_loading_preparing', 'En préparation…'));
     swPipelineUpdate('processing', null, null, null);
 
     var controller = new AbortController();
@@ -1376,25 +1513,27 @@ async function swGenerate() {
   } catch(e) {
     var isTimeout  = e.message === 'timeout' || e.name === 'AbortError';
     var isOffline  = !navigator.onLine || e.message.toLowerCase().includes('network') || e.message.toLowerCase().includes('fetch');
-    var userMsg    = isTimeout  ? 'La génération a pris trop de temps. Nos serveurs sont occupés, réessayez dans quelques instants.'
-                  : isOffline  ? 'Impossible de contacter nos serveurs. Vérifiez votre connexion internet, puis réessayez.'
-                  : 'Une erreur est survenue lors de la génération. Réessayez ou revenez en arrière pour modifier vos informations.';
+    var userMsg    = isTimeout
+      ? swT('wiz_loading_timeout_error', 'La génération a pris trop de temps. Nos serveurs sont occupés, réessayez dans quelques instants.')
+      : isOffline
+        ? swT('wiz_loading_offline_error', 'Impossible de contacter nos serveurs. Vérifiez votre connexion internet, puis réessayez.')
+        : swT('wiz_loading_generic_error', 'Une erreur est survenue lors de la génération. Réessayez ou revenez en arrière pour modifier vos informations.');
     if (loading) loading.innerHTML =
       '<div style="text-align:center;padding:32px 20px">'
       + '<div style="font-size:2.5rem;margin-bottom:14px">' + (isOffline ? '📡' : '⚠️') + '</div>'
-      + '<div style="color:#dc2626;font-weight:700;font-size:1rem;margin-bottom:10px">Génération interrompue</div>'
+      + '<div style="color:#dc2626;font-weight:700;font-size:1rem;margin-bottom:10px">' + escSw(swT('wiz_loading_interrupted', 'Génération interrompue')) + '</div>'
       + '<div style="color:#64748b;font-size:.87rem;line-height:1.6;margin-bottom:24px;max-width:320px;margin-left:auto;margin-right:auto">' + escSw(userMsg) + '</div>'
       + '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">'
-      + '<button class="sw-btn-ghost" onclick="swGoStep(2)">← Modifier mes infos</button>'
-      + '<button class="sw-btn-next" onclick="swGenerate()">Réessayer →</button>'
+      + '<button class="sw-btn-ghost" onclick="swGoStep(2)">' + escSw(swT('wiz_edit_info_full', '← Modifier mes infos')) + '</button>'
+      + '<button class="sw-btn-next" onclick="swGenerate()">' + escSw(swT('wiz_retry', 'Réessayer →')) + '</button>'
       + '</div></div>';
   }
 }
 
 function _loadingHTML() {
   return '<div class="sw-spinner"></div>'
-    + '<div class="sw-loading-msg" id="sw-loading-msg">Demande reçue</div>'
-    + '<div class="sw-loading-sub">Nous préparons votre document — cela prend quelques instants.</div>';
+    + '<div class="sw-loading-msg" id="sw-loading-msg">' + escSw(swT('wiz_loading_received', 'Demande reçue')) + '</div>'
+    + '<div class="sw-loading-sub">' + escSw(swT('wiz_loading_sub', 'Nous préparons votre document — cela prend quelques instants.')) + '</div>';
 }
 
 /* ── A4 SCALE ─────────────────────────────────────────────── */
@@ -1679,17 +1818,20 @@ function swFallbackPrompt() {
 /* ── STEP 3 → 4 ───────────────────────────────────────────── */
 function swGoStep4() {
   if (!SSW.html) return;
-  const cfg = SVC[SSW.svc];
+  const cfg = swGetCfg(SSW.svc) || SVC[SSW.svc];
   const choiceLabel = (cfg.choices.find(c => c.id === SSW.choice) || {}).label || SSW.choice;
 
   document.getElementById('sw-recap').innerHTML = `
-    <div class="sw-recap-row"><span>Client</span><span>${escSw(SSW.personal.prenom + ' ' + SSW.personal.nom)}</span></div>
-    <div class="sw-recap-row"><span>Service</span><span>${cfg.icon} ${escSw(cfg.name)}</span></div>
-    <div class="sw-recap-row"><span>Type</span><span>${escSw(choiceLabel)}</span></div>
-    <div class="sw-recap-row sw-recap-total"><span>Total</span><span>${cfg.price}€</span></div>
-    ${cfg.reviewRequired ? `<div class="sw-recap-review">⚠️ Ce service nécessite une vérification manuelle avant livraison du document final.</div>` : ''}
+    <div class="sw-recap-row"><span>${escSw(swT('wiz_pay_recap_client', 'Client'))}</span><span>${escSw(SSW.personal.prenom + ' ' + SSW.personal.nom)}</span></div>
+    <div class="sw-recap-row"><span>${escSw(swT('wiz_pay_recap_service', 'Service'))}</span><span>${cfg.icon} ${escSw(cfg.name)}</span></div>
+    <div class="sw-recap-row"><span>${escSw(swT('wiz_pay_recap_type', 'Type'))}</span><span>${escSw(choiceLabel)}</span></div>
+    <div class="sw-recap-row sw-recap-total"><span>${escSw(swT('wiz_pay_recap_total', 'Total'))}</span><span>${cfg.price}€</span></div>
+    ${cfg.reviewRequired ? `<div class="sw-recap-review">${escSw(swT('wiz_pay_review_required', '⚠️ Ce service nécessite une vérification manuelle avant livraison du document final.'))}</div>` : ''}
   `;
-  document.getElementById('sw-pay-lbl').textContent = `Payer ${cfg.price}€ et obtenir mon document`;
+  document.getElementById('sw-pay-lbl').textContent = swFormatI18n(
+    swT('wiz_pay_get_document_amount', 'Payer {amount}€ et obtenir mon document'),
+    { amount: cfg.price }
+  );
   swGoStep(4);
 }
 
@@ -1738,7 +1880,7 @@ async function swPay() {
   const btn = document.getElementById('sw-pay-btn');
   const lbl = document.getElementById('sw-pay-lbl');
   if (btn) btn.disabled = true;
-  if (lbl) lbl.textContent = '⏳ Redirection vers le paiement…';
+  if (lbl) lbl.textContent = swT('wiz_pay_redirecting', '⏳ Redirection vers le paiement…');
 
   try {
     const cfg = SVC[SSW.svc] || {};
@@ -1758,14 +1900,17 @@ async function swPay() {
     });
     const data = await res.json();
 
-    if (!data.ok || !data.url) throw new Error(data.error || 'Erreur paiement');
+    if (!data.ok || !data.url) throw new Error(data.error || swT('wiz_pay_error', 'Erreur paiement'));
     location.href = data.url; /* redirection vers Stripe Checkout */
   } catch(err) {
     if (btn) btn.disabled = false;
-    if (lbl) lbl.textContent = 'Réessayer';
+    if (lbl) lbl.textContent = swT('wiz_pay_retry', 'Réessayer');
     const errEl = document.createElement('p');
     errEl.style.cssText = 'color:#ef4444;font-size:.85rem;text-align:center;margin:10px 0 0';
-    errEl.textContent = 'Erreur : ' + err.message;
+    errEl.textContent = swFormatI18n(
+      swT('wiz_pay_error_prefix', 'Erreur : {message}'),
+      { message: err.message }
+    );
     document.getElementById('sw-pay-btn')?.parentNode?.appendChild(errEl);
   }
 }
@@ -1869,21 +2014,21 @@ function swUpdateOrderStatus(next, opts) {
 }
 
 function swShowConfirm() {
-  const cfg = SVC[SSW.svc];
+  const cfg = swGetCfg(SSW.svc) || SVC[SSW.svc];
   swGoStep(5);
 
   document.getElementById('sw-confirm-body').innerHTML = `
     <div class="sw-confirm-icon">🎉</div>
-    <h2>Merci, ${escSw(SSW.personal.prenom)}&nbsp;!</h2>
+    <h2>${escSw(swFormatI18n(swT('wiz_confirm_title', 'Merci, {name} !'), { name: SSW.personal.prenom }))}</h2>
     ${cfg.reviewRequired
-      ? `<p class="sw-confirm-sub">Votre demande a bien été transmise à notre équipe.</p>
-         <div class="sw-review-badge">📋 En cours de vérification — réponse sous 24–48h</div>
+      ? `<p class="sw-confirm-sub">${escSw(swT('wiz_confirm_review_sub', 'Votre demande a bien été transmise à notre équipe.'))}</p>
+         <div class="sw-review-badge">${escSw(swT('wiz_confirm_review_badge', '📋 En cours de vérification — réponse sous 24–48h'))}</div>
          <p style="font-size:.85rem;color:#64748b;max-width:420px;margin:0 auto 20px;line-height:1.6">${escSw(cfg.reviewMsg)}</p>`
-      : `<p class="sw-confirm-sub">Votre document est prêt. Téléchargez-le puis imprimez-le ou enregistrez-le en PDF.</p>
-         <button class="sw-btn-dl" onclick="swDownload()">⬇ Télécharger mon document</button>`
+      : `<p class="sw-confirm-sub">${escSw(swT('wiz_confirm_ready_sub', 'Votre document est prêt. Téléchargez-le puis imprimez-le ou enregistrez-le en PDF.'))}</p>
+         <button class="sw-btn-dl" onclick="swDownload()">${escSw(swT('wiz_confirm_download', '⬇ Télécharger mon document'))}</button>`
     }
-    <p class="sw-confirm-email">Confirmation envoyée à <strong>${escSw(SSW.personal.email)}</strong></p>
-    <a href="/" class="sw-btn-ghost" style="margin-top:24px;display:inline-flex">← Retour à l'accueil</a>
+    <p class="sw-confirm-email">${escSw(swFormatI18n(swT('wiz_confirm_email', 'Confirmation envoyée à {email}'), { email: SSW.personal.email }))}</p>
+    <a href="/" class="sw-btn-ghost" style="margin-top:24px;display:inline-flex">${escSw(swT('wiz_confirm_home', '← Retour à l\'accueil'))}</a>
   `;
 }
 

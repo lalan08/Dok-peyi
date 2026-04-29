@@ -5,14 +5,56 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const notFoundHtmlPath = path.join(__dirname, '..', '404.html');
+const indexHtmlPath = path.join(__dirname, '..', 'index.html');
+const aboutHtmlPath = path.join(__dirname, '..', 'a-propos.html');
+const legalNoticeHtmlPath = path.join(__dirname, '..', 'mentions-legales.html');
+const termsHtmlPath = path.join(__dirname, '..', 'cgv.html');
+const privacyHtmlPath = path.join(__dirname, '..', 'confidentialite.html');
+const cookiesHtmlPath = path.join(__dirname, '..', 'cookies.html');
+const legacyLegalHubHtmlPath = path.join(__dirname, '..', 'legales.html');
+const cvCatalogueHtmlPath = path.join(__dirname, '..', 'cv-catalogue.html');
 const serviceHtmlPath = path.join(__dirname, '..', 'service.html');
 const vercelConfigPath = path.join(__dirname, '..', 'vercel.json');
+const serviceWorkerPath = path.join(__dirname, '..', 'sw.js');
 
 describe('service static asset caching', () => {
+  test('public pages cache-bust lang.js to avoid stale i18n bundles', async () => {
+    const [notFoundHtml, indexHtml, aboutHtml, legalNoticeHtml, termsHtml, privacyHtml, cookiesHtml, legacyLegalHubHtml, cvCatalogueHtml, serviceHtml] = await Promise.all([
+      fs.readFile(notFoundHtmlPath, 'utf8'),
+      fs.readFile(indexHtmlPath, 'utf8'),
+      fs.readFile(aboutHtmlPath, 'utf8'),
+      fs.readFile(legalNoticeHtmlPath, 'utf8'),
+      fs.readFile(termsHtmlPath, 'utf8'),
+      fs.readFile(privacyHtmlPath, 'utf8'),
+      fs.readFile(cookiesHtmlPath, 'utf8'),
+      fs.readFile(legacyLegalHubHtmlPath, 'utf8'),
+      fs.readFile(cvCatalogueHtmlPath, 'utf8'),
+      fs.readFile(serviceHtmlPath, 'utf8'),
+    ]);
+
+    assert.match(notFoundHtml, /src="\/lang\.js\?v=/);
+    assert.match(indexHtml, /src="\/lang\.js\?v=/);
+    assert.match(aboutHtml, /src="\/lang\.js\?v=/);
+    assert.match(legalNoticeHtml, /src="\/lang\.js\?v=/);
+    assert.match(termsHtml, /src="\/lang\.js\?v=/);
+    assert.match(privacyHtml, /src="\/lang\.js\?v=/);
+    assert.match(cookiesHtml, /src="\/lang\.js\?v=/);
+    assert.match(legacyLegalHubHtml, /src="\/lang\.js\?v=/);
+    assert.match(cvCatalogueHtml, /src="\/lang\.js\?v=/);
+    assert.match(serviceHtml, /src="\/lang\.js\?v=/);
+  });
+
   test('service.html cache-busts service.css to avoid stale immutable CSS', async () => {
     const html = await fs.readFile(serviceHtmlPath, 'utf8');
 
     assert.match(html, /href="\/service\.css\?v=/);
+  });
+
+  test('service.html cache-busts service.js to avoid stale wizard logic', async () => {
+    const html = await fs.readFile(serviceHtmlPath, 'utf8');
+
+    assert.match(html, /src="\/service\.js\?v=/);
   });
 
   test('vercel.json does not mark non-hashed CSS bundles as immutable', async () => {
@@ -27,5 +69,12 @@ describe('service static asset caching', () => {
     const cacheControl = cssHeader.headers.find((header) => header.key === 'Cache-Control');
     assert.ok(cacheControl, 'expected Cache-Control header for CSS');
     assert.doesNotMatch(cacheControl.value, /immutable/);
+  });
+
+  test('service worker uses network-first for lang assets and service.js', async () => {
+    const sw = await fs.readFile(serviceWorkerPath, 'utf8');
+
+    assert.match(sw, /url\.pathname === '\/lang\.js' \|\| url\.pathname === '\/lang\.css' \|\| url\.pathname === '\/service\.js'/);
+    assert.match(sw, /Network-first for language and wizard runtime bundles to avoid stale UI after deploys/);
   });
 });

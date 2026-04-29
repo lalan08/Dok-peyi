@@ -242,7 +242,7 @@
       <ul class="nav-links">
         <li><a href="/#comment" data-i18n="nav_comment">Comment ça marche</a></li>
         <li><a href="/#services" data-i18n="nav_services">Services</a></li>
-        <li><a href="/a-propos" class="nav-active">À propos</a></li>
+        <li><a href="/a-propos" class="nav-active" data-i18n="nav_about">À propos</a></li>
         <li><a href="/#services" class="nav-cta" data-i18n="nav_cta">Faire ma demande</a></li>
       </ul>
       <button class="hamburger" id="hamburger" aria-label="Menu">
@@ -252,7 +252,7 @@
     <div class="mobile-menu" id="mobileMenu">
       <a href="/#comment" class="mobile-link" data-i18n="nav_comment">Comment ça marche</a>
       <a href="/#services" class="mobile-link" data-i18n="nav_services">Services</a>
-      <a href="/a-propos" class="mobile-link">À propos</a>
+      <a href="/a-propos" class="mobile-link" data-i18n="nav_about">À propos</a>
       <a href="/#services" class="mobile-link mobile-cta" data-i18n="nav_cta">Faire ma demande</a>
     </div>
   </nav>
@@ -335,7 +335,7 @@
               <div class="svc-desc" data-i18n="ap_svc1_desc">Création ou amélioration — 6 templates inclus, prêt à candidater immédiatement</div>
             </div>
           </div>
-          <div class="svc-price">à partir de 8€</div>
+          <div class="svc-price" data-i18n="home_price_cv">à partir de 8€</div>
         </div>
         <div class="svc-row">
           <div class="svc-row-left">
@@ -345,7 +345,7 @@
               <div class="svc-desc" data-i18n="ap_svc2_desc">Personnalisée selon le poste et l'entreprise, ton professionnel et accrocheur</div>
             </div>
           </div>
-          <div class="svc-price">5€</div>
+          <div class="svc-price" data-i18n="home_price_lettre">à partir de 5€</div>
         </div>
         <div class="svc-row">
           <div class="svc-row-left">
@@ -355,7 +355,7 @@
               <div class="svc-desc" data-i18n="ap_svc4_desc">Demande, réclamation ou contestation auprès de tout organisme administratif</div>
             </div>
           </div>
-          <div class="svc-price">7€</div>
+          <div class="svc-price" data-i18n="home_price_courrier">à partir de 7€</div>
         </div>
         <div class="svc-row">
           <div class="svc-row-left">
@@ -365,7 +365,7 @@
               <div class="svc-desc" data-i18n="ap_svc3_desc">CAF, logement social, aide sociale — guide complet, checklist et étapes</div>
             </div>
           </div>
-          <div class="svc-price">12€</div>
+          <div class="svc-price" data-i18n="home_price_dossier">à partir de 12€</div>
         </div>
         <div class="svc-row">
           <div class="svc-row-left">
@@ -375,7 +375,7 @@
               <div class="svc-desc" data-i18n="ap_svc5_desc">Première demande, renouvellement, régularisation — relecture humaine incluse</div>
             </div>
           </div>
-          <div class="svc-price">15€</div>
+          <div class="svc-price" data-i18n="home_price_sejour">à partir de 15€</div>
         </div>
         <div class="svc-row">
           <div class="svc-row-left">
@@ -385,7 +385,7 @@
               <div class="svc-desc" data-i18n="ap_svc6_desc">Comprendre, contester ou écrire à la DGFiP — décryptage complet</div>
             </div>
           </div>
-          <div class="svc-price">10€</div>
+          <div class="svc-price" data-i18n="home_price_impot">à partir de 10€</div>
         </div>
         <div class="svc-row">
           <div class="svc-row-left">
@@ -395,7 +395,7 @@
               <div class="svc-desc" data-i18n="ap_svc7_desc">Éligibilité, constitution de dossier, lettre — relecture humaine incluse</div>
             </div>
           </div>
-          <div class="svc-price">20€</div>
+          <div class="svc-price" data-i18n="home_price_naturalisation">à partir de 20€</div>
         </div>
       </div>
       <div style="text-align:center;margin-top:44px">
@@ -434,14 +434,14 @@
         <div>
           <p class="ap-orga-eyebrow" data-i18n="ap_orga_eyebrow">Organismes référencés</p>
           <div class="orga-list">
-            <div class="orga-item">CAF de Guyane<small>Allocations — département 973</small></div>
-            <div class="orga-item">Préfecture de Guyane<small>Titres de séjour, naturalisation</small></div>
-            <div class="orga-item">OFPRA<small>Protection internationale</small></div>
-            <div class="orga-item">CIMADE Guyane<small>Aide aux étrangers, droits</small></div>
-            <div class="orga-item">Tribunal judiciaire de Cayenne<small>Contentieux administratifs</small></div>
-            <div class="orga-item">CPAM de Guyane<small>Assurance maladie</small></div>
-            <div class="orga-item">Pôle emploi Guyane<small>Emploi et formation</small></div>
-            <div class="orga-item">SIMKO / SIGUY<small>Logement social en Guyane</small></div>
+            <div class="orga-item"><span data-i18n="ap_orga_1_name">CAF de Guyane</span><small data-i18n="ap_orga_1_desc">Allocations — département 973</small></div>
+            <div class="orga-item"><span data-i18n="ap_orga_2_name">Préfecture de Guyane</span><small data-i18n="ap_orga_2_desc">Titres de séjour, naturalisation</small></div>
+            <div class="orga-item"><span data-i18n="ap_orga_3_name">OFPRA</span><small data-i18n="ap_orga_3_desc">Protection internationale</small></div>
+            <div class="orga-item"><span data-i18n="ap_orga_4_name">CIMADE Guyane</span><small data-i18n="ap_orga_4_desc">Aide aux étrangers, droits</small></div>
+            <div class="orga-item"><span data-i18n="ap_orga_5_name">Tribunal judiciaire de Cayenne</span><small data-i18n="ap_orga_5_desc">Contentieux administratifs</small></div>
+            <div class="orga-item"><span data-i18n="ap_orga_6_name">CPAM de Guyane</span><small data-i18n="ap_orga_6_desc">Assurance maladie</small></div>
+            <div class="orga-item"><span data-i18n="ap_orga_7_name">Pôle emploi Guyane</span><small data-i18n="ap_orga_7_desc">Emploi et formation</small></div>
+            <div class="orga-item"><span data-i18n="ap_orga_8_name">SIMKO / SIGUY</span><small data-i18n="ap_orga_8_desc">Logement social en Guyane</small></div>
           </div>
         </div>
       </div>
@@ -506,25 +506,25 @@
           <h4 data-i18n="footer_nav">Navigation</h4>
           <a href="/#comment" data-i18n="nav_comment">Comment ça marche</a>
           <a href="/#services" data-i18n="nav_services">Services</a>
-          <a href="/a-propos" style="color:var(--white);font-weight:600">À propos</a>
+          <a href="/a-propos" style="color:var(--white);font-weight:600" data-i18n="nav_about">À propos</a>
           <a href="/#services" data-i18n="nav_cta">Faire ma demande</a>
         </div>
         <div class="footer-contact">
           <h4 data-i18n="footer_contact">Contact</h4>
           <p>📧 contact@dokpeyi.com</p>
-          <p>📱 WhatsApp disponible</p>
-          <p>🕐 Lun–Sam · 8h–20h</p>
+          <p data-i18n="contact_whatsapp">📱 WhatsApp disponible</p>
+          <p data-i18n="contact_hours">🕐 Lun–Sam · 8h–20h</p>
         </div>
       </div>
       <div class="footer-legal">
         <p data-i18n="footer_legal">Dok'péyi est un service d'aide à la rédaction et à la préparation de documents. Les informations doivent être vérifiées avant utilisation.</p>
         <p style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap">
-          <span>© 2026 Dok'péyi — Tous droits réservés</span>
-          <a href="/mentions-legales" style="color:#94a3b8;text-decoration:none;font-size:.82rem">Mentions légales</a>
-          <a href="/cgv" style="color:#94a3b8;text-decoration:none;font-size:.82rem">CGV</a>
-          <a href="/confidentialite" style="color:#94a3b8;text-decoration:none;font-size:.82rem">Confidentialité</a>
-          <a href="/cookies" style="color:#94a3b8;text-decoration:none;font-size:.82rem">Cookies</a>
-          <a href="/a-propos" style="color:#60a5fa;text-decoration:none;font-size:.82rem;font-weight:600">À propos</a>
+          <span data-i18n="footer_rights">© 2026 Dok'péyi — Tous droits réservés</span>
+          <a href="/mentions-legales" style="color:#94a3b8;text-decoration:none;font-size:.82rem" data-i18n="link_mentions">Mentions légales</a>
+          <a href="/cgv" style="color:#94a3b8;text-decoration:none;font-size:.82rem" data-i18n="link_cgv">CGV</a>
+          <a href="/confidentialite" style="color:#94a3b8;text-decoration:none;font-size:.82rem" data-i18n="link_confidentialite">Confidentialité</a>
+          <a href="/cookies" style="color:#94a3b8;text-decoration:none;font-size:.82rem" data-i18n="link_cookies">Cookies</a>
+          <a href="/a-propos" style="color:#60a5fa;text-decoration:none;font-size:.82rem;font-weight:600" data-i18n="nav_about">À propos</a>
         </p>
       </div>
     </div>
@@ -554,6 +554,6 @@
       navigator.serviceWorker.register('/sw.js');
     }
   </script>
-  <script src="/lang.js" defer></script>
+  <script src="/lang.js?v=20260425-i18n-cachefix" defer></script>
 </body>
 </html>

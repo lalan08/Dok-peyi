@@ -11,15 +11,18 @@
   <meta name="theme-color" content="#2563eb">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/lang.css">
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{font-family:Inter,system-ui,sans-serif;background:#fff;color:#333;line-height:1.7}
     .topbar{background:#fff;border-bottom:1px solid #e2e8f0;padding:16px 24px;position:sticky;top:0;z-index:10}
-    .topbar-inner{max-width:800px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+    .topbar-inner{max-width:800px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:18px}
     .logo{font-weight:800;font-size:1.2rem;color:#0f172a;text-decoration:none}
     .logo span{color:#2563eb}
-    .back{color:#2563eb;text-decoration:none;font-size:.88rem;font-weight:600}
-    .back:hover{text-decoration:underline}
+    .nav-links{list-style:none;display:flex;align-items:center;gap:14px;margin-left:auto;flex-wrap:wrap;justify-content:flex-end}
+    .nav-links a{color:#475569;text-decoration:none;font-size:.88rem;font-weight:600}
+    .nav-links a:hover{color:#0f172a}
+    .nav-home{display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:999px;background:#eff6ff;color:#2563eb !important}
     .wrap{max-width:800px;margin:0 auto;padding:40px 24px 80px}
     h1{font-size:1.9rem;font-weight:800;color:#1e3a5f;margin-bottom:8px}
     .subtitle{color:#64748b;font-size:.95rem;margin-bottom:32px}
@@ -37,6 +40,10 @@
     .footer-links{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:12px}
     .footer-links a{color:#64748b;font-size:.82rem;text-decoration:none}
     .footer-links a:hover{color:#2563eb}
+    @media (max-width:720px){
+      .topbar-inner{align-items:flex-start;flex-direction:column}
+      .nav-links{margin-left:0;width:100%;justify-content:flex-start}
+    }
   </style>
 </head>
 <body>
@@ -44,67 +51,72 @@
 <nav class="topbar">
   <div class="topbar-inner">
     <a href="/" class="logo">Dok'<span>péyi</span></a>
-    <a href="/" class="back">← Retour à l'accueil</a>
+    <ul class="nav-links">
+      <li><a href="/#services" data-i18n="nav_services">Services</a></li>
+      <li><a href="/a-propos" data-i18n="nav_about">À propos</a></li>
+      <li><a href="/" class="nav-home" data-i18n="ml_nav_home">Retour à l'accueil</a></li>
+    </ul>
   </div>
 </nav>
 
 <main class="wrap">
-  <h1>Mentions légales</h1>
-  <p class="subtitle">Dernière mise à jour : avril 2026</p>
+  <h1 data-i18n="ml_title">Mentions légales</h1>
+  <p class="subtitle" data-i18n="ml_updated">Dernière mise à jour : avril 2026</p>
 
-  <h2>Éditeur du site</h2>
+  <h2 data-i18n="ml_publisher_title">Éditeur du site</h2>
   <div class="card">
     <p><strong>Dok'péyi</strong></p>
-    <p>Service d'aide administrative en ligne destiné aux résidents de Guyane française.</p>
-    <p>Email : <a href="mailto:contact@dok-peyi.fr">contact@dok-peyi.fr</a></p>
+    <p data-i18n="ml_publisher_service">Service d'aide administrative en ligne destiné aux résidents de Guyane française.</p>
+    <p><span data-i18n="ml_email_label">Email :</span> <a href="mailto:contact@dok-peyi.fr">contact@dok-peyi.fr</a></p>
   </div>
-  <div class="note">
+  <div class="note" data-i18n-html="ml_note_html">
     Dok'péyi est actuellement <strong>en cours de constitution juridique</strong>. Les informations définitives (forme juridique, capital social, SIREN, numéro de TVA intracommunautaire) seront publiées dès immatriculation. L'activité opère à ce jour sous forme de projet porté par ses fondateurs.
   </div>
 
-  <h2>Responsable de la publication</h2>
-  <p><strong>Marvin</strong> — responsable du contenu éditorial du site et de la relation publique.</p>
-  <p>Contact : <a href="mailto:contact@dok-peyi.fr">contact@dok-peyi.fr</a></p>
+  <h2 data-i18n="ml_publication_title">Responsable de la publication</h2>
+  <p data-i18n-html="ml_publication_desc_html"><strong>Marvin</strong> — responsable du contenu éditorial du site et de la relation publique.</p>
+  <p><span data-i18n="ml_contact_label">Contact :</span> <a href="mailto:contact@dok-peyi.fr">contact@dok-peyi.fr</a></p>
 
-  <h2>Hébergeur</h2>
+  <h2 data-i18n="ml_host_title">Hébergeur</h2>
   <div class="card">
     <p><strong>Vercel Inc.</strong></p>
     <p>340 Pine Street, Suite 701</p>
-    <p>San Francisco, CA 94104, États-Unis</p>
-    <p>Site : <a href="https://vercel.com" target="_blank" rel="noopener">vercel.com</a></p>
+    <p data-i18n="ml_host_country">San Francisco, CA 94104, États-Unis</p>
+    <p><span data-i18n="ml_host_site">Site :</span> <a href="https://vercel.com" target="_blank" rel="noopener">vercel.com</a></p>
   </div>
 
-  <h2>Propriété intellectuelle</h2>
-  <p>L'ensemble du contenu du site (textes, graphismes, logo, icônes, images, code source, marques, interface, structure) est la propriété exclusive de Dok'péyi ou fait l'objet d'une autorisation d'usage.</p>
-  <p>Toute reproduction, représentation, modification, publication ou adaptation totale ou partielle, par quelque procédé que ce soit, est interdite sans autorisation écrite préalable.</p>
-  <p><strong>© 2026 Dok'péyi — Tous droits réservés.</strong></p>
+  <h2 data-i18n="ml_ip_title">Propriété intellectuelle</h2>
+  <p data-i18n="ml_ip_p1">L'ensemble du contenu du site (textes, graphismes, logo, icônes, images, code source, marques, interface, structure) est la propriété exclusive de Dok'péyi ou fait l'objet d'une autorisation d'usage.</p>
+  <p data-i18n="ml_ip_p2">Toute reproduction, représentation, modification, publication ou adaptation totale ou partielle, par quelque procédé que ce soit, est interdite sans autorisation écrite préalable.</p>
+  <p data-i18n-html="ml_ip_p3_html"><strong>© 2026 Dok'péyi — Tous droits réservés.</strong></p>
 
-  <h2>Données personnelles</h2>
-  <p>Les données collectées via ce site sont traitées conformément au Règlement Général sur la Protection des Données (RGPD) et à la Loi Informatique et Libertés.</p>
-  <p>Pour en savoir plus, consultez notre <a href="/confidentialite">Politique de confidentialité</a>.</p>
+  <h2 data-i18n="ml_data_title">Données personnelles</h2>
+  <p data-i18n="ml_data_p1">Les données collectées via ce site sont traitées conformément au Règlement Général sur la Protection des Données (RGPD) et à la Loi Informatique et Libertés.</p>
+  <p data-i18n-html="ml_data_p2_html">Pour en savoir plus, consultez notre <a href="/confidentialite">Politique de confidentialité</a>.</p>
 
-  <h2>Cookies</h2>
-  <p>Ce site utilise uniquement des cookies strictement nécessaires à son fonctionnement. Aucun cookie publicitaire n'est déposé.</p>
-  <p>Détails : <a href="/cookies">Politique cookies</a>.</p>
+  <h2 data-i18n="ml_cookies_title">Cookies</h2>
+  <p data-i18n="ml_cookies_p1">Ce site utilise uniquement des cookies strictement nécessaires à son fonctionnement. Aucun cookie publicitaire n'est déposé.</p>
+  <p data-i18n-html="ml_cookies_p2_html">Détails : <a href="/cookies">Politique cookies</a>.</p>
 
-  <h2>Droit applicable</h2>
-  <p>Les présentes mentions sont soumises au droit français. Tout litige relève de la compétence exclusive des tribunaux français ; le tribunal compétent est celui de <strong>Cayenne (Guyane française)</strong>.</p>
+  <h2 data-i18n="ml_law_title">Droit applicable</h2>
+  <p data-i18n-html="ml_law_p1_html">Les présentes mentions sont soumises au droit français. Tout litige relève de la compétence exclusive des tribunaux français ; le tribunal compétent est celui de <strong>Cayenne (Guyane française)</strong>.</p>
 
-  <h2>Contact</h2>
-  <p>Pour toute question relative au site ou à son contenu :</p>
+  <h2 data-i18n="ml_contact_title">Contact</h2>
+  <p data-i18n="ml_contact_intro">Pour toute question relative au site ou à son contenu :</p>
   <p>📧 <a href="mailto:contact@dok-peyi.fr">contact@dok-peyi.fr</a></p>
 
   <div class="footer-legal">
-    <p>© 2026 Dok'péyi — Tous droits réservés</p>
+    <p data-i18n="footer_rights">© 2026 Dok'péyi — Tous droits réservés</p>
     <div class="footer-links">
-      <a href="/mentions-legales">Mentions légales</a>
-      <a href="/cgv">CGV</a>
-      <a href="/confidentialite">Confidentialité</a>
-      <a href="/cookies">Cookies</a>
-      <a href="/">Accueil</a>
+      <a href="/mentions-legales" data-i18n="link_mentions">Mentions légales</a>
+      <a href="/cgv" data-i18n="link_cgv">CGV</a>
+      <a href="/confidentialite" data-i18n="link_confidentialite">Confidentialité</a>
+      <a href="/cookies" data-i18n="link_cookies">Cookies</a>
+      <a href="/" data-i18n="ml_footer_home">Accueil</a>
     </div>
   </div>
 </main>
 
+<script defer src="/lang.js?v=20260425-mentions-i18n"></script>
 </body>
 </html>
