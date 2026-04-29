@@ -383,7 +383,7 @@
     if (!container) return;
     container.innerHTML = COMP_SUGGESTIONS.map(function (s) {
       var safeS = escapeHtml(s);
-      return '<span class="suggestion-chip" data-value="' + safeS + '" onclick="addTag(\'competences\',this.dataset.value)">' + safeS + '</span>';
+      return '<span class="suggestion-chip" data-value="' + safeS + '" onclick="addTag(\'competences\',this.dataset.value);this.parentNode.setAttribute(\'data-frozen\',\'true\');this.remove()">' + safeS + '</span>';
     }).join('');
   }
 
