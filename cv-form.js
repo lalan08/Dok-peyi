@@ -114,13 +114,16 @@
     if (!container) return;
     container.dataset.state = state;
     if (state === 'loading') {
-      container.innerHTML = '<span class="suggestions-loading">' + cvfT('cvf_suggestions_loading', "✦ L'IA génère des suggestions…") + '</span>';
+      container.setAttribute('aria-label', cvfT('cvf_suggestions_loading', "L'IA génère des suggestions…"));
+      container.innerHTML = '<span class="suggestion-skeleton"></span><span class="suggestion-skeleton"></span><span class="suggestion-skeleton"></span>';
       return;
     }
     if (state === 'error') {
+      container.removeAttribute('aria-label');
       container.innerHTML = '<span class="suggestions-loading">' + cvfT('cvf_suggestions_unavailable', 'Suggestions indisponibles') + '</span>';
       return;
     }
+    container.removeAttribute('aria-label');
     delete container.dataset.state;
   }
 
@@ -588,6 +591,7 @@
   }
 
   /* ── Suggestions IA ── */
+  var DEBOUNCE_MS = 300;
   var suggestDebounceTimer = {};
   var lastPoste = '';
 
@@ -607,6 +611,8 @@
         c.innerHTML = '';
         c.removeAttribute('data-frozen');
       });
+      var globalFmt = document.getElementById('suggestions-formation-global');
+      if (globalFmt) { globalFmt.innerHTML = ''; globalFmt.removeAttribute('data-frozen'); }
       lastPoste = poste;
     }
 
@@ -632,9 +638,9 @@
           var suggestions = data.suggestions || [];
           if (!suggestions.length) { container.innerHTML = ''; return; }
           var isMutable = field.startsWith('missions') || field.startsWith('formation');
-          container.innerHTML = suggestions.map(function (s) {
+          container.innerHTML = suggestions.map(function (s, i) {
             var safeS = escapeHtml(s);
-            return '<span class="suggestion-chip" data-value="' + safeS + '" onclick="' +
+            return '<span class="suggestion-chip" style="animation-delay:' + (i * 40) + 'ms" data-value="' + safeS + '" onclick="' +
               (isMutable ? 'this.parentNode.setAttribute(\'data-frozen\',\'true\');' : '') +
               'applySuggestion(\'' + field + '\',this.dataset.value);this.remove()">' + safeS + '</span>';
           }).join('');
@@ -642,7 +648,7 @@
         .catch(function () {
           renderSuggestionState(container, 'error');
         });
-    }, 600);
+    }, DEBOUNCE_MS);
   }
 
   function applySuggestion(field, value) {
@@ -660,6 +666,17 @@
       var sel = idx ? '#exp-card-' + idx + ' textarea' : '.dynamic-card textarea';
       var ta = document.querySelector(sel);
       if (ta) { ta.value += (ta.value ? '\n' : '') + '• ' + value; ta.dispatchEvent(new Event('input')); }
+    } else if (field === 'formation-global') {
+      var firstFCard = document.getElementById('form-card-1');
+      var firstFInput = firstFCard ? firstFCard.querySelector('input.field-input') : null;
+      if (firstFInput && !firstFInput.value.trim()) {
+        firstFInput.value = value;
+        firstFInput.dispatchEvent(new Event('input'));
+      } else {
+        addFormation();
+        var newGlobalInput = document.querySelector('#form-card-' + formCount + ' input.field-input');
+        if (newGlobalInput) { newGlobalInput.value = value; newGlobalInput.dispatchEvent(new Event('input')); }
+      }
     } else if (field.startsWith('formation')) {
       var fidx = field.split('_')[1];
       var finput = document.querySelector('#form-card-' + fidx + ' input.field-input');
@@ -751,6 +768,9 @@
         (d.accroche ? '<div style="font-size:12px;color:#555;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #eee;line-height:1.7">' + d.accroche + '</div>' : '') +
         (d.expHtml ? sectionHead('Expériences') + d.expHtml : '') +
         (d.forHtml ? '<div style="margin-top:16px">' + sectionHead('Formation') + d.forHtml + '</div>' : '') +
+        (d.certHtml ? '<div style="margin-top:16px">' + sectionHead('Certifications') + d.certHtml + '</div>' : '') +
+        (d.intHtml  ? '<div style="margin-top:16px">' + sectionHead('Centres d\'intérêt') + d.intHtml + '</div>' : '') +
+        (d.infoHtml ? '<div style="margin-top:16px">' + sectionHead('Informations') + d.infoHtml + '</div>' : '') +
         '</div></div>';
     }
 
@@ -769,6 +789,9 @@
       (d.forHtml ? '<div style="margin-top:16px">' + sectionHead('Formation') + d.forHtml + '</div>' : '') +
       (d.compHtml ? '<div style="margin-top:16px">' + sectionHead('Compétences') + '<div>' + d.compHtml + '</div></div>' : '') +
       (d.langHtml ? '<div style="margin-top:16px">' + sectionHead('Langues') + d.langHtml + '</div>' : '') +
+      (d.certHtml ? '<div style="margin-top:16px">' + sectionHead('Certifications') + d.certHtml + '</div>' : '') +
+      (d.intHtml  ? '<div style="margin-top:16px">' + sectionHead('Centres d\'intérêt') + d.intHtml + '</div>' : '') +
+      (d.infoHtml ? '<div style="margin-top:16px">' + sectionHead('Informations') + d.infoHtml + '</div>' : '') +
       '</div>';
   }
 
@@ -824,11 +847,21 @@
       photoHtml = '<img src="' + escapeHtml(data.photo) + '" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid ' + s.accent + '">';
     }
 
+    var extras = data.extras || {};
+    var certHtml = (extras.certifications || '').split(',').map(function (c) { return c.trim(); }).filter(Boolean).map(function (c) {
+      return '<span style="display:inline-block;margin:2px 4px 2px 0;padding:3px 10px;background:' + s.chipBg + ';color:' + s.chipText + ';border-radius:999px;font-size:10px">' + escapeHtml(c) + '</span>';
+    }).join('');
+    var intHtml = (extras.interets || '').split(',').map(function (c) { return c.trim(); }).filter(Boolean).map(function (c) {
+      return '<span style="display:inline-block;margin:2px 4px 2px 0;padding:3px 10px;background:' + s.chipBg + ';color:' + s.chipText + ';border-radius:999px;font-size:10px">' + escapeHtml(c) + '</span>';
+    }).join('');
+    var infoHtml = extras.infos ? '<p style="font-size:11px;color:#666;line-height:1.7">' + escapeHtml(extras.infos).replace(/\n/g, '<br>') + '</p>' : '';
+
     return buildLayout(tpl, s, {
       name: name, poste: poste, accroche: accrocheHtml,
       email: email, tel: tel, ville: ville, linkedin: linkedin,
       expHtml: expHtml, forHtml: forHtml,
-      compHtml: compHtml, langHtml: langHtml, photoHtml: photoHtml
+      compHtml: compHtml, langHtml: langHtml, photoHtml: photoHtml,
+      certHtml: certHtml, intHtml: intHtml, infoHtml: infoHtml
     });
   }
 
@@ -879,7 +912,7 @@
 
     currentStep = n;
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    if (n === 4) triggerSuggestions('formation_1', cvData.profil.poste || '', '');
+    if (n === 4) triggerSuggestions('formation-global', cvData.profil.poste || '', '');
     if (n === 5) triggerSuggestions('competences', cvData.profil.poste || '', buildExpContext());
     if (n === 6) {
       var ctx6 = buildExpContext();
