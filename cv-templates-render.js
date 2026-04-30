@@ -74,45 +74,41 @@
     };
   }
 
-  /* ── T01 — ÉPURÉ ── */
-  /* Bande verticale 6px noire à gauche (position absolute, full height).
-     Header avec nom #111 + photo top-right cercle 54px.
-     Layout 2 colonnes 65% / 32% (gauche : expériences/formation, droite : contact/compétences/langues).
-     Barres compétences fines noires sur fond #e0e0e0. */
+  /* ── T01 — ÉPURÉ ──
+     Extraction littérale cv-wizard.html data-tpl-id="01" (lignes 75-170).
+     Layout flex : bande 6px noire à gauche + contenu padding 28px 24px.
+     Header flex space-between : nom 24px black/letter-spacing:3px + photo 54px cercle bordure noire.
+     Body flex gap:20px : col gauche flex 0 0 65% (expériences + formation),
+     col droite flex 0 0 32% (contact + compétences à barres + langues + certifications). */
   function render01(data) {
     var d = extractData(data);
-
-    var sHead = function (label) {
-      return '<div style="text-transform:uppercase;font-size:10px;font-weight:800;' +
-        'letter-spacing:2.5px;color:#111;border-bottom:2px solid #111;' +
-        'padding-bottom:5px;margin-bottom:12px">' + label + '</div>';
-    };
 
     var photoHtml = '';
     if (data.withPhoto) {
       photoHtml = data.photo
-        ? '<img src="' + esc(data.photo) + '" style="width:54px;height:54px;' +
-          'border-radius:50%;object-fit:cover;border:3px solid #111;flex-shrink:0;display:block">'
-        : '<div style="width:54px;height:54px;border-radius:50%;background:#bbb;' +
-          'border:3px solid #111;flex-shrink:0"></div>';
+        ? '<img src="' + esc(data.photo) + '" style="width:54px;height:54px;border-radius:50%;object-fit:cover;border:3px solid #111;flex-shrink:0">'
+        : '<div class="cv-photo-zone" style="width:54px;height:54px;border-radius:50%;background:#bbb;border:3px solid #111;flex-shrink:0"></div>';
     }
 
     var expHtml = d.exps.map(function (e) {
-      return '<div style="margin-bottom:14px">' +
-        '<div style="display:flex;justify-content:space-between;align-items:baseline">' +
-          '<div style="font-size:12px;font-weight:700;color:#111">' + esc(e.entreprise || '') + '</div>' +
+      var mHtml = '';
+      if (e.missions) {
+        var lines = String(e.missions).split('\n').map(function (l) { return l.replace(/^\s*[•\-]\s*/, '').trim(); }).filter(Boolean);
+        if (lines.length) mHtml = '<ul style="font-size:9px;color:#444;margin:5px 0 0 14px;padding:0;line-height:1.5">' + lines.map(function (l) { return '<li>' + esc(l) + '</li>'; }).join('') + '</ul>';
+      }
+      return '<div style="margin-bottom:12px">' +
+        '<div style="display:flex;justify-content:space-between">' +
+          '<div style="font-size:11px;font-weight:700;color:#111">' + esc(e.entreprise || '') + '</div>' +
           '<div style="font-size:9px;color:#777">' + esc(e.debut || '') + (e.fin ? ' – ' + esc(e.fin) : '') + '</div>' +
         '</div>' +
-        '<div style="font-size:10px;color:#555;margin-top:2px;font-style:italic">' +
-          esc(e.poste || '') + (e.lieu ? ' · ' + esc(e.lieu) : '') +
-        '</div>' +
-        (e.missions ? renderMissions(e.missions) : '') +
+        '<div style="font-size:9px;color:#555;margin-top:2px;font-style:italic">' + esc(e.poste || '') + (e.lieu ? ' · ' + esc(e.lieu) : '') + '</div>' +
+        mHtml +
       '</div>';
     }).join('');
 
-    var forHtml = d.fors.map(function (f) {
-      return '<div style="margin-bottom:10px">' +
-        '<div style="display:flex;justify-content:space-between;align-items:baseline">' +
+    var forHtml = d.fors.map(function (f, i) {
+      return '<div' + (i < d.fors.length - 1 ? ' style="margin-bottom:8px"' : '') + '>' +
+        '<div style="display:flex;justify-content:space-between">' +
           '<div style="font-size:11px;font-weight:700;color:#111">' + esc(f.diplome || '') + '</div>' +
           '<div style="font-size:9px;color:#777">' + esc(f.annee || '') + '</div>' +
         '</div>' +
@@ -121,64 +117,48 @@
     }).join('');
 
     var compHtml = d.comps.map(function (c, i) {
-      var pct = (i % 5 === 4) ? 80 : (i % 5 === 3 ? 85 : 95);
-      return '<div style="font-size:9px;color:#333;margin-bottom:4px">' + esc(c) + '</div>' +
-        '<div style="height:3px;background:#e0e0e0;border-radius:2px;margin-bottom:8px">' +
-          '<div style="width:' + pct + '%;height:3px;background:#111;border-radius:2px"></div>' +
-        '</div>';
+      var pct = (i % 5 >= 3) ? 80 : 95;
+      return '<div style="font-size:9px;color:#333;margin-bottom:3px">' + esc(c) + '</div>' +
+        '<div style="height:3px;background:#e0e0e0;border-radius:2px;margin-bottom:7px"><div style="width:' + pct + '%;height:3px;background:#111;border-radius:2px"></div></div>';
     }).join('');
 
     var langHtml = d.langs.map(function (l) {
-      return '<div style="font-size:9px;color:#333;margin-bottom:4px">' +
-        esc(l.langue || '') + (l.niveau ? ' — ' + esc(l.niveau) : '') +
-      '</div>';
+      return '<div style="font-size:9px;color:#333;margin-bottom:3px">' + esc(l.langue || '') + (l.niveau ? ' — ' + esc(l.niveau) : '') + '</div>';
     }).join('');
 
     var certHtml = d.certs.map(function (c) {
-      return '<div style="font-size:9px;color:#333;margin-bottom:4px">' + esc(c) + '</div>';
+      return '<div style="font-size:9px;color:#333;margin-bottom:3px">' + esc(c) + '</div>';
     }).join('');
 
-    var intHtml = d.interets.map(function (c) {
-      return '<div style="font-size:9px;color:#333;margin-bottom:4px">' + esc(c) + '</div>';
-    }).join('');
+    var contactHtml =
+      (d.email    ? '<div style="font-size:9px;color:#333;margin-bottom:4px">✉ ' + d.email + '</div>' : '') +
+      (d.tel      ? '<div style="font-size:9px;color:#333;margin-bottom:4px">☎ ' + d.tel + '</div>' : '') +
+      (d.location ? '<div style="font-size:9px;color:#333;margin-bottom:4px">⌖ ' + d.location + '</div>' : '') +
+      (d.linkedin ? '<div style="font-size:9px;color:#333;margin-bottom:14px">🔗 ' + d.linkedin + '</div>' : '<div style="margin-bottom:14px"></div>');
 
-    var contactHtml = '';
-    if (d.email || d.tel || d.location || d.linkedin) {
-      contactHtml = sHead('Contact') +
-        (d.email    ? '<div style="font-size:9px;color:#333;margin-bottom:4px;word-break:break-all">✉ ' + d.email    + '</div>' : '') +
-        (d.tel      ? '<div style="font-size:9px;color:#333;margin-bottom:4px">☎ ' + d.tel      + '</div>' : '') +
-        (d.location ? '<div style="font-size:9px;color:#333;margin-bottom:4px">⌖ ' + d.location + '</div>' : '') +
-        (d.linkedin ? '<div style="font-size:9px;color:#333;margin-bottom:14px;word-break:break-all">🔗 ' + d.linkedin + '</div>' : '<div style="margin-bottom:14px"></div>');
-    }
-
-    return '<div style="position:relative;background:#fff;width:794px;min-height:1122px;' +
-      'font-family:Arial,Helvetica,sans-serif;box-sizing:border-box;color:#111">' +
-      /* bande noire 6px gauche, full height */
-      '<div style="position:absolute;top:0;left:0;bottom:0;width:6px;background:#111"></div>' +
-      '<div style="padding:36px 32px 36px 38px">' +
-        /* Header : nom + photo top-right */
-        '<div style="display:flex;justify-content:space-between;align-items:center;' +
-          'padding-bottom:18px;border-bottom:2.5px solid #111;margin-bottom:22px">' +
-          '<div style="flex:1;min-width:0">' +
-            '<div style="font-size:28px;font-weight:900;color:#111;letter-spacing:3px;line-height:1.1">' + d.fullName + '</div>' +
-            '<div style="font-size:11px;color:#555;letter-spacing:2.5px;text-transform:uppercase;margin-top:6px">' + d.poste + '</div>' +
-            (d.accroche ? '<div style="font-size:10px;color:#666;margin-top:8px;line-height:1.5;max-width:440px">' + d.accroche + '</div>' : '') +
+    return '<div style="background:#fff;display:flex;min-height:960px;font-family:Arial,sans-serif">' +
+      '<div style="width:6px;background:#111;flex-shrink:0"></div>' +
+      '<div style="flex:1;padding:28px 24px">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:16px;border-bottom:2.5px solid #111;margin-bottom:16px">' +
+          '<div>' +
+            '<div style="font-size:24px;font-weight:900;color:#111;letter-spacing:3px">' + d.fullName + '</div>' +
+            '<div style="font-size:10px;color:#555;letter-spacing:2px;text-transform:uppercase;margin-top:5px">' + d.poste + '</div>' +
+            (d.accroche ? '<div style="font-size:9px;color:#666;margin-top:6px;line-height:1.4;max-width:340px">' + d.accroche + '</div>' : '') +
           '</div>' +
-          (photoHtml ? '<div style="margin-left:18px">' + photoHtml + '</div>' : '') +
+          photoHtml +
         '</div>' +
-        /* 2 colonnes 65% / 32% */
-        '<div style="display:flex;gap:3%">' +
+        '<div style="display:flex;gap:20px">' +
           '<div style="flex:0 0 65%">' +
-            (expHtml ? sHead('Expériences Professionnelles') + expHtml : '') +
-            (forHtml ? '<div style="margin-top:6px">' + sHead('Formation') + forHtml + '</div>' : '') +
-            (d.infos ? '<div style="margin-top:6px">' + sHead('Informations') + '<p style="font-size:10px;color:#444;line-height:1.6">' + renderAccroche(d.infos) + '</p></div>' : '') +
+            '<div style="text-transform:uppercase;font-size:9px;font-weight:800;letter-spacing:2px;color:#111;border-bottom:2px solid #111;padding-bottom:4px;margin-bottom:10px">Expériences Professionnelles</div>' +
+            expHtml +
+            (forHtml ? '<div style="text-transform:uppercase;font-size:9px;font-weight:800;letter-spacing:2px;color:#111;border-bottom:2px solid #111;padding-bottom:4px;margin:12px 0 10px">Formation</div>' + forHtml : '') +
           '</div>' +
           '<div style="flex:0 0 32%">' +
+            '<div style="text-transform:uppercase;font-size:9px;font-weight:800;letter-spacing:2px;color:#111;border-bottom:2px solid #111;padding-bottom:4px;margin-bottom:10px">Contact</div>' +
             contactHtml +
-            (compHtml ? sHead('Compétences') + compHtml : '') +
-            (langHtml ? sHead('Langues') + langHtml : '') +
-            (certHtml ? sHead('Certifications') + certHtml : '') +
-            (intHtml  ? sHead('Intérêts') + intHtml : '') +
+            (compHtml ? '<div style="text-transform:uppercase;font-size:9px;font-weight:800;letter-spacing:2px;color:#111;border-bottom:2px solid #111;padding-bottom:4px;margin-bottom:10px">Compétences</div>' + compHtml : '') +
+            (langHtml ? '<div style="text-transform:uppercase;font-size:9px;font-weight:800;letter-spacing:2px;color:#111;border-bottom:2px solid #111;padding-bottom:4px;margin:12px 0 8px">Langues</div>' + langHtml : '') +
+            (certHtml ? '<div style="text-transform:uppercase;font-size:9px;font-weight:800;letter-spacing:2px;color:#111;border-bottom:2px solid #111;padding-bottom:4px;margin-bottom:8px">Certifications</div>' + certHtml : '') +
           '</div>' +
         '</div>' +
       '</div>' +
