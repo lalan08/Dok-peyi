@@ -76,93 +76,168 @@
 
   /* ── T01 — ÉPURÉ ──
      Extraction littérale cv-wizard.html data-tpl-id="01" (lignes 75-170).
-     Layout flex : bande 6px noire à gauche + contenu padding 28px 24px.
-     Header flex space-between : nom 24px black/letter-spacing:3px + photo 54px cercle bordure noire.
-     Body flex gap:20px : col gauche flex 0 0 65% (expériences + formation),
-     col droite flex 0 0 32% (contact + compétences à barres + langues + certifications). */
+     width:794px fixe (A4), layout flex : bande 6px noire + padding 28px 24px.
+     Header : nom 24px + poste + accroche à gauche, photo 54px cercle à droite.
+     Body : col gauche flex 0 0 65% (expériences + formation),
+            col droite flex 0 0 32% (contact + compétences barres + langues + certs). */
   function render01(data) {
-    var d = extractData(data);
+    var d   = data || {};
+    var id  = d.identite || {};
+    var pr  = d.profil   || {};
+    var ex  = (d.experiences || []).filter(Boolean);
+    var fo  = (d.formations  || []).filter(Boolean);
+    var co  = (d.competences || []).filter(Boolean);
+    var la  = (d.langues     || []).filter(Boolean);
+    var et  = d.extras || {};
+    var showPhoto = d.withPhoto && d.photo;
 
-    var photoHtml = '';
-    if (data.withPhoto) {
-      photoHtml = data.photo
-        ? '<img src="' + esc(data.photo) + '" style="width:54px;height:54px;border-radius:50%;object-fit:cover;border:3px solid #111;flex-shrink:0">'
-        : '<div class="cv-photo-zone" style="width:54px;height:54px;border-radius:50%;background:#bbb;border:3px solid #111;flex-shrink:0"></div>';
-    }
-
-    var expHtml = d.exps.map(function (e) {
-      var mHtml = '';
-      if (e.missions) {
-        var lines = String(e.missions).split('\n').map(function (l) { return l.replace(/^\s*[•\-]\s*/, '').trim(); }).filter(Boolean);
-        if (lines.length) mHtml = '<ul style="font-size:9px;color:#444;margin:5px 0 0 14px;padding:0;line-height:1.5">' + lines.map(function (l) { return '<li>' + esc(l) + '</li>'; }).join('') + '</ul>';
-      }
+    function expBlock(e) {
+      var missions = String(e.missions || '')
+        .split('\n')
+        .map(function (m) { return m.replace(/^\s*[•\-]\s*/, '').trim(); })
+        .filter(Boolean);
+      var ul = missions.length
+        ? '<ul style="font-size:9px;color:#444;margin:5px 0 0 14px;padding:0;line-height:1.5">' +
+          missions.map(function (m) { return '<li>' + esc(m) + '</li>'; }).join('') +
+          '</ul>'
+        : '';
       return '<div style="margin-bottom:12px">' +
         '<div style="display:flex;justify-content:space-between">' +
           '<div style="font-size:11px;font-weight:700;color:#111">' + esc(e.entreprise || '') + '</div>' +
           '<div style="font-size:9px;color:#777">' + esc(e.debut || '') + (e.fin ? ' – ' + esc(e.fin) : '') + '</div>' +
         '</div>' +
-        '<div style="font-size:9px;color:#555;margin-top:2px;font-style:italic">' + esc(e.poste || '') + (e.lieu ? ' · ' + esc(e.lieu) : '') + '</div>' +
-        mHtml +
+        '<div style="font-size:9px;color:#555;margin-top:2px;font-style:italic">' +
+          esc(e.poste || '') + (e.lieu ? ' · ' + esc(e.lieu) : '') +
+        '</div>' +
+        ul +
       '</div>';
-    }).join('');
+    }
 
-    var forHtml = d.fors.map(function (f, i) {
-      return '<div' + (i < d.fors.length - 1 ? ' style="margin-bottom:8px"' : '') + '>' +
+    function forBlock(f) {
+      return '<div style="margin-bottom:8px">' +
         '<div style="display:flex;justify-content:space-between">' +
-          '<div style="font-size:11px;font-weight:700;color:#111">' + esc(f.diplome || '') + '</div>' +
+          '<div style="font-size:11px;font-weight:700;color:#111">' +
+            esc(f.diplome || '') + (f.mention ? ' — Mention ' + esc(f.mention) : '') +
+          '</div>' +
           '<div style="font-size:9px;color:#777">' + esc(f.annee || '') + '</div>' +
         '</div>' +
         '<div style="font-size:9px;color:#777;margin-top:2px">' + esc(f.etablissement || '') + '</div>' +
       '</div>';
-    }).join('');
+    }
 
-    var compHtml = d.comps.map(function (c, i) {
-      var pct = (i % 5 >= 3) ? 80 : 95;
+    function compBlock(c, i) {
+      var pct = i < 3 ? 95 : 80;
       return '<div style="font-size:9px;color:#333;margin-bottom:3px">' + esc(c) + '</div>' +
-        '<div style="height:3px;background:#e0e0e0;border-radius:2px;margin-bottom:7px"><div style="width:' + pct + '%;height:3px;background:#111;border-radius:2px"></div></div>';
+        '<div style="height:3px;background:#e0e0e0;border-radius:2px;margin-bottom:7px">' +
+          '<div style="width:' + pct + '%;height:3px;background:#111;border-radius:2px"></div>' +
+        '</div>';
+    }
+
+    function langBlock(l) {
+      return '<div style="font-size:9px;color:#333;margin-bottom:3px">' +
+        esc(l.langue || '') + (l.niveau ? ' — ' + esc(l.niveau) : '') +
+      '</div>';
+    }
+
+    var photoHtml = showPhoto
+      ? '<div class="cv-photo-zone" style="width:54px;height:54px;border-radius:50%;' +
+        'background-image:url(\'' + esc(d.photo) + '\');background-size:cover;' +
+        'background-position:center;border:3px solid #111;flex-shrink:0"></div>'
+      : (d.withPhoto
+        ? '<div class="cv-photo-zone" style="width:54px;height:54px;border-radius:50%;' +
+          'background:#bbb;border:3px solid #111;flex-shrink:0"></div>'
+        : '');
+
+    var ville = [id.codepostal, id.ville].filter(Boolean).join(' ');
+    var contactLines = [];
+    if (id.email)   contactLines.push('✉ ' + esc(id.email));
+    if (id.tel)     contactLines.push('☎ ' + esc(id.tel));
+    if (ville)      contactLines.push('⌖ ' + esc(ville));
+    if (id.linkedin) contactLines.push('🔗 ' + esc(id.linkedin));
+    var contactHtml = contactLines.map(function (c) {
+      return '<div style="font-size:9px;color:#333;margin-bottom:4px">' + c + '</div>';
     }).join('');
 
-    var langHtml = d.langs.map(function (l) {
-      return '<div style="font-size:9px;color:#333;margin-bottom:3px">' + esc(l.langue || '') + (l.niveau ? ' — ' + esc(l.niveau) : '') + '</div>';
-    }).join('');
-
-    var certHtml = d.certs.map(function (c) {
-      return '<div style="font-size:9px;color:#333;margin-bottom:3px">' + esc(c) + '</div>';
-    }).join('');
-
-    var contactHtml =
-      (d.email    ? '<div style="font-size:9px;color:#333;margin-bottom:4px">✉ ' + d.email + '</div>' : '') +
-      (d.tel      ? '<div style="font-size:9px;color:#333;margin-bottom:4px">☎ ' + d.tel + '</div>' : '') +
-      (d.location ? '<div style="font-size:9px;color:#333;margin-bottom:4px">⌖ ' + d.location + '</div>' : '') +
-      (d.linkedin ? '<div style="font-size:9px;color:#333;margin-bottom:14px">🔗 ' + d.linkedin + '</div>' : '<div style="margin-bottom:14px"></div>');
-
-    return '<div style="background:#fff;display:flex;min-height:960px;font-family:Arial,sans-serif">' +
-      '<div style="width:6px;background:#111;flex-shrink:0"></div>' +
-      '<div style="flex:1;padding:28px 24px">' +
-        '<div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:16px;border-bottom:2.5px solid #111;margin-bottom:16px">' +
-          '<div>' +
-            '<div style="font-size:24px;font-weight:900;color:#111;letter-spacing:3px">' + d.fullName + '</div>' +
-            '<div style="font-size:10px;color:#555;letter-spacing:2px;text-transform:uppercase;margin-top:5px">' + d.poste + '</div>' +
-            (d.accroche ? '<div style="font-size:9px;color:#666;margin-top:6px;line-height:1.4;max-width:340px">' + d.accroche + '</div>' : '') +
+    return '' +
+      '<div style="background:#fff;display:flex;min-height:1123px;width:794px;font-family:Arial,sans-serif">' +
+        '<div style="width:6px;background:#111;flex-shrink:0"></div>' +
+        '<div style="flex:1;padding:28px 24px">' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;' +
+            'padding-bottom:16px;border-bottom:2.5px solid #111;margin-bottom:16px">' +
+            '<div>' +
+              '<div style="font-size:24px;font-weight:900;color:#111;letter-spacing:3px">' +
+                esc(id.prenom || '') +
+                ' <span style="text-transform:uppercase">' + esc(id.nom || '') + '</span>' +
+              '</div>' +
+              '<div style="font-size:10px;color:#555;letter-spacing:2px;text-transform:uppercase;margin-top:5px">' +
+                esc(pr.poste || '') +
+              '</div>' +
+              (pr.accroche
+                ? '<div style="font-size:9px;color:#666;margin-top:6px;line-height:1.4;max-width:340px">' +
+                  esc(pr.accroche).replace(/\n/g, '<br>') + '</div>'
+                : '') +
+            '</div>' +
+            photoHtml +
           '</div>' +
-          photoHtml +
+          '<div style="display:flex;gap:20px">' +
+            '<div style="flex:0 0 65%">' +
+              (ex.length
+                ? '<div style="text-transform:uppercase;font-size:9px;font-weight:800;' +
+                  'letter-spacing:2px;color:#111;border-bottom:2px solid #111;' +
+                  'padding-bottom:4px;margin-bottom:10px">Expériences Professionnelles</div>' +
+                  ex.map(expBlock).join('')
+                : '') +
+              (fo.length
+                ? '<div style="text-transform:uppercase;font-size:9px;font-weight:800;' +
+                  'letter-spacing:2px;color:#111;border-bottom:2px solid #111;' +
+                  'padding-bottom:4px;margin:12px 0 10px">Formation</div>' +
+                  fo.map(forBlock).join('')
+                : '') +
+            '</div>' +
+            '<div style="flex:0 0 32%">' +
+              (contactHtml
+                ? '<div style="text-transform:uppercase;font-size:9px;font-weight:800;' +
+                  'letter-spacing:2px;color:#111;border-bottom:2px solid #111;' +
+                  'padding-bottom:4px;margin-bottom:10px">Contact</div>' +
+                  contactHtml +
+                  '<div style="height:14px"></div>'
+                : '') +
+              (co.length
+                ? '<div style="text-transform:uppercase;font-size:9px;font-weight:800;' +
+                  'letter-spacing:2px;color:#111;border-bottom:2px solid #111;' +
+                  'padding-bottom:4px;margin-bottom:10px">Compétences</div>' +
+                  co.map(compBlock).join('')
+                : '') +
+              (la.length
+                ? '<div style="text-transform:uppercase;font-size:9px;font-weight:800;' +
+                  'letter-spacing:2px;color:#111;border-bottom:2px solid #111;' +
+                  'padding-bottom:4px;margin:12px 0 8px">Langues</div>' +
+                  la.map(langBlock).join('')
+                : '') +
+              (et.certifications
+                ? '<div style="text-transform:uppercase;font-size:9px;font-weight:800;' +
+                  'letter-spacing:2px;color:#111;border-bottom:2px solid #111;' +
+                  'padding-bottom:4px;margin:12px 0 8px">Certifications</div>' +
+                  '<div style="font-size:9px;color:#333">' +
+                  esc(et.certifications).replace(/\n/g, '<br>') + '</div>'
+                : '') +
+              (et.interets
+                ? '<div style="text-transform:uppercase;font-size:9px;font-weight:800;' +
+                  'letter-spacing:2px;color:#111;border-bottom:2px solid #111;' +
+                  'padding-bottom:4px;margin:12px 0 8px">Centres d\'intérêt</div>' +
+                  '<div style="font-size:9px;color:#333">' + esc(et.interets) + '</div>'
+                : '') +
+              (et.infos
+                ? '<div style="text-transform:uppercase;font-size:9px;font-weight:800;' +
+                  'letter-spacing:2px;color:#111;border-bottom:2px solid #111;' +
+                  'padding-bottom:4px;margin:12px 0 8px">Informations</div>' +
+                  '<div style="font-size:9px;color:#333">' +
+                  esc(et.infos).replace(/\n/g, '<br>') + '</div>'
+                : '') +
+            '</div>' +
+          '</div>' +
         '</div>' +
-        '<div style="display:flex;gap:20px">' +
-          '<div style="flex:0 0 65%">' +
-            '<div style="text-transform:uppercase;font-size:9px;font-weight:800;letter-spacing:2px;color:#111;border-bottom:2px solid #111;padding-bottom:4px;margin-bottom:10px">Expériences Professionnelles</div>' +
-            expHtml +
-            (forHtml ? '<div style="text-transform:uppercase;font-size:9px;font-weight:800;letter-spacing:2px;color:#111;border-bottom:2px solid #111;padding-bottom:4px;margin:12px 0 10px">Formation</div>' + forHtml : '') +
-          '</div>' +
-          '<div style="flex:0 0 32%">' +
-            '<div style="text-transform:uppercase;font-size:9px;font-weight:800;letter-spacing:2px;color:#111;border-bottom:2px solid #111;padding-bottom:4px;margin-bottom:10px">Contact</div>' +
-            contactHtml +
-            (compHtml ? '<div style="text-transform:uppercase;font-size:9px;font-weight:800;letter-spacing:2px;color:#111;border-bottom:2px solid #111;padding-bottom:4px;margin-bottom:10px">Compétences</div>' + compHtml : '') +
-            (langHtml ? '<div style="text-transform:uppercase;font-size:9px;font-weight:800;letter-spacing:2px;color:#111;border-bottom:2px solid #111;padding-bottom:4px;margin:12px 0 8px">Langues</div>' + langHtml : '') +
-            (certHtml ? '<div style="text-transform:uppercase;font-size:9px;font-weight:800;letter-spacing:2px;color:#111;border-bottom:2px solid #111;padding-bottom:4px;margin-bottom:8px">Certifications</div>' + certHtml : '') +
-          '</div>' +
-        '</div>' +
-      '</div>' +
-    '</div>';
+      '</div>';
   }
 
   /* ── T02 — SIDEBAR SOMBRE ── */

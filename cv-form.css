@@ -163,7 +163,7 @@ a { text-decoration: none; color: inherit; }
   top: 72px;
   height: calc(100vh - 72px);
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: auto;
   background: #111;
 }
 #preview-panel::-webkit-scrollbar { width: 6px; }
@@ -181,8 +181,9 @@ a { text-decoration: none; color: inherit; }
   padding: 20px 20px 40px;
 }
 #preview-cv {
-  width: 210mm;
-  max-width: 100%;
+  width: 794px;
+  min-width: 794px;
+  max-width: none;
   transform-origin: top center;
   box-shadow: 0 20px 60px rgba(0,0,0,0.5);
 }
